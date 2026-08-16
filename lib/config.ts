@@ -13,8 +13,8 @@ export const siteConfig = {
 
 export const product = {
   slug: "premium-membership",
-  name: "Premium Membership",
-  category: "ABONNEMENT · PREMIUM",
+  name: "Basic fit ultimate",
+  category: "ABONNEMENT · ULTIMATE",
   duration: "2 mois",
   priceTotal: 10.0,
   currency: "EUR",
