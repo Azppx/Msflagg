@@ -30,7 +30,7 @@ export const product = {
 
 export const discordConfig = {
   // Remplace par ta véritable invitation Discord.
-  inviteUrl: process.env.NEXT_PUBLIC_DISCORD_INVITE_URL || "https://discord.gg/k4ayxpryJb",
+  inviteUrl: process.env.NEXT_PUBLIC_DISCORD_INVITE_URL || "https://discord.gg/REMPLACER",
 };
 
 export const reviews = [
