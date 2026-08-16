@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
+import { StepIndicator } from "@/components/StepIndicator";
 import { Button } from "@/components/Button";
 import { product } from "@/lib/config";
 
@@ -74,19 +75,3 @@ export default function InformationsPage() {
   );
 }
 
-function StepIndicator({ current }: { current: number }) {
-  const steps = ["Produit", "Informations", "Paiement", "Confirmation"];
-  return (
-    <div className="flex items-center gap-2">
-      {steps.map((s, i) => (
-        <div key={s} className="flex flex-1 items-center gap-2">
-          <div
-            className={`h-1.5 flex-1 rounded-full ${
-              i + 1 <= current ? "bg-electric" : "bg-white/10"
-            }`}
-          />
-        </div>
-      ))}
-    </div>
-  );
-}
