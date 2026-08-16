@@ -20,7 +20,7 @@ export const product = {
   currency: "EUR",
   badge: "OFFRE POPULAIRE",
   description:
-    "Un accès complet à l'offre Premium Membership, sans engagement long, pensé pour démarrer rapidement.",
+    "Un accès complet à l'offre Basic fit Ultimate, sans engagement long, pensé pour démarrer rapidement.",
   features: [
     "Accès complet pendant toute la durée de l'offre",
     "Activation rapide après paiement",
