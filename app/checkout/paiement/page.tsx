@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
+import { StepIndicator } from "@/components/StepIndicator";
 import { PaypalButton } from "@/components/PaypalButton";
 import { product } from "@/lib/config";
 import { paypalClientIdPublic } from "@/lib/paypal";
@@ -25,7 +26,9 @@ function PaiementContent() {
       <PageHeader eyebrow="ÉTAPE 3 / 4" title="PAIEMENT" backHref="/checkout/informations" />
 
       <div className="px-5">
-        <div className="rounded-xl2 border border-panelBorder bg-panel/60 p-5">
+        <StepIndicator current={3} />
+
+        <div className="mt-6 rounded-xl2 border border-panelBorder bg-panel/60 p-5">
           <h2 className="font-display text-lg">RÉCAPITULATIF</h2>
           <div className="mt-4 space-y-3 text-sm">
             <Row label="Produit" value={product.name} />
