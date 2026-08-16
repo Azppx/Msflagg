@@ -36,7 +36,7 @@ export function PaypalButton({
 
       window.paypal
         .Buttons({
-          style: { layout: "vertical", color: "blue", shape: "pill", label: "paypal" },
+          style: { layout: "vertical", color: "black", shape: "pill", label: "pay", height: 48 },
           createOrder: async () => {
             setStatus("processing");
             setErrorMsg("");
@@ -107,14 +107,36 @@ export function PaypalButton({
   }
 
   return (
-    <div>
-      <div ref={containerRef} />
+    <div className="rounded-xl2 border border-panelBorder bg-panel/60 p-5 shadow-[0_0_40px_-15px_rgba(255,138,0,0.35)]">
+      <div className="mb-4 flex items-center justify-center gap-2">
+        <svg
+          className="h-4 w-4 text-accent"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        </svg>
+        <span className="text-xs font-medium uppercase tracking-wider text-white/50">
+          Paiement 100% sécurisé
+        </span>
+      </div>
+
+      <div className="overflow-hidden rounded-xl bg-white p-3">
+        <div ref={containerRef} />
+      </div>
+
       {status === "processing" && (
-        <p className="mt-2 text-center text-sm text-white/50">Traitement en cours…</p>
+        <p className="mt-3 text-center text-sm text-white/50">Traitement en cours…</p>
       )}
       {status === "error" && (
-        <p className="mt-2 text-center text-sm text-danger">{errorMsg}</p>
+        <p className="mt-3 text-center text-sm text-danger">{errorMsg}</p>
       )}
+
+      <p className="mt-4 text-center text-[11px] text-white/30">
+        Transaction chiffrée · Vos données ne sont jamais stockées
+      </p>
     </div>
   );
 }
