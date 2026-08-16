@@ -1,10 +1,13 @@
 import { ServiceCard } from "@/components/ServiceCard";
+import { ServicesCarousel } from "@/components/ServicesCarousel";
 import { siteConfig, product } from "@/lib/config";
 
 export default function HomePage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col px-5 pb-16 pt-12">
-      <div className="text-center">
+      <ServicesCarousel />
+
+      <div className="mt-12 text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-electric/40 bg-electric/10 px-4 py-1.5 text-xs font-semibold tracking-widest text-electric-soft">
           ✦ EXPLORE
         </span>
@@ -20,7 +23,7 @@ export default function HomePage() {
           accent="accent"
           title={product.name}
           subtitle={`${product.duration} · ${product.priceTotal.toFixed(0)}€ au total`}
-          icon={<LightningIcon />}
+          icon={<DumbbellIcon />}
         />
         <ServiceCard
           href="/avis"
@@ -52,6 +55,17 @@ export default function HomePage() {
   );
 }
 
+function DumbbellIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+      <path
+        d="M4 9v6M2 10v4M20 9v6M22 10v4M7 8.5v7M17 8.5v7M7 12h10"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 function LightningIcon() {
   return (
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
