@@ -15,7 +15,7 @@ export function PageHeader({
         <Link
           href={backHref}
           aria-label="Retour"
-          className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-panelBorder bg-white/5 text-white/80"
+          className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-panelBorder bg-white/5 text-white/80 transition-all duration-200 ease-out hover:-translate-x-0.5 hover:bg-white/10 active:scale-90 active:duration-100"
         >
           ←
         </Link>

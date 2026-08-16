@@ -5,15 +5,15 @@ type Variant = "primary" | "secondary" | "ghost";
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    "bg-accent text-black font-bold hover:bg-accent-soft active:scale-[0.98]",
+    "bg-accent text-black font-bold shadow-[0_8px_24px_-8px_rgba(255,138,0,0.5)] hover:bg-accent-soft hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-8px_rgba(255,138,0,0.6)] active:translate-y-0 active:scale-[0.97] active:duration-100",
   secondary:
-    "bg-electric text-white font-bold hover:bg-electric-soft active:scale-[0.98]",
+    "bg-electric text-white font-bold shadow-[0_8px_24px_-8px_rgba(46,110,255,0.5)] hover:bg-electric-soft hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-8px_rgba(46,110,255,0.6)] active:translate-y-0 active:scale-[0.97] active:duration-100",
   ghost:
-    "bg-white/5 text-white border border-panelBorder hover:bg-white/10 active:scale-[0.98]",
+    "bg-white/5 text-white border border-panelBorder hover:bg-white/10 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] active:duration-100",
 };
 
 const base =
-  "inline-flex w-full items-center justify-center rounded-2xl px-6 py-4 text-sm tracking-wide transition-all duration-200 min-h-[52px]";
+  "inline-flex w-full items-center justify-center rounded-2xl px-6 py-4 text-sm tracking-wide transition-all duration-300 ease-out min-h-[52px]";
 
 export function ButtonLink({
   href,
