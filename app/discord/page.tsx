@@ -16,7 +16,7 @@ export default function DiscordPage() {
             REJOINDRE LE DISCORD
           </ButtonLink>
         </div>
-        {discordConfig.inviteUrl.includes("https://discord.gg/k4ayxpryJb") && (
+        {discordConfig.inviteUrl.includes("REMPLACER") && (
           <p className="mt-4 text-xs text-danger/80">
             Invitation non configurée — définis NEXT_PUBLIC_DISCORD_INVITE_URL.
           </p>
