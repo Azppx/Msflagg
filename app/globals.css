@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  overscroll-behavior-y: none;
+}
+
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bg-glow-radial {
+  background:
+    radial-gradient(60% 40% at 50% 0%, rgba(46, 110, 255, 0.16), transparent 60%),
+    radial-gradient(50% 30% at 85% 20%, rgba(255, 122, 24, 0.08), transparent 60%);
+}
+
+.card-glow {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 20px 60px -20px rgba(46, 110, 255, 0.25);
+}
+
+.card-glow-accent {
+  box-shadow: 0 0 0 1px rgba(255, 138, 0, 0.35), 0 25px 70px -20px rgba(255, 138, 0, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
