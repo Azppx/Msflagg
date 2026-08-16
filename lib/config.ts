@@ -13,14 +13,14 @@ export const siteConfig = {
 
 export const product = {
   slug: "premium-membership",
-  name: "Basic fit ultimate",
-  category: "ABONNEMENT · ULTIMATE",
+  name: "Premium Membership",
+  category: "ABONNEMENT · PREMIUM",
   duration: "2 mois",
   priceTotal: 10.0,
   currency: "EUR",
   badge: "OFFRE POPULAIRE",
   description:
-    "Un accès complet à l'offre Basic fit Ultimate, sans engagement long, pensé pour démarrer rapidement.",
+    "Un accès complet à l'offre Premium Membership, sans engagement long, pensé pour démarrer rapidement.",
   features: [
     "Accès complet pendant toute la durée de l'offre",
     "Activation rapide après paiement",
