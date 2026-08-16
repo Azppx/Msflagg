@@ -68,66 +68,6 @@ body {
   box-shadow: 0 0 0 1px rgba(255, 138, 0, 0.35), 0 25px 70px -20px rgba(255, 138, 0, 0.35);
 }
 
-/* --- Moving light effects for selection cards --- */
-
-@property --angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
-
-/* Wrap a selection card in .selection-ring for a rotating light border. */
-.selection-ring {
-  position: relative;
-  border-radius: inherit;
-}
-
-.selection-ring::before {
-  content: "";
-  position: absolute;
-  inset: -1.5px;
-  border-radius: inherit;
-  padding: 1.5px;
-  background: conic-gradient(
-    from var(--angle),
-    transparent 0deg,
-    transparent 280deg,
-    #ffb454 320deg,
-    #ff8a00 335deg,
-    #fff3d6 345deg,
-    #ff8a00 355deg,
-    transparent 360deg
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  animation: spin-angle 3.4s linear infinite;
-  pointer-events: none;
-}
-
-.selection-ring--active::before {
-  background: conic-gradient(
-    from var(--angle),
-    transparent 0deg,
-    transparent 210deg,
-    #ff8a00 250deg,
-    #ffd199 280deg,
-    #ffffff 290deg,
-    #ffd199 300deg,
-    #ff8a00 330deg,
-    transparent 360deg
-  );
-  opacity: 1;
-}
-
-@keyframes spin-angle {
-  to {
-    --angle: 360deg;
-  }
-}
-
 /* Soft pulsing halo, e.g. behind icons/logos on selection cards */
 .icon-halo {
   position: relative;
@@ -161,10 +101,6 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-  }
-
-  .selection-ring::before {
-    opacity: 0.6;
   }
 }
 
