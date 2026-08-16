@@ -1,4 +1,5 @@
 import { PageHeader } from "@/components/PageHeader";
+import { StepIndicator } from "@/components/StepIndicator";
 import { ButtonLink } from "@/components/Button";
 import { getOrder } from "@/lib/orders";
 import { discordConfig } from "@/lib/config";
@@ -15,10 +16,14 @@ export default function ConfirmationPage({
     <main className="mx-auto min-h-screen max-w-md pb-16">
       <PageHeader eyebrow="ÉTAPE 4 / 4" title="CONFIRMATION" />
 
-      <div className="px-5 text-center">
+      <div className="px-5">
+        <StepIndicator current={4} />
+      </div>
+
+      <div className="px-5 pt-6 text-center animate-fadeUp">
         {isPaid ? (
           <>
-            <div className="mx-auto mt-4 flex h-20 w-20 items-center justify-center rounded-full bg-electric/15 text-4xl">
+            <div className="mx-auto mt-4 flex h-20 w-20 items-center justify-center rounded-full bg-electric/15 text-4xl animate-fadeUp">
               ✓
             </div>
             <h2 className="font-display mt-6 text-3xl">PAIEMENT CONFIRMÉ ✓</h2>
