@@ -20,6 +20,18 @@ const config: Config = {
           soft: "#FFB454",
         },
         danger: "#FF3B3B",
+        violet: {
+          DEFAULT: "#8B5CF6",
+          soft: "#B79CFF",
+        },
+        gold: {
+          DEFAULT: "#F5C518",
+          soft: "#FFDD66",
+        },
+        teal: {
+          DEFAULT: "#2DD4BF",
+          soft: "#7EEDE1",
+        },
       },
       borderRadius: {
         xl2: "1.5rem",
