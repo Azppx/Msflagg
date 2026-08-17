@@ -248,7 +248,7 @@ export function ServicesCarousel() {
                   minHeight: cardHeight ? `${cardHeight}px` : undefined,
                   flex: "0 0 auto",
                 }}
-                className={`card-glow relative flex snap-center flex-col rounded-xl2 border bg-panel p-6 text-center ${t.cardBorder} ${t.cardShadow}`}
+                className={`card-glow glass-panel relative flex snap-center flex-col rounded-xl2 border p-6 text-center ${t.cardBorder} ${t.cardShadow}`}
               >
                 {cat.badge && (
                   <span
