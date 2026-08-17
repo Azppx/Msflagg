@@ -1,0 +1,85 @@
+import { listOrders } from "@/lib/orders";
+import { DeliverForm } from "@/components/admin/DeliverForm";
+import { LogoutButton } from "@/components/admin/LogoutButton";
+
+export const dynamic = "force-dynamic";
+
+export default function AdminOrdersPage() {
+  const orders = listOrders();
+
+  return (
+    <main className="mx-auto max-w-2xl px-5 py-10">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs font-semibold tracking-widest text-electric-soft">ADMIN</p>
+          <h1 className="font-display text-3xl">Commandes</h1>
+          <p className="mt-1 text-sm text-white/50">{orders.length} commande(s)</p>
+        </div>
+        <LogoutButton />
+      </div>
+
+      {orders.length === 0 && (
+        <p className="mt-8 text-sm text-white/40">Aucune commande pour l'instant.</p>
+      )}
+
+      <div className="mt-6 space-y-4">
+        {orders.map((o) => (
+          <div key={o.id} className="rounded-xl2 border border-panelBorder bg-panel/60 p-5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="font-mono text-sm text-white/70">{o.id}</span>
+              <StatusBadge status={o.status} fulfillment={o.fulfillment} />
+            </div>
+
+            <p className="mt-3 font-semibold">{o.productName}</p>
+            <p className="text-sm text-white/50">
+              {o.customerName || "—"} · {o.customerEmail || "—"}
+            </p>
+            <p className="text-sm text-white/50">
+              {o.amount} {o.currency}
+            </p>
+
+            {o.status === "PAID" ? (
+              <DeliverForm
+                orderId={o.id}
+                alreadyDelivered={o.fulfillment === "DELIVERED"}
+                existingContent={o.deliveryContent}
+              />
+            ) : (
+              <p className="mt-3 text-xs text-white/30">
+                En attente de paiement — rien à livrer pour l'instant.
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </main>
+  );
+}
+
+function StatusBadge({
+  status,
+  fulfillment,
+}: {
+  status: string;
+  fulfillment: string;
+}) {
+  if (status !== "PAID") {
+    return (
+      <span className="rounded-full border border-panelBorder bg-white/5 px-3 py-1 text-[11px] font-semibold tracking-wide text-white/50">
+        {status}
+      </span>
+    );
+  }
+  if (fulfillment === "DELIVERED") {
+    return (
+      <span className="rounded-full border border-electric/40 bg-electric/10 px-3 py-1 text-[11px] font-semibold tracking-wide text-electric-soft">
+        LIVRÉE
+      </span>
+    );
+  }
+  return (
+    <span className="rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[11px] font-semibold tracking-wide text-accent-soft">
+      EN ATTENTE
+    </span>
+  );
+}
