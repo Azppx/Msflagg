@@ -36,7 +36,7 @@ function PaiementContent() {
       <div className="px-5">
         <StepIndicator current={3} />
 
-        <div className="mt-6 rounded-xl2 border border-panelBorder bg-panel/60 p-5">
+        <div className="glass-panel mt-6 rounded-xl2 border border-panelBorder p-5">
           <h2 className="font-display text-lg">RÉCAPITULATIF</h2>
           <div className="mt-4 space-y-3 text-sm">
             <Row label="Produit" value={productName} />
