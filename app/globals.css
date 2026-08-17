@@ -60,6 +60,24 @@ body {
   100% { transform: translate(2%, -5%) scale(0.96); opacity: 0.6; }
 }
 
+/* Fades the left/right edges of a horizontally scrollable row instead of hard-clipping content */
+.edge-fade-x {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black 20px,
+    black calc(100% - 20px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black 20px,
+    black calc(100% - 20px),
+    transparent 100%
+  );
+}
+
 .card-glow {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 20px 60px -20px rgba(46, 110, 255, 0.25);
 }
