@@ -12,17 +12,17 @@ export const siteConfig = {
 };
 
 export const product = {
-  slug: "premium-membership",
-  name: "Premium Membership",
-  category: "ABONNEMENT · PREMIUM",
+  slug: "basic-fit",
+  name: "Basic-Fit Ultimate",
+  category: "ABONNEMENT · ULTIMATE",
   duration: "2 mois",
   priceTotal: 10.0,
   currency: "EUR",
   badge: "OFFRE POPULAIRE",
   description:
-    "Un accès complet à l'offre Premium Membership, sans engagement long, pensé pour démarrer rapidement.",
+    "Abonnement Basic-Fit Ultimate 2 mois, accès à tous les clubs en Europe, sans engagement long.",
   features: [
-    "Accès complet pendant toute la durée de l'offre",
+    "Accès à tous les clubs Basic-Fit en Europe",
     "Activation rapide après paiement",
     "Support dédié via Discord",
   ],
