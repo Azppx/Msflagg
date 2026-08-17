@@ -14,7 +14,11 @@ export type Order = {
   amount: string;
   currency: string;
   status: "CREATED" | "PAID" | "FAILED";
+  fulfillment: "PENDING" | "DELIVERED";
+  deliveryContent?: string;
+  deliveredAt?: string;
   paypalOrderId?: string;
+  customerName?: string;
   customerEmail?: string;
   createdAt: string;
 };
@@ -30,12 +34,24 @@ export function getOrder(id: string) {
   return orders.get(id) || null;
 }
 
+export function listOrders(): Order[] {
+  return Array.from(orders.values()).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+}
+
 export function updateOrder(id: string, patch: Partial<Order>) {
   const existing = orders.get(id);
   if (!existing) return null;
   const updated = { ...existing, ...patch };
   orders.set(id, updated);
   return updated;
+}
+
+export function deliverOrder(id: string, content: string) {
+  return updateOrder(id, {
+    fulfillment: "DELIVERED",
+    deliveryContent: content,
+    deliveredAt: new Date().toISOString(),
+  });
 }
 
 export function generateOrderId() {
