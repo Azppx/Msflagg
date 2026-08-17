@@ -1,0 +1,232 @@
+/**
+ * Catalogue des produits individuels (page /premium).
+ * Chaque produit a son propre slug, utilisé pour :
+ *  - générer sa page dédiée /produit/[slug]
+ *  - retrouver son prix côté serveur dans lib/pricing.ts (jamais depuis le client)
+ */
+
+export type CatalogTone = "electric" | "violet" | "gold" | "teal" | "danger" | "accent" | "green";
+
+export type CatalogProduct = {
+  slug: string;
+  name: string;
+  category: string;
+  priceTotal: number;
+  currency: "EUR";
+  description: string;
+  features: string[];
+  tone: CatalogTone;
+  icon: string; // clé vers l'icône, voir components/catalog-icons.tsx
+};
+
+const genericFeatures = [
+  "Accès immédiat après paiement",
+  "Support dédié via Discord",
+  "Garantie & remplacement en cas de souci",
+];
+
+export const catalogProducts: CatalogProduct[] = [
+  {
+    slug: "deezer",
+    name: "Deezer",
+    category: "PREMIUM À VIE",
+    priceTotal: 15,
+    currency: "EUR",
+    description: "Compte Deezer Premium à vie, musique HiFi sans pub.",
+    features: genericFeatures,
+    tone: "violet",
+    icon: "heart",
+  },
+  {
+    slug: "spotify",
+    name: "Spotify",
+    category: "PREMIUM 1 AN",
+    priceTotal: 25,
+    currency: "EUR",
+    description: "Compte Spotify Premium pendant 12 mois, sans pub, qualité max.",
+    features: genericFeatures,
+    tone: "green",
+    icon: "spotify",
+  },
+  {
+    slug: "basic-fit",
+    name: "Basic-Fit",
+    category: "2 MOIS",
+    priceTotal: 10,
+    currency: "EUR",
+    description: "Abonnement Basic-Fit Ultimate 2 mois, accès à tous les clubs en Europe.",
+    features: genericFeatures,
+    tone: "accent",
+    icon: "dumbbell",
+  },
+  {
+    slug: "iptv",
+    name: "IPTV",
+    category: "SERVEUR 4K · 1 AN",
+    priceTotal: 45,
+    currency: "EUR",
+    description: "Serveur IPTV ultra rapide en 4K, milliers de chaînes et VOD.",
+    features: genericFeatures,
+    tone: "electric",
+    icon: "tv",
+  },
+  {
+    slug: "netflix",
+    name: "Netflix",
+    category: "PREMIUM 4K · 1 AN",
+    priceTotal: 15,
+    currency: "EUR",
+    description: "Compte Netflix Premium en qualité 4K Ultra HD.",
+    features: genericFeatures,
+    tone: "danger",
+    icon: "netflix",
+  },
+  {
+    slug: "crunchyroll",
+    name: "Crunchyroll",
+    category: "MÉGA FAN 1 AN",
+    priceTotal: 20,
+    currency: "EUR",
+    description: "Abonnement Méga Fan 12 mois, accès complet au catalogue anime.",
+    features: genericFeatures,
+    tone: "accent",
+    icon: "moon",
+  },
+  {
+    slug: "canva",
+    name: "Canva",
+    category: "PRO · 1 AN",
+    priceTotal: 10,
+    currency: "EUR",
+    description: "Canva Pro pendant 1 an, tous les templates et outils premium.",
+    features: genericFeatures,
+    tone: "teal",
+    icon: "canva",
+  },
+  {
+    slug: "adobe",
+    name: "Adobe",
+    category: "CREATIVE CLOUD · 1 AN",
+    priceTotal: 20,
+    currency: "EUR",
+    description: "Toute la suite Creative Cloud pendant 12 mois, avec tous les logiciels.",
+    features: genericFeatures,
+    tone: "danger",
+    icon: "adobe",
+  },
+  {
+    slug: "capcut",
+    name: "CapCut",
+    category: "PRO · 1 AN",
+    priceTotal: 15,
+    currency: "EUR",
+    description: "CapCut Pro pendant 12 mois, montage vidéo sans limites.",
+    features: genericFeatures,
+    tone: "electric",
+    icon: "capcut",
+  },
+  {
+    slug: "office365",
+    name: "Office 365",
+    category: "1 AN",
+    priceTotal: 15,
+    currency: "EUR",
+    description: "Pack Office 365 complet pendant 12 mois, tous les outils Microsoft.",
+    features: genericFeatures,
+    tone: "accent",
+    icon: "office",
+  },
+  {
+    slug: "prime-video",
+    name: "Prime Video",
+    category: "1 AN",
+    priceTotal: 30,
+    currency: "EUR",
+    description: "Amazon Prime Video pendant 12 mois, films et séries en streaming.",
+    features: genericFeatures,
+    tone: "electric",
+    icon: "play",
+  },
+  {
+    slug: "nordvpn",
+    name: "NordVPN",
+    category: "1 AN",
+    priceTotal: 15,
+    currency: "EUR",
+    description: "Abonnement NordVPN 12 mois, navigation sécurisée et anonyme.",
+    features: genericFeatures,
+    tone: "electric",
+    icon: "shield",
+  },
+  {
+    slug: "chatgpt",
+    name: "ChatGPT",
+    category: "PLUS · 1 MOIS",
+    priceTotal: 10,
+    currency: "EUR",
+    description: "ChatGPT Plus pendant 1 mois, GPT-5 et fonctionnalités avancées.",
+    features: genericFeatures,
+    tone: "green",
+    icon: "spark",
+  },
+  {
+    slug: "paramount",
+    name: "Paramount+",
+    category: "1 AN",
+    priceTotal: 10,
+    currency: "EUR",
+    description: "Paramount+ 12 mois, films, séries et exclus Paramount.",
+    features: genericFeatures,
+    tone: "electric",
+    icon: "mountain",
+  },
+  {
+    slug: "disney",
+    name: "Disney+",
+    category: "1 AN",
+    priceTotal: 15,
+    currency: "EUR",
+    description: "Disney+ pendant 12 mois, Marvel, Star Wars, Pixar et plus.",
+    features: genericFeatures,
+    tone: "electric",
+    icon: "star",
+  },
+  {
+    slug: "hbomax",
+    name: "HBO Max",
+    category: "1 AN",
+    priceTotal: 20,
+    currency: "EUR",
+    description: "HBO Max 12 mois, séries premium et exclus Warner.",
+    features: genericFeatures,
+    tone: "violet",
+    icon: "clapper",
+  },
+  {
+    slug: "discord",
+    name: "Discord",
+    category: "MEMBRES, BOOST, NITRO",
+    priceTotal: 4,
+    currency: "EUR",
+    description: "Membres online/offline, boost serveur niveaux 1/2/3, liens Nitro 1 ou 3 mois.",
+    features: genericFeatures,
+    tone: "violet",
+    icon: "discord",
+  },
+  {
+    slug: "duolingo",
+    name: "Duolingo",
+    category: "SUPER · 1 AN",
+    priceTotal: 15,
+    currency: "EUR",
+    description: "Abonnement Duolingo Super pendant 1 an, apprenez des langues sans limites.",
+    features: genericFeatures,
+    tone: "green",
+    icon: "owl",
+  },
+];
+
+export function getProductBySlug(slug: string | null | undefined): CatalogProduct | null {
+  if (!slug) return null;
+  return catalogProducts.find((p) => p.slug === slug) || null;
+}
