@@ -78,6 +78,14 @@ body {
   );
 }
 
+/* Frosted-glass card background: lets the colored glow bleed through,
+   like the reference Pulse screenshots. Pair with your own border color. */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+}
+
 .card-glow {
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.06),
