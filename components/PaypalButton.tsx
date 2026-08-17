@@ -108,7 +108,7 @@ export function PaypalButton({
   }
 
   return (
-    <div className="rounded-xl2 border border-panelBorder bg-panel/60 p-5 shadow-[0_0_40px_-15px_rgba(255,138,0,0.35)]">
+    <div className="glass-panel rounded-xl2 border border-panelBorder p-5 shadow-[0_0_40px_-15px_rgba(255,138,0,0.35)]">
       <div className="mb-4 flex items-center justify-center gap-2">
         <svg
           className="h-4 w-4 text-accent"
