@@ -50,7 +50,7 @@ export const catalogProducts: CatalogProduct[] = [
   },
   {
     slug: "basic-fit",
-    name: "Basic-Fit",
+    name: "Basic-Fit Ultimate",
     category: "2 MOIS",
     priceTotal: 10,
     currency: "EUR",
