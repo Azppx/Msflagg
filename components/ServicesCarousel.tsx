@@ -98,7 +98,7 @@ const categories: ServiceCategory[] = [
       "Escrow disponible",
     ],
     ctaLabel: "Découvrir Premium",
-    href: "/produit",
+    href: "/premium",
     tone: "electric",
     captionEyebrow: "LE SAVOIR-FAIRE DES PROS",
     captionText: "Le meilleur de nos services.",
@@ -155,6 +155,7 @@ export function ServicesCarousel() {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const trackWrapperRef = useRef<HTMLDivElement | null>(null);
   const [cardWidth, setCardWidth] = useState<number | null>(null);
+  const [cardHeight, setCardHeight] = useState<number | null>(null);
 
   useEffect(() => {
     const el = trackWrapperRef.current;
@@ -165,6 +166,12 @@ export function ServicesCarousel() {
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+
+  useEffect(() => {
+    const heights = cardRefs.current.map((el) => el?.scrollHeight ?? 0);
+    const max = Math.max(0, ...heights);
+    if (max > 0 && max !== cardHeight) setCardHeight(max);
+  }, [cardWidth]);
 
   function goTo(index: number) {
     const clamped = Math.max(0, Math.min(categories.length - 1, index));
@@ -236,8 +243,12 @@ export function ServicesCarousel() {
                 ref={(el) => {
                   cardRefs.current[i] = el;
                 }}
-                style={{ width: cardWidth ? `${cardWidth}px` : "100%", flex: "0 0 auto" }}
-                className={`card-glow relative snap-center rounded-xl2 border bg-panel p-6 text-center ${t.cardBorder} ${t.cardShadow}`}
+                style={{
+                  width: cardWidth ? `${cardWidth}px` : "100%",
+                  minHeight: cardHeight ? `${cardHeight}px` : undefined,
+                  flex: "0 0 auto",
+                }}
+                className={`card-glow relative flex snap-center flex-col rounded-xl2 border bg-panel p-6 text-center ${t.cardBorder} ${t.cardShadow}`}
               >
                 {cat.badge && (
                   <span
@@ -272,7 +283,7 @@ export function ServicesCarousel() {
                   ))}
                 </ul>
 
-                <div className="mt-6">
+                <div className="mt-auto pt-6">
                   {cat.disabled ? (
                     <span
                       className={`block cursor-not-allowed rounded-xl px-5 py-3.5 text-sm font-semibold tracking-wide ${t.cta}`}
@@ -354,4 +365,3 @@ function TruckIcon() {
       <circle cx="16.5" cy="18" r="1.6" fill="currentColor" stroke="none" />
     </svg>
   );
-}
