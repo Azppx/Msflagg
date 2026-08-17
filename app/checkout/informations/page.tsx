@@ -1,14 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { StepIndicator } from "@/components/StepIndicator";
 import { Button } from "@/components/Button";
 import { product } from "@/lib/config";
+import { getProductBySlug } from "@/lib/catalog";
 
 export default function InformationsPage() {
+  return (
+    <Suspense fallback={null}>
+      <InformationsContent />
+    </Suspense>
+  );
+}
+
+function InformationsContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const itemSlug = searchParams.get("item");
+  const catalogItem = getProductBySlug(itemSlug);
+  const displayName = catalogItem ? catalogItem.name : product.name;
+  const displayDuration = catalogItem ? catalogItem.category : product.duration;
+
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
@@ -20,19 +35,24 @@ export default function InformationsPage() {
       return;
     }
     const params = new URLSearchParams({ email, name });
+    if (itemSlug) params.set("item", itemSlug);
     router.push(`/checkout/paiement?${params.toString()}`);
   }
 
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow="ÉTAPE 2 / 4" title="TES INFORMATIONS" backHref="/produit" />
+      <PageHeader
+        eyebrow="ÉTAPE 2 / 4"
+        title="TES INFORMATIONS"
+        backHref={catalogItem ? `/produit/${catalogItem.slug}` : "/produit"}
+      />
 
       <div className="px-5">
         <StepIndicator current={2} />
 
         <div className="mt-6 rounded-xl2 border border-panelBorder bg-panel/60 p-4">
           <p className="text-sm text-white/50">Produit sélectionné</p>
-          <p className="mt-1 font-semibold">{product.name} — {product.duration}</p>
+          <p className="mt-1 font-semibold">{displayName} — {displayDuration}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
