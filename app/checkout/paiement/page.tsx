@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { StepIndicator } from "@/components/StepIndicator";
 import { PaypalButton } from "@/components/PaypalButton";
 import { product } from "@/lib/config";
+import { getProductBySlug } from "@/lib/catalog";
 import { paypalClientIdPublic } from "@/lib/paypal";
 
 export default function PaiementPage() {
@@ -20,6 +21,13 @@ function PaiementContent() {
   const params = useSearchParams();
   const name = params.get("name") || "";
   const email = params.get("email") || "";
+  const itemSlug = params.get("item");
+  const catalogItem = getProductBySlug(itemSlug);
+
+  const productSlug = catalogItem ? catalogItem.slug : product.slug;
+  const productName = catalogItem ? catalogItem.name : product.name;
+  const productDuration = catalogItem ? catalogItem.category : product.duration;
+  const priceTotal = catalogItem ? catalogItem.priceTotal : product.priceTotal;
 
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
@@ -31,13 +39,13 @@ function PaiementContent() {
         <div className="mt-6 rounded-xl2 border border-panelBorder bg-panel/60 p-5">
           <h2 className="font-display text-lg">RÉCAPITULATIF</h2>
           <div className="mt-4 space-y-3 text-sm">
-            <Row label="Produit" value={product.name} />
-            <Row label="Durée" value={product.duration} />
+            <Row label="Produit" value={productName} />
+            <Row label="Durée" value={productDuration} />
             <Row label="Client" value={`${name} · ${email}`} />
             <div className="h-px bg-panelBorder" />
             <Row
               label="Montant total"
-              value={`${product.priceTotal.toFixed(2)} €`}
+              value={`${priceTotal.toFixed(2)} €`}
               emphasize
             />
           </div>
@@ -52,6 +60,7 @@ function PaiementContent() {
             clientId={paypalClientIdPublic}
             customerName={name}
             customerEmail={email}
+            productSlug={productSlug}
           />
         </div>
       </div>
