@@ -23,7 +23,7 @@ export default function CatalogProductPage({ params }: { params: { slug: string 
         <StepIndicator current={1} />
 
         <div
-          className={`card-glow relative mt-6 rounded-xl2 border border-panelBorder bg-panel p-6 ${t.glow}`}
+          className={`card-glow glass-panel relative mt-6 rounded-xl2 border border-panelBorder p-6 ${t.glow}`}
         >
           <div
             className={`icon-halo flex h-16 w-16 items-center justify-center rounded-2xl border bg-white/5 ${t.iconBox}`}
