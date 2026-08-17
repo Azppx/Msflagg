@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 type Tone = "electric" | "violet" | "gold" | "teal";
@@ -153,6 +153,18 @@ const categories: ServiceCategory[] = [
 export function ServicesCarousel() {
   const [current, setCurrent] = useState(0);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const trackWrapperRef = useRef<HTMLDivElement | null>(null);
+  const [cardWidth, setCardWidth] = useState<number | null>(null);
+
+  useEffect(() => {
+    const el = trackWrapperRef.current;
+    if (!el) return;
+    const update = () => setCardWidth(el.clientWidth);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   function goTo(index: number) {
     const clamped = Math.max(0, Math.min(categories.length - 1, index));
@@ -171,7 +183,7 @@ export function ServicesCarousel() {
     <section className="animate-fadeUp">
       {/* Horizontal category tabs */}
       <div
-        className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [&::-webkit-scrollbar]:hidden"
+        className="edge-fade-x flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden"
         style={{ scrollbarWidth: "none" }}
       >
         {categories.map((cat, i) => {
@@ -194,7 +206,7 @@ export function ServicesCarousel() {
       </div>
 
       {/* Swipeable card carousel */}
-      <div className="relative mt-5">
+      <div ref={trackWrapperRef} className="relative mt-5">
         <button
           aria-label="Catégorie précédente"
           onClick={() => goTo(current - 1)}
@@ -213,7 +225,7 @@ export function ServicesCarousel() {
         </button>
 
         <div
-          className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-8 pb-2 [&::-webkit-scrollbar]:hidden"
+          className="flex snap-x snap-mandatory overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden"
           style={{ scrollbarWidth: "none" }}
         >
           {categories.map((cat, i) => {
@@ -224,7 +236,8 @@ export function ServicesCarousel() {
                 ref={(el) => {
                   cardRefs.current[i] = el;
                 }}
-                className={`card-glow relative w-[85%] shrink-0 snap-center rounded-xl2 border bg-panel p-6 text-center ${t.cardBorder} ${t.cardShadow}`}
+                style={{ width: cardWidth ? `${cardWidth}px` : "100%", flex: "0 0 auto" }}
+                className={`card-glow relative snap-center rounded-xl2 border bg-panel p-6 text-center ${t.cardBorder} ${t.cardShadow}`}
               >
                 {cat.badge && (
                   <span
