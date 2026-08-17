@@ -7,6 +7,8 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const productSlug = body?.productSlug;
+    const customerName = typeof body?.customerName === "string" ? body.customerName : "";
+    const customerEmail = typeof body?.customerEmail === "string" ? body.customerEmail : "";
 
     // Le prix n'est JAMAIS lu depuis le corps de la requête : il est
     // recalculé ici, côté serveur, à partir du slug produit uniquement.
@@ -28,7 +30,10 @@ export async function POST(req: NextRequest) {
       amount: price.amount,
       currency: price.currency,
       status: "CREATED",
+      fulfillment: "PENDING",
       paypalOrderId: paypalOrder.id,
+      customerName,
+      customerEmail,
       createdAt: new Date().toISOString(),
     });
 
