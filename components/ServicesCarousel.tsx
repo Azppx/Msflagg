@@ -365,3 +365,4 @@ function TruckIcon() {
       <circle cx="16.5" cy="18" r="1.6" fill="currentColor" stroke="none" />
     </svg>
   );
+}
