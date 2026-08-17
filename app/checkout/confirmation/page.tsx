@@ -31,7 +31,7 @@ export default function ConfirmationPage({
               <h2 className="font-display mt-6 text-3xl">COMMANDE LIVRÉE ✓</h2>
               <p className="mt-3 text-white/60">Voici tes accès, merci pour ta commande.</p>
 
-              <div className="mt-6 rounded-xl2 border border-electric/40 bg-panel/60 p-5 text-left">
+              <div className="glass-panel mt-6 rounded-xl2 border border-electric/40 p-5 text-left">
                 <p className="text-xs font-semibold tracking-widest text-electric-soft">
                   TA LIVRAISON
                 </p>
@@ -40,7 +40,7 @@ export default function ConfirmationPage({
                 </p>
               </div>
 
-              <div className="mt-4 rounded-xl2 border border-panelBorder bg-panel/60 p-5 text-left">
+              <div className="glass-panel mt-4 rounded-xl2 border border-panelBorder p-5 text-left">
                 <p className="text-xs font-semibold tracking-widest text-white/40">
                   NUMÉRO DE COMMANDE
                 </p>
@@ -72,7 +72,7 @@ export default function ConfirmationPage({
                 24h.
               </p>
 
-              <div className="mt-6 rounded-xl2 border border-panelBorder bg-panel/60 p-5 text-left">
+              <div className="glass-panel mt-6 rounded-xl2 border border-panelBorder p-5 text-left">
                 <p className="text-xs font-semibold tracking-widest text-white/40">
                   NUMÉRO DE COMMANDE
                 </p>
