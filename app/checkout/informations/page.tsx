@@ -50,7 +50,7 @@ function InformationsContent() {
       <div className="px-5">
         <StepIndicator current={2} />
 
-        <div className="mt-6 rounded-xl2 border border-panelBorder bg-panel/60 p-4">
+        <div className="glass-panel mt-6 rounded-xl2 border border-panelBorder p-4">
           <p className="text-sm text-white/50">Produit sélectionné</p>
           <p className="mt-1 font-semibold">{displayName} — {displayDuration}</p>
         </div>
