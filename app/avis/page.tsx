@@ -10,7 +10,7 @@ export default function AvisPage() {
         {reviews.map((r, i) => (
           <div
             key={i}
-            className="card-glow rounded-xl2 border border-panelBorder bg-panel/60 p-5"
+            className="card-glow glass-panel rounded-xl2 border border-panelBorder p-5"
           >
             <div className="text-accent" aria-label={`${r.rating} étoiles`}>
               {"★".repeat(r.rating)}
