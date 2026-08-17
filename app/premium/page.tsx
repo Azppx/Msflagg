@@ -27,7 +27,7 @@ export default function PremiumCatalogPage() {
           return (
             <div
               key={item.slug}
-              className={`card-glow relative rounded-xl2 border border-panelBorder bg-panel/70 p-6 ${t.glow}`}
+              className={`card-glow glass-panel relative rounded-xl2 border border-panelBorder p-6 ${t.glow}`}
             >
               <div className="flex items-start justify-between">
                 <div
