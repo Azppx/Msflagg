@@ -11,7 +11,7 @@ export default function ProductPage() {
       <div className="px-5">
         <StepIndicator current={1} />
 
-        <div className="card-glow-accent relative mt-6 rounded-xl2 border border-accent/40 bg-panel p-6">
+        <div className="card-glow-accent glass-panel relative mt-6 rounded-xl2 border border-accent/40 p-6">
           <span className="absolute -top-3 right-5 rounded-full bg-accent px-3 py-1 text-[11px] font-bold tracking-widest text-black">
             {product.badge}
           </span>
