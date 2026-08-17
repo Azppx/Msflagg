@@ -5,7 +5,7 @@ export const catalogToneClasses: Record<
   { glow: string; iconBox: string; category: string; cta: string; pill: string; dot: string }
 > = {
   electric: {
-    glow: "shadow-[0_0_60px_-25px_rgba(46,110,255,0.5)]",
+    glow: "shadow-[0_0_90px_-15px_rgba(46,110,255,0.7)]",
     iconBox: "border-electric/40 text-electric-soft",
     category: "text-electric-soft",
     cta: "bg-electric text-white hover:bg-electric-soft",
@@ -13,7 +13,7 @@ export const catalogToneClasses: Record<
     dot: "bg-electric",
   },
   violet: {
-    glow: "shadow-[0_0_60px_-25px_rgba(139,92,246,0.5)]",
+    glow: "shadow-[0_0_90px_-15px_rgba(139,92,246,0.7)]",
     iconBox: "border-violet/40 text-violet-soft",
     category: "text-violet-soft",
     cta: "bg-violet text-white hover:bg-violet-soft",
@@ -21,7 +21,7 @@ export const catalogToneClasses: Record<
     dot: "bg-violet",
   },
   gold: {
-    glow: "shadow-[0_0_60px_-25px_rgba(245,197,24,0.45)]",
+    glow: "shadow-[0_0_90px_-15px_rgba(245,197,24,0.65)]",
     iconBox: "border-gold/40 text-gold-soft",
     category: "text-gold-soft",
     cta: "bg-gold text-black hover:bg-gold-soft",
@@ -29,7 +29,7 @@ export const catalogToneClasses: Record<
     dot: "bg-gold",
   },
   teal: {
-    glow: "shadow-[0_0_60px_-25px_rgba(45,212,191,0.5)]",
+    glow: "shadow-[0_0_90px_-15px_rgba(45,212,191,0.7)]",
     iconBox: "border-teal/40 text-teal-soft",
     category: "text-teal-soft",
     cta: "bg-teal text-black hover:bg-teal-soft",
@@ -37,7 +37,7 @@ export const catalogToneClasses: Record<
     dot: "bg-teal",
   },
   danger: {
-    glow: "shadow-[0_0_60px_-25px_rgba(255,59,59,0.45)]",
+    glow: "shadow-[0_0_90px_-15px_rgba(255,59,59,0.65)]",
     iconBox: "border-danger/40 text-danger",
     category: "text-danger",
     cta: "bg-danger text-white hover:opacity-90",
@@ -45,7 +45,7 @@ export const catalogToneClasses: Record<
     dot: "bg-danger",
   },
   accent: {
-    glow: "shadow-[0_0_60px_-25px_rgba(255,138,0,0.5)]",
+    glow: "shadow-[0_0_90px_-15px_rgba(255,138,0,0.7)]",
     iconBox: "border-accent/40 text-accent-soft",
     category: "text-accent-soft",
     cta: "bg-accent text-black hover:bg-accent-soft",
@@ -53,7 +53,7 @@ export const catalogToneClasses: Record<
     dot: "bg-accent",
   },
   green: {
-    glow: "shadow-[0_0_60px_-25px_rgba(34,197,94,0.5)]",
+    glow: "shadow-[0_0_90px_-15px_rgba(34,197,94,0.7)]",
     iconBox: "border-green/40 text-green-soft",
     category: "text-green-soft",
     cta: "bg-green text-black hover:bg-green-soft",
