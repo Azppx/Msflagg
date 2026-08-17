@@ -44,7 +44,7 @@ export function PaypalButton({
             const res = await fetch("/api/paypal/create-order", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ productSlug }),
+              body: JSON.stringify({ productSlug, customerName, customerEmail }),
             });
             const data = await res.json();
             if (!res.ok) {
