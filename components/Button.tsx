@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ButtonHTMLAttributes } from "react";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "secondary" | "ghost" | "custom";
 
 const variantClasses: Record<Variant, string> = {
   primary:
@@ -10,6 +10,8 @@ const variantClasses: Record<Variant, string> = {
     "bg-electric text-white font-bold shadow-[0_8px_24px_-8px_rgba(46,110,255,0.5)] hover:bg-electric-soft hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-8px_rgba(46,110,255,0.6)] active:translate-y-0 active:scale-[0.97] active:duration-100",
   ghost:
     "bg-white/5 text-white border border-panelBorder hover:bg-white/10 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] active:duration-100",
+  custom:
+    "font-bold hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] active:duration-100",
 };
 
 const base =
@@ -18,14 +20,16 @@ const base =
 export function ButtonLink({
   href,
   variant = "primary",
+  className = "",
   children,
 }: {
   href: string;
   variant?: Variant;
+  className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <Link href={href} className={`${base} ${variantClasses[variant]}`}>
+    <Link href={href} className={`${base} ${variantClasses[variant]} ${className}`}>
       {children}
     </Link>
   );
