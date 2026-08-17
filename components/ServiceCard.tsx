@@ -28,7 +28,7 @@ export function ServiceCard({
   return (
     <Link
       href={href}
-      className={`card-glow group relative block overflow-hidden rounded-xl2 border border-panelBorder bg-panel/70 p-6 text-center transition-all duration-300 ease-out will-change-transform hover:-translate-y-1 hover:bg-panel/90 active:translate-y-0 active:scale-[0.97] active:duration-100 ${borderHover}`}
+      className={`card-glow glass-panel group relative block overflow-hidden rounded-xl2 border border-panelBorder p-6 text-center transition-all duration-300 ease-out will-change-transform hover:-translate-y-1 hover:backdrop-brightness-125 active:translate-y-0 active:scale-[0.97] active:duration-100 ${borderHover}`}
     >
       <span
         aria-hidden
