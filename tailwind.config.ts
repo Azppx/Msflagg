@@ -32,6 +32,10 @@ const config: Config = {
           DEFAULT: "#2DD4BF",
           soft: "#7EEDE1",
         },
+        green: {
+          DEFAULT: "#22C55E",
+          soft: "#6EE7A0",
+        },
       },
       borderRadius: {
         xl2: "1.5rem",
