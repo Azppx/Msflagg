@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { product } from "@/lib/config";
 
 declare global {
   interface Window {
@@ -14,10 +13,12 @@ export function PaypalButton({
   clientId,
   customerName,
   customerEmail,
+  productSlug,
 }: {
   clientId: string;
   customerName: string;
   customerEmail: string;
+  productSlug: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -43,7 +44,7 @@ export function PaypalButton({
             const res = await fetch("/api/paypal/create-order", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ productSlug: product.slug }),
+              body: JSON.stringify({ productSlug }),
             });
             const data = await res.json();
             if (!res.ok) {
@@ -95,7 +96,7 @@ export function PaypalButton({
     script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=EUR&intent=capture`;
     script.onload = render;
     document.body.appendChild(script);
-  }, [clientId, router]);
+  }, [clientId, router, productSlug]);
 
   if (!clientId) {
     return (
