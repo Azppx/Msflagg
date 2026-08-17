@@ -1,4 +1,5 @@
 import { product } from "./config";
+import { getProductBySlug } from "./catalog";
 
 /**
  * Source de vérité côté serveur pour le prix.
@@ -10,12 +11,22 @@ export function getServerPrice(productSlug: string): {
   currency: string;
   name: string;
 } {
-  if (productSlug !== product.slug) {
-    throw new Error("Produit inconnu");
+  if (productSlug === product.slug) {
+    return {
+      amount: product.priceTotal.toFixed(2),
+      currency: product.currency,
+      name: `${product.name} — ${product.duration}`,
+    };
   }
-  return {
-    amount: product.priceTotal.toFixed(2),
-    currency: product.currency,
-    name: `${product.name} — ${product.duration}`,
-  };
+
+  const catalogItem = getProductBySlug(productSlug);
+  if (catalogItem) {
+    return {
+      amount: catalogItem.priceTotal.toFixed(2),
+      currency: catalogItem.currency,
+      name: `${catalogItem.name} — ${catalogItem.category}`,
+    };
+  }
+
+  throw new Error("Produit inconnu");
 }
