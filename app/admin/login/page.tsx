@@ -52,5 +52,4 @@ export default function AdminLoginPage() {
         </button>
       </form>
     </main>
-  );
-}
+  )
