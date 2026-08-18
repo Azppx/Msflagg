@@ -12,11 +12,11 @@ export async function POST(
     return NextResponse.json({ error: "Non autorisé." }, { status: 401 });
   }
 
-  const order = getOrder(params.id);
+  const order = await getOrder(params.id);
   if (!order) {
     return NextResponse.json({ error: "Commande introuvable." }, { status: 404 });
   }
 
-  const updated = updateOrder(params.id, { status: "PAID" });
+  const updated = await updateOrder(params.id, { status: "PAID" });
   return NextResponse.json({ ok: true, order: updated });
 }
