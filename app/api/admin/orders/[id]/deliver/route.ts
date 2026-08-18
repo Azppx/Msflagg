@@ -15,11 +15,11 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json({ error: "Contenu de livraison requis." }, { status: 400 });
   }
 
-  const order = getOrder(params.id);
+  const order = await getOrder(params.id);
   if (!order) {
     return NextResponse.json({ error: "Commande introuvable." }, { status: 404 });
   }
 
-  const updated = deliverOrder(params.id, content);
+  const updated = await deliverOrder(params.id, content);
   return NextResponse.json({ ok: true, order: updated });
 }
