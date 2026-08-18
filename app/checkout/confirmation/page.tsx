@@ -4,12 +4,12 @@ import { ButtonLink } from "@/components/Button";
 import { getOrder } from "@/lib/orders";
 import { discordConfig } from "@/lib/config";
 
-export default function ConfirmationPage({
+export default async function ConfirmationPage({
   searchParams,
 }: {
   searchParams: { orderId?: string };
 }) {
-  const order = searchParams.orderId ? getOrder(searchParams.orderId) : null;
+  const order = searchParams.orderId ? await getOrder(searchParams.orderId) : null;
   const isDelivered = order?.status === "PAID" && order?.fulfillment === "DELIVERED";
   const isPaidPending = order?.status === "PAID" && order?.fulfillment !== "DELIVERED";
   const isAwaitingVerification = order?.status === "AWAITING_VERIFICATION";
