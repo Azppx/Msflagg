@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { catalogProducts } from "@/lib/catalog";
-import { CatalogIcon, catalogToneClasses } from "@/components/catalog-icons";
+import { CatalogIcon, catalogToneClasses, catalogToneRgb } from "@/components/catalog-icons";
 
 export default function PremiumCatalogPage() {
   return (
@@ -25,37 +25,44 @@ export default function PremiumCatalogPage() {
         {catalogProducts.map((item) => {
           const t = catalogToneClasses[item.tone];
           return (
-            <div
+            <Link
               key={item.slug}
-              className={`card-glow glass-panel relative rounded-xl2 border border-panelBorder p-6 ${t.glow}`}
+              href={`/produit/${item.slug}`}
+              className="pulse-card glass-panel group block border border-panelBorder"
+              style={
+                {
+                  "--tone-rgb": catalogToneRgb[item.tone],
+                  "--tone-hover-border": `rgba(${catalogToneRgb[item.tone]},0.4)`,
+                } as React.CSSProperties
+              }
             >
-              <div className="flex items-start justify-between">
+              <div className="flex items-start justify-between gap-3">
                 <div
-                  className={`icon-halo flex h-16 w-16 items-center justify-center rounded-2xl border bg-white/5 ${t.iconBox}`}
+                  className={`pulse-logo flex h-[60px] w-[60px] items-center justify-center ${t.iconBox}`}
                 >
                   <CatalogIcon name={item.icon} />
                 </div>
-                <span
-                  className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold tracking-wide ${t.pill}`}
-                >
-                  <span className={`h-1.5 w-1.5 rounded-full ${t.dot}`} />
+                <span className="pulse-badge">
+                  <span className="dot" />
                   {item.priceTotal} €
                 </span>
               </div>
 
-              <p className={`mt-5 text-xs font-semibold tracking-widest ${t.category}`}>
+              <p className={`mt-5 text-xs font-bold uppercase tracking-widest ${t.category}`}>
                 {item.category}
               </p>
-              <h2 className="font-display mt-1 text-2xl">{item.name}</h2>
-              <p className="mt-2 text-sm text-white/50">{item.description}</p>
+              <h2 className="font-display mt-1.5 text-[1.7rem] leading-tight tracking-tight">
+                {item.name}
+              </h2>
+              <p className="mt-2.5 text-sm leading-relaxed text-white/55">{item.description}</p>
 
-              <Link
-                href={`/produit/${item.slug}`}
-                className={`mt-5 inline-flex items-center gap-1 text-sm font-semibold text-white/80 hover:text-white`}
-              >
-                Explorer <span aria-hidden>↗</span>
-              </Link>
-            </div>
+              <span className="pulse-explore mt-5 inline-flex items-center text-[0.95rem] font-bold text-white/80 group-hover:text-white">
+                Explorer
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7 17L17 7M17 7H8M17 7v9" />
+                </svg>
+              </span>
+            </Link>
           );
         })}
       </div>
