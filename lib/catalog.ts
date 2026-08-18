@@ -50,8 +50,8 @@ export const catalogProducts: CatalogProduct[] = [
   },
   {
     slug: "basic-fit",
-    name: "Basic-Fit Ultimate",
-    category: "2 MOIS",
+    name: "Basic-Fit",
+    category: "ULTIMATE · 2 MOIS",
     priceTotal: 10,
     currency: "EUR",
     description: "Abonnement Basic-Fit Ultimate 2 mois, accès à tous les clubs en Europe.",
