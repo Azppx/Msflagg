@@ -13,11 +13,10 @@ export type Order = {
   productName: string;
   amount: string;
   currency: string;
-  status: "CREATED" | "PAID" | "FAILED";
+  status: "CREATED" | "AWAITING_VERIFICATION" | "PAID" | "FAILED";
   fulfillment: "PENDING" | "DELIVERED";
   deliveryContent?: string;
   deliveredAt?: string;
-  paypalOrderId?: string;
   customerName?: string;
   customerEmail?: string;
   createdAt: string;

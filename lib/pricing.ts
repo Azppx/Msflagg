@@ -3,7 +3,7 @@ import { getProductBySlug } from "./catalog";
 
 /**
  * Source de vérité côté serveur pour le prix.
- * Les routes API PayPal appellent CETTE fonction — jamais une valeur
+ * Les routes API de commande appellent CETTE fonction — jamais une valeur
  * envoyée par le navigateur — pour déterminer le montant à facturer.
  */
 export function getServerPrice(productSlug: string): {
