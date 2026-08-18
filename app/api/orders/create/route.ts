@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     // recalculé ici, côté serveur, à partir du slug produit uniquement.
     const price = getServerPrice(productSlug);
 
-    const order = createOrder({
+    const order = await createOrder({
       id: generateOrderId(),
       productSlug,
       productName: price.name,
