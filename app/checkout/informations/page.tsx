@@ -7,6 +7,7 @@ import { StepIndicator } from "@/components/StepIndicator";
 import { Button } from "@/components/Button";
 import { product } from "@/lib/config";
 import { getProductBySlug } from "@/lib/catalog";
+import { catalogToneClasses } from "@/components/catalog-icons";
 
 export default function InformationsPage() {
   return (
@@ -23,6 +24,7 @@ function InformationsContent() {
   const catalogItem = getProductBySlug(itemSlug);
   const displayName = catalogItem ? catalogItem.name : product.name;
   const displayDuration = catalogItem ? catalogItem.category : product.duration;
+  const ctaClass = catalogItem ? catalogToneClasses[catalogItem.tone].cta : "";
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -86,7 +88,11 @@ function InformationsContent() {
 
           {error && <p className="text-sm text-danger">{error}</p>}
 
-          <Button type="submit" variant="primary" className="mt-2">
+          <Button
+            type="submit"
+            variant={catalogItem ? "custom" : "primary"}
+            className={`mt-2 ${ctaClass}`}
+          >
             CONTINUER →
           </Button>
         </form>
