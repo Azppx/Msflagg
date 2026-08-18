@@ -19,7 +19,7 @@ export default function HomePage() {
 
       <div className="mt-10 flex flex-col gap-6 animate-fadeUp">
         <ServiceCard
-          href={`/produit`}
+          href={`/produit/${product.slug}`}
           accent="accent"
           badge={`${product.priceTotal.toFixed(0)} €`}
           eyebrow={product.category}
