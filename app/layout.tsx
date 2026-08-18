@@ -1,6 +1,21 @@
 import type { Metadata } from "next";
+import { Inter, Archivo_Black } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/config";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const archivoBlack = Archivo_Black({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-archivo-black",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: `${siteConfig.brandName} — ${siteConfig.brandTagline}`,
@@ -13,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" className={`${inter.variable} ${archivoBlack.variable}`}>
       <body className="min-h-screen bg-midnight text-white antialiased">
         <div className="pointer-events-none fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 bg-dot-grid opacity-70" />
