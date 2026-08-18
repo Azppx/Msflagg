@@ -1,11 +1,13 @@
 /**
- * Stockage des commandes.
+ * Stockage des commandes — Upstash Redis (via l'intégration Vercel Marketplace
+ * "Upstash for Redis"). Persiste réellement les commandes entre les requêtes,
+ * contrairement à un stockage en mémoire qui se réinitialise sur Vercel.
  *
- * Implémentation en mémoire fournie pour que le projet soit exécutable
- * immédiatement. En production, remplace ce module par une vraie base
- * de données (Postgres, SQLite, Supabase, etc.) — l'interface ci-dessous
- * reste la même, seule l'implémentation change.
+ * Configuration requise (Vercel → Storage → ajouter "Upstash for Redis") :
+ * ça injecte automatiquement les variables d'environnement nécessaires.
  */
+
+import { Redis } from "@upstash/redis";
 
 export type Order = {
   id: string;
@@ -22,30 +24,60 @@ export type Order = {
   createdAt: string;
 };
 
-const orders = new Map<string, Order>();
+const ORDER_PREFIX = "order:";
+const INDEX_KEY = "orders:index";
 
-export function createOrder(order: Order) {
-  orders.set(order.id, order);
+let redisClient: Redis | null = null;
+
+function getRedis(): Redis {
+  if (redisClient) return redisClient;
+
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+
+  if (!url || !token) {
+    throw new Error(
+      "Base de données non configurée : ajoute l'intégration \"Upstash for Redis\" " +
+        "depuis Vercel → ton projet → Storage → Marketplace Database Providers, " +
+        "puis redéploie."
+    );
+  }
+
+  redisClient = new Redis({ url, token });
+  return redisClient;
+}
+
+export async function createOrder(order: Order): Promise<Order> {
+  const redis = getRedis();
+  await redis.set(`${ORDER_PREFIX}${order.id}`, order);
+  await redis.zadd(INDEX_KEY, { score: Date.parse(order.createdAt), member: order.id });
   return order;
 }
 
-export function getOrder(id: string) {
-  return orders.get(id) || null;
+export async function getOrder(id: string): Promise<Order | null> {
+  const redis = getRedis();
+  const order = await redis.get<Order>(`${ORDER_PREFIX}${id}`);
+  return order ?? null;
 }
 
-export function listOrders(): Order[] {
-  return Array.from(orders.values()).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+export async function listOrders(): Promise<Order[]> {
+  const redis = getRedis();
+  const ids = await redis.zrange<string[]>(INDEX_KEY, 0, -1, { rev: true });
+  if (!ids || ids.length === 0) return [];
+  const orders = await Promise.all(ids.map((id) => getOrder(id)));
+  return orders.filter((o): o is Order => o !== null);
 }
 
-export function updateOrder(id: string, patch: Partial<Order>) {
-  const existing = orders.get(id);
+export async function updateOrder(id: string, patch: Partial<Order>): Promise<Order | null> {
+  const existing = await getOrder(id);
   if (!existing) return null;
   const updated = { ...existing, ...patch };
-  orders.set(id, updated);
+  const redis = getRedis();
+  await redis.set(`${ORDER_PREFIX}${id}`, updated);
   return updated;
 }
 
-export function deliverOrder(id: string, content: string) {
+export async function deliverOrder(id: string, content: string): Promise<Order | null> {
   return updateOrder(id, {
     fulfillment: "DELIVERED",
     deliveryContent: content,
@@ -54,7 +86,7 @@ export function deliverOrder(id: string, content: string) {
 }
 
 export function generateOrderId() {
-  return `CMD-${Date.now().toString(36).toUpperCase()}-${Math.random()
+  return `PLS-${Date.now().toString(36).toUpperCase()}-${Math.random()
     .toString(36)
     .slice(2, 6)
     .toUpperCase()}`;
