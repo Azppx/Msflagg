@@ -4,10 +4,10 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { StepIndicator } from "@/components/StepIndicator";
-import { PaypalButton } from "@/components/PaypalButton";
+import { WisePaymentPanel } from "@/components/WisePaymentPanel";
 import { product } from "@/lib/config";
 import { getProductBySlug } from "@/lib/catalog";
-import { paypalClientIdPublic } from "@/lib/paypal";
+import { getWiseConfig } from "@/lib/wise";
 
 export default function PaiementPage() {
   return (
@@ -23,6 +23,7 @@ function PaiementContent() {
   const email = params.get("email") || "";
   const itemSlug = params.get("item");
   const catalogItem = getProductBySlug(itemSlug);
+  const wise = getWiseConfig();
 
   const productSlug = catalogItem ? catalogItem.slug : product.slug;
   const productName = catalogItem ? catalogItem.name : product.name;
@@ -56,11 +57,14 @@ function PaiementContent() {
         </p>
 
         <div className="mt-6">
-          <PaypalButton
-            clientId={paypalClientIdPublic}
+          <WisePaymentPanel
+            productSlug={productSlug}
             customerName={name}
             customerEmail={email}
-            productSlug={productSlug}
+            wiseAccountHolder={wise.accountHolder}
+            wiseEmail={wise.email}
+            wiseIban={wise.iban}
+            wisePaymentLink={wise.paymentLink}
           />
         </div>
       </div>
