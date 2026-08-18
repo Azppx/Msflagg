@@ -14,6 +14,7 @@ body {
 body {
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
 
 .bg-glow-radial {
@@ -76,6 +77,102 @@ body {
     black calc(100% - 20px),
     transparent 100%
   );
+}
+
+/* --- Pulse-style card recipe (from HTML preview) --- */
+
+.pulse-card {
+  position: relative;
+  border-radius: 1.5rem;
+  padding: 26px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  color: inherit;
+}
+
+.pulse-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 30% 0%,
+    rgba(var(--tone-rgb, 255, 138, 0), 0.1),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.pulse-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--tone-hover-border, rgba(255, 138, 0, 0.4));
+  box-shadow: 0 20px 50px -20px rgba(var(--tone-rgb, 255, 138, 0), 0.35);
+}
+
+.pulse-card:hover::before {
+  opacity: 1;
+}
+
+.pulse-card:active {
+  transform: translateY(-1px) scale(0.98);
+  transition-duration: 0.1s;
+}
+
+.pulse-logo {
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(var(--tone-rgb, 255, 138, 0), 0.25);
+  box-shadow: 0 0 30px -8px rgba(var(--tone-rgb, 255, 138, 0), 0.5);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pulse-card:hover .pulse-logo {
+  transform: scale(1.08) rotate(-2deg);
+}
+
+.pulse-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+}
+
+.pulse-badge .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgb(var(--tone-rgb, 255, 138, 0));
+  box-shadow: 0 0 10px 1px rgb(var(--tone-rgb, 255, 138, 0));
+}
+
+.pulse-explore {
+  position: relative;
+  gap: 6px;
+  transition: gap 0.25s ease;
+}
+
+.pulse-card:hover .pulse-explore {
+  gap: 10px;
+}
+
+.pulse-explore svg {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pulse-card:hover .pulse-explore svg {
+  transform: translate(2px, -2px);
 }
 
 /* Frosted-glass card background: lets the colored glow bleed through,

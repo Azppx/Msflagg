@@ -21,29 +21,37 @@ export default function HomePage() {
         <ServiceCard
           href={`/produit`}
           accent="accent"
+          badge={`${product.priceTotal.toFixed(0)} €`}
+          eyebrow={product.category}
           title={product.name}
-          subtitle={`${product.duration} · ${product.priceTotal.toFixed(0)}€ au total`}
+          description={product.description}
           icon={<DumbbellIcon />}
         />
         <ServiceCard
           href="/avis"
           accent="electric"
+          badge="GRATUIT"
+          eyebrow="Avis vérifiés"
           title="Avis Clients"
-          subtitle="Consultez les retours clients"
+          description="Consultez les retours clients"
           icon={<StarIcon />}
         />
         <ServiceCard
           href="/discord"
           accent="electric"
+          badge="GRATUIT"
+          eyebrow="Communauté"
           title="Discord"
-          subtitle="Rejoindre notre communauté"
+          description="Rejoindre notre communauté"
           icon={<DiscordIcon />}
         />
         <ServiceCard
           href="/support"
           accent="danger"
+          badge="24/7"
+          eyebrow="Assistance"
           title="Support"
-          subtitle="Besoin d'aide ? Contactez-nous"
+          description="Besoin d'aide ? Contactez-nous"
           icon={<SupportIcon />}
         />
       </div>
