@@ -1,54 +1,66 @@
 import Link from "next/link";
 
+type Accent = "electric" | "accent" | "danger";
+
+const toneVars: Record<Accent, { rgb: string; hover: string }> = {
+  electric: { rgb: "46,110,255", hover: "rgba(46,110,255,0.4)" },
+  accent: { rgb: "255,138,0", hover: "rgba(255,138,0,0.4)" },
+  danger: { rgb: "255,59,59", hover: "rgba(255,59,59,0.4)" },
+};
+
 export function ServiceCard({
   icon,
+  eyebrow,
   title,
-  subtitle,
+  description,
+  badge,
   href,
   accent = "electric",
 }: {
   icon: React.ReactNode;
+  eyebrow: string;
   title: string;
-  subtitle: string;
+  description: string;
+  badge: string;
   href: string;
-  accent?: "electric" | "accent" | "danger";
+  accent?: Accent;
 }) {
-  const glow = {
-    electric: "shadow-[0_0_40px_-10px_rgba(46,110,255,0.6)]",
-    accent: "shadow-[0_0_40px_-10px_rgba(255,138,0,0.6)]",
-    danger: "shadow-[0_0_40px_-10px_rgba(255,59,59,0.55)]",
-  }[accent];
-
-  const borderHover = {
-    electric: "hover:border-electric/50",
-    accent: "hover:border-accent/50",
-    danger: "hover:border-danger/50",
-  }[accent];
+  const tone = toneVars[accent];
 
   return (
     <Link
       href={href}
-      className={`card-glow glass-panel group relative block overflow-hidden rounded-xl2 border border-panelBorder p-6 text-center transition-all duration-300 ease-out will-change-transform hover:-translate-y-1 hover:backdrop-brightness-125 active:translate-y-0 active:scale-[0.97] active:duration-100 ${borderHover}`}
+      className="pulse-card glass-panel group block border border-panelBorder"
+      style={
+        {
+          "--tone-rgb": tone.rgb,
+          "--tone-hover-border": tone.hover,
+        } as React.CSSProperties
+      }
     >
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/[0.06] to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full"
-      />
-      <div
-        className={`icon-halo relative mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/5 transition-transform duration-300 ease-out group-hover:scale-110 group-active:scale-95 ${glow}`}
-      >
-        {icon}
-      </div>
-      <h3 className="relative font-display text-xl tracking-tight">{title}</h3>
-      <p className="relative mt-1 text-sm text-white/50">{subtitle}</p>
-      <span className="relative mt-5 inline-flex items-center gap-1 text-xs font-semibold tracking-widest text-white/70 transition-colors duration-300 group-hover:text-white">
-        DÉCOUVRIR{" "}
-        <span
-          aria-hidden
-          className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1"
-        >
-          →
+      <div className="flex items-start justify-between gap-3">
+        <div className="pulse-logo flex h-[60px] w-[60px] items-center justify-center">
+          {icon}
+        </div>
+        <span className="pulse-badge">
+          <span className="dot" />
+          {badge}
         </span>
+      </div>
+
+      <p className="mt-5 text-xs font-bold uppercase tracking-widest text-accent-soft">
+        {eyebrow}
+      </p>
+      <h3 className="font-display mt-1.5 text-[1.7rem] leading-tight tracking-tight">
+        {title}
+      </h3>
+      <p className="mt-2.5 text-sm leading-relaxed text-white/55">{description}</p>
+
+      <span className="pulse-explore mt-5 inline-flex items-center text-[0.95rem] font-bold text-accent">
+        Explorer
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M7 17L17 7M17 7H8M17 7v9" />
+        </svg>
       </span>
     </Link>
   );

@@ -1,5 +1,15 @@
 import type { CatalogTone } from "@/lib/catalog";
 
+export const catalogToneRgb: Record<CatalogTone, string> = {
+  electric: "46,110,255",
+  violet: "139,92,246",
+  gold: "245,197,24",
+  teal: "45,212,191",
+  danger: "255,59,59",
+  accent: "255,138,0",
+  green: "34,197,94",
+};
+
 export const catalogToneClasses: Record<
   CatalogTone,
   { glow: string; iconBox: string; category: string; cta: string; pill: string; dot: string }
