@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ServiceCard } from "@/components/ServiceCard";
 import { ServicesCarousel } from "@/components/ServicesCarousel";
 import { siteConfig, product } from "@/lib/config";
@@ -59,6 +60,12 @@ export default function HomePage() {
       <p className="mt-12 text-center text-[11px] tracking-widest text-white/25">
         {siteConfig.brandName} — PLATEFORME INDÉPENDANTE
       </p>
+      <Link
+        href="/admin/login"
+        className="mt-2 block text-center text-[11px] tracking-widest text-white/15 transition-colors hover:text-white/40"
+      >
+        Admin
+      </Link>
     </main>
   );
 }
