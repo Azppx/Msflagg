@@ -31,7 +31,19 @@ export default async function AdminOrdersPage() {
               <StatusBadge status={o.status} fulfillment={o.fulfillment} />
             </div>
 
-            <p className="mt-3 font-semibold">{o.productName}</p>
+            <div className="mt-3">
+              {o.items && o.items.length > 0 ? (
+                <ul className="space-y-0.5">
+                  {o.items.map((it, i) => (
+                    <li key={i} className="font-semibold">
+                      {it.name} {it.quantity > 1 && `×${it.quantity}`}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="font-semibold">{o.productName}</p>
+              )}
+            </div>
             <p className="text-sm text-white/50">
               {o.customerName || "—"} · {o.customerEmail || "—"}
             </p>
