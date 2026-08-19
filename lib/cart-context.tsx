@@ -21,7 +21,16 @@ type CartContextValue = {
   hydrated: boolean;
 };
 
-const CartContext = createContext<CartContextValue | null>(null);
+const CartContext = createContext<CartContextValue>({
+  items: [],
+  addItem: () => {},
+  updateQuantity: () => {},
+  removeItem: () => {},
+  clearCart: () => {},
+  totalCount: 0,
+  totalPrice: 0,
+  hydrated: false,
+});
 const STORAGE_KEY = "qulse_cart";
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -104,7 +113,5 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useCart() {
-  const ctx = useContext(CartContext);
-  if (!ctx) throw new Error("useCart doit être utilisé à l'intérieur de <CartProvider>");
-  return ctx;
+  return useContext(CartContext);
 }
