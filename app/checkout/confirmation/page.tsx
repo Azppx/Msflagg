@@ -47,8 +47,8 @@ export default async function ConfirmationPage({
               </p>
               <p className="mt-1 font-mono text-lg">{order?.id}</p>
               <div className="mt-4 h-px bg-panelBorder" />
-              <p className="mt-4 text-xs font-semibold tracking-widest text-white/40">PRODUIT</p>
-              <p className="mt-1">{order?.productName}</p>
+              <p className="mt-4 text-xs font-semibold tracking-widest text-white/40">PRODUIT(S)</p>
+              <OrderItemsList order={order} />
             </div>
 
             <div className="mt-8 flex flex-col gap-3">
@@ -144,7 +144,7 @@ function OrderRecap({
   statusLabel,
   statusTone,
 }: {
-  order: { id: string; productName: string } | null;
+  order: { id: string; productName: string; items?: { name: string; quantity: number }[] } | null;
   statusLabel: string;
   statusTone: "accent-soft" | "electric-soft";
 }) {
@@ -153,11 +153,30 @@ function OrderRecap({
       <p className="text-xs font-semibold tracking-widest text-white/40">NUMÉRO DE COMMANDE</p>
       <p className="mt-1 font-mono text-lg">{order?.id}</p>
       <div className="mt-4 h-px bg-panelBorder" />
-      <p className="mt-4 text-xs font-semibold tracking-widest text-white/40">PRODUIT</p>
-      <p className="mt-1">{order?.productName}</p>
+      <p className="mt-4 text-xs font-semibold tracking-widest text-white/40">PRODUIT(S)</p>
+      <OrderItemsList order={order} />
       <div className="mt-4 h-px bg-panelBorder" />
       <p className={`mt-4 text-xs font-semibold tracking-widest text-${statusTone}`}>STATUT</p>
       <p className="mt-1">{statusLabel}</p>
     </div>
   );
+}
+
+function OrderItemsList({
+  order,
+}: {
+  order: { productName: string; items?: { name: string; quantity: number }[] } | null;
+}) {
+  if (order?.items && order.items.length > 0) {
+    return (
+      <ul className="mt-1 space-y-1">
+        {order.items.map((item, i) => (
+          <li key={i} className="text-sm">
+            {item.name} {item.quantity > 1 && `×${item.quantity}`}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  return <p className="mt-1">{order?.productName}</p>;
 }
