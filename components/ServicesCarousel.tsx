@@ -86,7 +86,7 @@ const toneClasses: Record<
 const categories: ServiceCategory[] = [
   {
     id: "premium",
-    tabLabel: "Services キティちゃん",
+    tabLabel: "Services",
     badge: "RECOMMANDÉ",
     icon: <CrownIcon />,
     title: "Premium",
@@ -102,51 +102,6 @@ const categories: ServiceCategory[] = [
     tone: "electric",
     captionEyebrow: "LE SAVOIR-FAIRE DES PROS",
     captionText: "Le meilleur de nos services.",
-  },
-  {
-    id: "abonnement",
-    tabLabel: "Abonnement",
-    icon: <RefreshIcon />,
-    title: "Abonnement",
-    subtitle: "Abonnement à prix cassé.",
-    features: ["Prix réduit", "Livraison rapide", "Escrow disponible"],
-    ctaLabel: "Découvrir Abonnement",
-    href: "/produit",
-    tone: "violet",
-    captionEyebrow: "ÉCONOMISE SUR TES APPS PRÉFÉRÉES",
-    captionText: "Abonnement à prix cassé.",
-  },
-  {
-    id: "vip",
-    tabLabel: "VIP",
-    badge: "BIENTÔT DISPONIBLE",
-    icon: <DiamondIcon />,
-    title: "VIP",
-    subtitle: "Pronostics, Poker & Casino.",
-    features: [
-      "Section Pronostics",
-      "Section Poker",
-      "Section Casino",
-      "Accès Discord privé",
-    ],
-    ctaLabel: "Bientôt disponible",
-    disabled: true,
-    tone: "gold",
-    captionEyebrow: "SALON PRIVÉ",
-    captionText: "Pronostics, Poker & Casino.",
-  },
-  {
-    id: "fournisseur",
-    tabLabel: "Fournisseur",
-    icon: <TruckIcon />,
-    title: "Fournisseur",
-    subtitle: "Tous les fournisseurs vérifiés.",
-    features: ["Sourcing direct", "Contacts vérifiés", "Escrow disponible"],
-    ctaLabel: "Découvrir Fournisseur",
-    href: "/produit",
-    tone: "teal",
-    captionEyebrow: "SOURCING DIRECT & CONTACTS",
-    captionText: "Tous les fournisseurs vérifiés.",
   },
 ];
 
@@ -189,6 +144,7 @@ export function ServicesCarousel() {
   return (
     <section className="animate-fadeUp">
       {/* Horizontal category tabs */}
+      {categories.length > 1 && (
       <div
         className="edge-fade-x flex gap-2 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden"
         style={{ scrollbarWidth: "none" }}
@@ -211,9 +167,12 @@ export function ServicesCarousel() {
           );
         })}
       </div>
+      )}
 
       {/* Swipeable card carousel */}
       <div ref={trackWrapperRef} className="relative mt-5">
+        {categories.length > 1 && (
+        <>
         <button
           aria-label="Catégorie précédente"
           onClick={() => goTo(current - 1)}
@@ -230,6 +189,8 @@ export function ServicesCarousel() {
         >
           ›
         </button>
+        </>
+        )}
 
         <div
           className="flex snap-x snap-mandatory overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden"
@@ -312,6 +273,7 @@ export function ServicesCarousel() {
         </p>
         <p className="mt-1 text-sm text-white/50">{active.captionText}</p>
 
+        {categories.length > 1 && (
         <div className="mt-4 flex items-center justify-center gap-1.5">
           {categories.map((cat, i) => (
             <span
@@ -322,6 +284,7 @@ export function ServicesCarousel() {
             />
           ))}
         </div>
+        )}
       </div>
     </section>
   );
