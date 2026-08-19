@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { catalogProducts } from "@/lib/catalog";
 import { CatalogIcon, catalogToneClasses, catalogToneRgb } from "@/components/catalog-icons";
+import { CartHeaderLink } from "@/components/CartHeaderLink";
 
 export default function PremiumCatalogPage() {
   return (
@@ -13,12 +14,13 @@ export default function PremiumCatalogPage() {
         >
           ←
         </Link>
-        <div>
+        <div className="flex-1">
           <p className="text-xs font-semibold tracking-widest text-electric-soft">
             PULSE · PREMIUM
           </p>
           <h1 className="font-display text-2xl">Service Premium</h1>
         </div>
+        <CartHeaderLink />
       </div>
 
       <div className="mt-8 space-y-5">
