@@ -1,13 +1,16 @@
 import Link from "next/link";
+import { CartHeaderLink } from "@/components/CartHeaderLink";
 
 export function PageHeader({
   eyebrow,
   title,
   backHref,
+  showCart = false,
 }: {
   eyebrow: string;
   title: string;
   backHref?: string;
+  showCart?: boolean;
 }) {
   return (
     <header className="mb-8 flex items-start gap-4 px-5 pt-6">
@@ -20,7 +23,7 @@ export function PageHeader({
           ←
         </Link>
       )}
-      <div>
+      <div className="flex-1">
         <p className="text-xs font-semibold tracking-[0.2em] text-white/40">
           {eyebrow}
         </p>
@@ -29,6 +32,7 @@ export function PageHeader({
         </h1>
         <span className="mt-3 block h-1 w-14 rounded-full bg-accent" />
       </div>
+      {showCart && <CartHeaderLink />}
     </header>
   );
 }
