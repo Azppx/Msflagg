@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCart, CartItem } from "@/lib/cart-context";
+import { trackOrder } from "@/lib/order-tracking";
 
 export function WisePaymentPanel({
-  productSlug,
+  items,
   customerName,
   customerEmail,
   wiseAccountHolder,
@@ -12,7 +14,7 @@ export function WisePaymentPanel({
   wiseIban,
   wisePaymentLink,
 }: {
-  productSlug: string;
+  items: CartItem[];
   customerName: string;
   customerEmail: string;
   wiseAccountHolder: string;
@@ -21,6 +23,7 @@ export function WisePaymentPanel({
   wisePaymentLink: string;
 }) {
   const router = useRouter();
+  const { clearCart } = useCart();
   const [orderId, setOrderId] = useState<string | null>(null);
   const [amount, setAmount] = useState<string | null>(null);
   const [currency, setCurrency] = useState<string>("EUR");
@@ -34,7 +37,11 @@ export function WisePaymentPanel({
         const res = await fetch("/api/orders/create", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ productSlug, customerName, customerEmail }),
+          body: JSON.stringify({
+            items: items.map((i) => ({ slug: i.slug, quantity: i.quantity })),
+            customerName,
+            customerEmail,
+          }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Erreur lors de la création de la commande");
@@ -42,16 +49,21 @@ export function WisePaymentPanel({
           setOrderId(data.orderId);
           setAmount(data.amount);
           setCurrency(data.currency);
+          // La commande est créée : on la mémorise pour le suivi persistant
+          // et on vide le panier (la commande garde sa propre copie des articles).
+          trackOrder(data.orderId);
+          clearCart();
         }
       } catch (e: any) {
         if (!cancelled) setError(e.message || "Erreur");
       }
     }
-    createOrder();
+    if (items.length > 0) createOrder();
     return () => {
       cancelled = true;
     };
-  }, [productSlug, customerName, customerEmail]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleConfirmSent() {
     if (!orderId) return;
@@ -105,7 +117,8 @@ export function WisePaymentPanel({
 
       <p className="px-1 text-xs text-white/40">
         Une fois le virement envoyé, clique ci-dessous. Ta commande sera vérifiée manuellement
-        puis livrée sous 24h.
+        puis livrée sous 24h. Tu peux retrouver son statut à tout moment via l'icône 📦 en bas de
+        l'écran.
       </p>
 
       <button
