@@ -9,9 +9,17 @@
 
 import { Redis } from "@upstash/redis";
 
+export type OrderItem = {
+  slug: string;
+  name: string;
+  unitPrice: number;
+  quantity: number;
+};
+
 export type Order = {
   id: string;
-  productSlug: string;
+  items: OrderItem[];
+  productSlug?: string;
   productName: string;
   amount: string;
   currency: string;
