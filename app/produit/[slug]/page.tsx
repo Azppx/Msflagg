@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { StepIndicator } from "@/components/StepIndicator";
 import { ButtonLink } from "@/components/Button";
+import { AddToCartPanel } from "@/components/AddToCartPanel";
 import { catalogProducts, getProductBySlug } from "@/lib/catalog";
 import { CatalogIcon, catalogToneClasses } from "@/components/catalog-icons";
 
@@ -17,7 +18,7 @@ export default function CatalogProductPage({ params }: { params: { slug: string 
 
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow={item.category} title={item.name.toUpperCase()} backHref="/premium" />
+      <PageHeader eyebrow={item.category} title={item.name.toUpperCase()} backHref="/premium" showCart />
 
       <div className="px-5">
         <StepIndicator current={1} />
@@ -51,13 +52,13 @@ export default function CatalogProductPage({ params }: { params: { slug: string 
           </ul>
 
           <div className="mt-8 flex flex-col gap-3">
-            <ButtonLink
-              href={`/checkout/informations?item=${item.slug}`}
-              variant="custom"
-              className={t.cta}
-            >
-              ACHETER — {item.priceTotal}€
-            </ButtonLink>
+            <AddToCartPanel
+              slug={item.slug}
+              name={item.name}
+              unitPrice={item.priceTotal}
+              currency={item.currency}
+              ctaClass={t.cta}
+            />
             <ButtonLink href="/discord" variant="ghost">
               REJOINDRE LE DISCORD
             </ButtonLink>
