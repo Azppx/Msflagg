@@ -32,6 +32,10 @@ const config: Config = {
           DEFAULT: "#2DD4BF",
           soft: "#7EEDE1",
         },
+        indigo: {
+          DEFAULT: "#5865F2",
+          soft: "#8C95FF",
+        },
         green: {
           DEFAULT: "#22C55E",
           soft: "#6EE7A0",
