@@ -1,12 +1,13 @@
 import { PageHeader } from "@/components/PageHeader";
 import { StepIndicator } from "@/components/StepIndicator";
 import { ButtonLink } from "@/components/Button";
+import { AddToCartPanel } from "@/components/AddToCartPanel";
 import { product } from "@/lib/config";
 
 export default function ProductPage() {
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow={product.category} title={product.name.toUpperCase()} backHref="/" />
+      <PageHeader eyebrow={product.category} title={product.name.toUpperCase()} backHref="/" showCart />
 
       <div className="px-5">
         <StepIndicator current={1} />
@@ -40,9 +41,12 @@ export default function ProductPage() {
           </ul>
 
           <div className="mt-8 flex flex-col gap-3">
-            <ButtonLink href="/checkout/informations" variant="primary">
-              ACHETER — {product.priceTotal.toFixed(0)}€
-            </ButtonLink>
+            <AddToCartPanel
+              slug={product.slug}
+              name={`${product.name} — ${product.duration}`}
+              unitPrice={product.priceTotal}
+              currency={product.currency}
+            />
             <ButtonLink href="/discord" variant="ghost">
               REJOINDRE LE DISCORD
             </ButtonLink>
