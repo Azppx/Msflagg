@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ServiceCard } from "@/components/ServiceCard";
 import { ServicesCarousel } from "@/components/ServicesCarousel";
-import { siteConfig, product } from "@/lib/config";
+import { siteConfig } from "@/lib/config";
 
 export default function HomePage() {
   return (
@@ -20,31 +20,22 @@ export default function HomePage() {
 
       <div className="mt-10 flex flex-col gap-6 animate-fadeUp">
         <ServiceCard
-          href={`/produit/${product.slug}`}
-          accent="accent"
-          badge={`${product.priceTotal.toFixed(0)} €`}
-          eyebrow={product.category}
-          title={product.name}
-          description={product.description}
-          icon={<DumbbellIcon />}
+          href="/premium"
+          accent="electric"
+          badge="TEMPS RÉEL"
+          eyebrow="Catalogue"
+          title="Services Qulse"
+          description="Vos services en temps réel"
+          icon={<LightningIcon />}
         />
         <ServiceCard
           href="/avis"
           accent="electric"
           badge="GRATUIT"
           eyebrow="Avis vérifiés"
-          title="Avis Clients"
+          title="Avis"
           description="Consultez les retours clients"
           icon={<StarIcon />}
-        />
-        <ServiceCard
-          href="/discord"
-          accent="electric"
-          badge="GRATUIT"
-          eyebrow="Communauté"
-          title="Discord"
-          description="Rejoindre notre communauté"
-          icon={<DiscordIcon />}
         />
         <ServiceCard
           href="/support"
@@ -70,17 +61,6 @@ export default function HomePage() {
   );
 }
 
-function DumbbellIcon() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-      <path
-        d="M4 9v6M2 10v4M20 9v6M22 10v4M7 8.5v7M17 8.5v7M7 12h10"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 function LightningIcon() {
   return (
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
@@ -95,15 +75,6 @@ function StarIcon() {
         d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
         strokeLinejoin="round"
       />
-    </svg>
-  );
-}
-function DiscordIcon() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-      <circle cx="9" cy="12" r="1.2" fill="white" stroke="none" />
-      <circle cx="15" cy="12" r="1.2" fill="white" stroke="none" />
-      <path d="M7 5c3.3-1 6.7-1 10 0l1 4c1 3 1 6-.5 9-1.5-1-2.5-2-2.5-2s-1.5 1-3 1-3-1-3-1-1 1-2.5 2C5 18 5 15 6 12l1-7z" strokeLinejoin="round" />
     </svg>
   );
 }
