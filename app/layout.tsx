@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Inter, Archivo_Black } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/config";
+import { CartProvider } from "@/lib/cart-context";
+import { AuthProvider } from "@/lib/auth-context";
+import { OrderTrackerWidget } from "@/components/OrderTrackerWidget";
+import { TopBar } from "@/components/TopBar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -20,6 +24,17 @@ const archivoBlack = Archivo_Black({
 export const metadata: Metadata = {
   title: `${siteConfig.brandName} — ${siteConfig.brandTagline}`,
   description: "Boutique premium — offres et services.",
+  manifest: "/manifest.json",
+  themeColor: "#0a0e1a",
+  icons: {
+    icon: "/icons/icon-192.png",
+    apple: "/icons/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: siteConfig.brandName,
+  },
 };
 
 export default function RootLayout({
@@ -36,7 +51,15 @@ export default function RootLayout({
           <div className="bg-ambient-blob bg-ambient-blob--accent -top-24 left-1/2 h-72 w-72 -translate-x-1/2" />
           <div className="bg-ambient-blob bg-ambient-blob--electric -bottom-32 -right-16 h-80 w-80" />
         </div>
-        <div className="relative z-10">{children}</div>
+        <div className="relative z-10">
+          <AuthProvider>
+            <CartProvider>
+              <TopBar />
+              {children}
+              <OrderTrackerWidget />
+            </CartProvider>
+          </AuthProvider>
+        </div>
       </body>
     </html>
   );
