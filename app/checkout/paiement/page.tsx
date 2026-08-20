@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { StepIndicator } from "@/components/StepIndicator";
 import { ButtonLink } from "@/components/Button";
-import { WisePaymentPanel } from "@/components/WisePaymentPanel";
+import { GlowPaymentPanel } from "@/components/GlowPaymentPanel";
 import { useCart, CartItem } from "@/lib/cart-context";
 import { getWiseConfig } from "@/lib/wise";
 
@@ -25,8 +25,8 @@ function PaiementContent() {
   const cart = useCart();
 
   // On fige le contenu du panier au moment où l'étape paiement démarre :
-  // WisePaymentPanel vide le panier dès que la commande est créée, il ne
-  // faut donc pas re-lire le panier "en direct" ensuite (il redeviendrait vide).
+  // le panneau vide le panier dès que la commande est créée, il ne faut
+  // donc pas re-lire le panier "en direct" ensuite (il redeviendrait vide).
   const [snapshot, setSnapshot] = useState<CartItem[] | null>(null);
   useEffect(() => {
     if (cart.hydrated && snapshot === null) {
@@ -36,7 +36,6 @@ function PaiementContent() {
   }, [cart.hydrated]);
 
   const items = snapshot ?? [];
-  const total = items.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0);
 
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
@@ -57,47 +56,17 @@ function PaiementContent() {
         )}
 
         {items.length > 0 && (
-          <>
-            <div className="glass-panel mt-6 rounded-xl2 border border-panelBorder p-5">
-              <h2 className="font-display text-lg">RÉCAPITULATIF</h2>
-              <div className="mt-4 space-y-2 text-sm">
-                {items.map((item) => (
-                  <div key={item.slug} className="flex items-center justify-between">
-                    <span className="text-white/70">
-                      {item.name} {item.quantity > 1 && `×${item.quantity}`}
-                    </span>
-                    <span>{(item.unitPrice * item.quantity).toFixed(2)} €</span>
-                  </div>
-                ))}
-                <div className="h-px bg-panelBorder" />
-                <div className="flex items-center justify-between">
-                  <span className="text-white/50">Client</span>
-                  <span className="font-medium">{name} · {email}</span>
-                </div>
-                <div className="h-px bg-panelBorder" />
-                <div className="flex items-center justify-between">
-                  <span className="text-white/50">Montant total</span>
-                  <span className="font-display text-xl text-accent">{total.toFixed(2)} €</span>
-                </div>
-              </div>
-            </div>
-
-            <p className="mt-4 px-1 text-xs text-white/40">
-              Le montant facturé est vérifié côté serveur avant tout paiement.
-            </p>
-
-            <div className="mt-6">
-              <WisePaymentPanel
-                items={items}
-                customerName={name}
-                customerEmail={email}
-                wiseAccountHolder={wise.accountHolder}
-                wiseEmail={wise.email}
-                wiseIban={wise.iban}
-                wisePaymentLink={wise.paymentLink}
-              />
-            </div>
-          </>
+          <div className="bounce-in mt-6">
+            <GlowPaymentPanel
+              items={items}
+              customerName={name}
+              customerEmail={email}
+              wiseAccountHolder={wise.accountHolder}
+              wiseEmail={wise.email}
+              wiseIban={wise.iban}
+              wisePaymentLink={wise.paymentLink}
+            />
+          </div>
         )}
       </div>
     </main>
