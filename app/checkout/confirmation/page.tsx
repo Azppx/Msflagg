@@ -4,6 +4,10 @@ import { ButtonLink } from "@/components/Button";
 import { getOrder } from "@/lib/orders";
 import { discordConfig } from "@/lib/config";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+export const revalidate = 0;
+
 export default async function ConfirmationPage({
   searchParams,
 }: {
