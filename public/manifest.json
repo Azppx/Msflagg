@@ -1,7 +1,7 @@
 {
-  "name": "Qulse",
-  "short_name": "Qulse",
-  "description": "Qulse — services premium, abonnements et plus.",
+  "name": "Qluse",
+  "short_name": "Qluse",
+  "description": "Qluse — services premium, abonnements et plus.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0e1a",

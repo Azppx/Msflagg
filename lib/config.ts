@@ -7,7 +7,7 @@
  */
 
 export const siteConfig = {
-  brandName: "Qulse",
+  brandName: "Qluse",
   brandTagline: "NOS SERVICES",
 };
 

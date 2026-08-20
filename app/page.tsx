@@ -21,7 +21,7 @@ export default function HomePage() {
           accent="electric"
           badge="TEMPS RÉEL"
           eyebrow="Catalogue"
-          title="Services Qulse"
+          title="Services Qluse"
           description="Vos services en temps réel"
           icon={<LightningIcon />}
         />

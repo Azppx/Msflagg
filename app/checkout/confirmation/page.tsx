@@ -30,10 +30,10 @@ export default async function ConfirmationPage({
         <StepIndicator current={4} />
       </div>
 
-      <div className="px-5 pt-6 text-center animate-fadeUp">
+      <div className="px-5 pt-6 text-center bounce-in">
         {isDelivered && (
           <>
-            <div className="mx-auto mt-4 flex h-20 w-20 items-center justify-center rounded-full bg-electric/15 text-4xl animate-fadeUp">
+            <div className="mx-auto mt-4 flex h-20 w-20 items-center justify-center rounded-full bg-electric/15 text-4xl bounce-in">
               ✓
             </div>
             <h2 className="font-display mt-6 text-3xl">COMMANDE LIVRÉE ✓</h2>
@@ -71,7 +71,7 @@ export default async function ConfirmationPage({
 
         {isPaidPending && (
           <>
-            <div className="mx-auto mt-4 flex h-20 w-20 items-center justify-center rounded-full bg-accent/15 text-4xl animate-fadeUp">
+            <div className="mx-auto mt-4 flex h-20 w-20 items-center justify-center rounded-full bg-accent/15 text-4xl bounce-in">
               ⏳
             </div>
             <h2 className="font-display mt-6 text-3xl">PAIEMENT CONFIRMÉ ✓</h2>
@@ -103,7 +103,7 @@ export default async function ConfirmationPage({
 
         {isAwaitingVerification && (
           <>
-            <div className="mx-auto mt-4 flex h-20 w-20 items-center justify-center rounded-full bg-electric/15 text-4xl animate-fadeUp">
+            <div className="mx-auto mt-4 flex h-20 w-20 items-center justify-center rounded-full bg-electric/15 text-4xl bounce-in">
               ⏳
             </div>
             <h2 className="font-display mt-6 text-3xl">VIREMENT ANNONCÉ</h2>

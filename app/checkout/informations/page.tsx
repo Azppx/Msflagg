@@ -42,7 +42,7 @@ export default function InformationsPage() {
         )}
 
         {items.length > 0 && (
-          <>
+          <div className="bounce-in">
             <div className="glass-panel mt-6 rounded-xl2 border border-panelBorder p-4">
               <p className="text-sm text-white/50">Produits sélectionnés</p>
               <div className="mt-2 space-y-1.5">
@@ -99,7 +99,7 @@ export default function InformationsPage() {
                 CONTINUER →
               </Button>
             </form>
-          </>
+          </div>
         )}
       </div>
     </main>
