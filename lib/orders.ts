@@ -30,6 +30,8 @@ export type Order = {
   customerName?: string;
   customerEmail?: string;
   createdAt: string;
+  type?: "PURCHASE" | "WALLET_RECHARGE";
+  accountId?: string;
 };
 
 const ORDER_PREFIX = "order:";
@@ -59,7 +61,23 @@ export async function createOrder(order: Order): Promise<Order> {
   const redis = getRedis();
   await redis.set(`${ORDER_PREFIX}${order.id}`, order);
   await redis.zadd(INDEX_KEY, { score: Date.parse(order.createdAt), member: order.id });
+  if (order.accountId) {
+    await redis.zadd(`orders:by-account:${order.accountId}`, {
+      score: Date.parse(order.createdAt),
+      member: order.id,
+    });
+  }
   return order;
+}
+
+export async function listOrdersByAccount(accountId: string): Promise<Order[]> {
+  const redis = getRedis();
+  const ids = await redis.zrange<string[]>(`orders:by-account:${accountId}`, 0, -1, {
+    rev: true,
+  });
+  if (!ids || ids.length === 0) return [];
+  const orders = await Promise.all(ids.map((id) => getOrder(id)));
+  return orders.filter((o): o is Order => o !== null);
 }
 
 export async function getOrder(id: string): Promise<Order | null> {
