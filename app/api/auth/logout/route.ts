@@ -10,4 +10,3 @@ export async function POST(req: NextRequest) {
   res.cookies.delete(SESSION_COOKIE);
   return res;
 }
-

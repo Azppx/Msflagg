@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Archivo_Black } from "next/font/google";
+import { Inter, Archivo_Black, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/lib/config";
 import { CartProvider } from "@/lib/cart-context";
@@ -18,6 +18,13 @@ const archivoBlack = Archivo_Black({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-archivo-black",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-space-grotesk",
   display: "swap",
 });
 
@@ -43,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" className={`${inter.variable} ${archivoBlack.variable}`}>
+    <html lang="fr" className={`${inter.variable} ${archivoBlack.variable} ${spaceGrotesk.variable}`}>
       <body className="min-h-screen bg-midnight text-white antialiased">
         <div className="pointer-events-none fixed inset-0 overflow-hidden">
           <div className="absolute inset-0 bg-dot-grid opacity-70" />

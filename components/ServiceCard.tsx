@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useTilt } from "@/lib/useTilt";
 
 type Accent = "electric" | "accent" | "danger";
 
@@ -26,11 +29,16 @@ export function ServiceCard({
   accent?: Accent;
 }) {
   const tone = toneVars[accent];
+  const { ref, onPointerEnter, onPointerMove, onPointerLeave } = useTilt<HTMLAnchorElement>();
 
   return (
     <Link
+      ref={ref}
       href={href}
-      className="pulse-card glass-panel group block border border-panelBorder"
+      onPointerEnter={onPointerEnter}
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
+      className="pulse-card group block border border-panelBorder"
       style={
         {
           "--tone-rgb": tone.rgb,
@@ -51,7 +59,7 @@ export function ServiceCard({
       <p className="mt-5 text-xs font-bold uppercase tracking-widest text-accent-soft">
         {eyebrow}
       </p>
-      <h3 className="font-display mt-1.5 text-[1.7rem] leading-tight tracking-tight">
+      <h3 className="font-heading mt-1.5 text-[1.7rem] leading-tight tracking-tight">
         {title}
       </h3>
       <p className="mt-2.5 text-sm leading-relaxed text-white/55">{description}</p>

@@ -11,4 +11,3 @@ export async function GET(req: NextRequest) {
   const orders = await listOrdersByAccount(account.id);
   return NextResponse.json({ orders });
 }
-

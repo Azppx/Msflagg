@@ -32,7 +32,6 @@ export default function ComptePage() {
         </div>
 
         <div className="mt-4 flex flex-col gap-3">
-          <MenuLink href="/compte/portefeuille" title="Portefeuille" subtitle={`${account.walletBalance.toFixed(2)} € de crédit`} />
           <MenuLink href="/compte/commandes" title="Mes commandes" subtitle="Historique et suivi" />
           <MenuLink href="/support" title="Aide" subtitle="Support & SAV" />
         </div>

@@ -8,4 +8,3 @@ export async function GET(req: NextRequest) {
   if (!account) return NextResponse.json({ account: null });
   return NextResponse.json({ account: toPublicAccount(account) });
 }
-
