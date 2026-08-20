@@ -1,12 +1,7 @@
 /**
- * Comptes clients (email + mot de passe) et portefeuille "crédit interne".
- *
- * ⚠️ Le solde du portefeuille N'EST PAS de la monnaie électronique au sens
- * légal : il ne peut être ni transféré, ni remboursé, ni retiré en cash —
- * uniquement dépensé sur ce site, comme une carte cadeau. C'est un choix
- * volontaire pour éviter d'avoir besoin d'un agrément d'établissement de
- * monnaie électronique (EME). Ne transforme pas ce solde en un vrai système
- * de retrait/transfert sans validation juridique préalable.
+ * Comptes clients (email + mot de passe) et sessions.
+ * Le paiement se fait uniquement par virement bancaire (Wise) — pas de solde
+ * ou de portefeuille interne rattaché au compte.
  */
 import { randomBytes, randomUUID, scryptSync, timingSafeEqual } from "crypto";
 import { getRedis } from "./redis";
@@ -16,7 +11,6 @@ export type Account = {
   email: string;
   passwordHash: string;
   name: string;
-  walletBalance: number;
   createdAt: string;
 };
 
@@ -65,7 +59,6 @@ export async function createAccount(
     email: normalizedEmail,
     passwordHash: hashPassword(password),
     name: name.trim(),
-    walletBalance: 0,
     createdAt: new Date().toISOString(),
   };
 
@@ -91,23 +84,6 @@ export async function verifyLogin(email: string, password: string): Promise<Acco
   if (!account) return null;
   if (!verifyPassword(password, account.passwordHash)) return null;
   return account;
-}
-
-/**
- * Modifie le solde crédit de `delta` (positif pour créditer, négatif pour débiter).
- * Le solde ne descend jamais sous 0.
- */
-export async function adjustWalletBalance(
-  accountId: string,
-  delta: number
-): Promise<Account | null> {
-  const redis = getRedis();
-  const account = await getAccountById(accountId);
-  if (!account) return null;
-  const nextBalance = Math.max(0, Math.round((account.walletBalance + delta) * 100) / 100);
-  const updated = { ...account, walletBalance: nextBalance };
-  await redis.set(`${ACCOUNT_PREFIX}${accountId}`, updated);
-  return updated;
 }
 
 // --- Sessions ---

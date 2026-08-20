@@ -47,6 +47,7 @@ const config: Config = {
       fontFamily: {
         display: ["var(--font-archivo-black)", "Arial Black", "sans-serif"],
         body: ["var(--font-inter)", "system-ui", "sans-serif"],
+        heading: ["var(--font-space-grotesk)", "sans-serif"],
       },
       keyframes: {
         fadeUp: {

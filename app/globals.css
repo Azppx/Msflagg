@@ -18,10 +18,7 @@ body {
 }
 
 .bg-glow-radial {
-  background:
-    radial-gradient(55% 38% at 50% -5%, rgba(255, 138, 0, 0.16), transparent 62%),
-    radial-gradient(45% 28% at 90% 18%, rgba(255, 90, 20, 0.09), transparent 60%),
-    radial-gradient(40% 30% at 6% 92%, rgba(46, 110, 255, 0.07), transparent 60%);
+  background: radial-gradient(ellipse 140% 55% at 50% -15%, rgba(46, 110, 255, 0.18), transparent 65%);
 }
 
 /* Subtle dot-grid texture, like the reference screenshots */
@@ -79,58 +76,76 @@ body {
   );
 }
 
-/* --- Pulse-style card recipe (from HTML preview) --- */
+/* --- Glow 3D card recipe (identique aux maquettes HTML) --- */
 
 .pulse-card {
   position: relative;
-  border-radius: 1.5rem;
+  border-radius: 1.6rem;
   padding: 26px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none;
   color: inherit;
+  background:
+    radial-gradient(120% 90% at 22% 0%, rgba(var(--tone-rgb, 46, 110, 255), 0.3), transparent 60%),
+    rgba(255, 255, 255, 0.035);
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.12s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 10px 30px -18px rgba(var(--tone-rgb, 46, 110, 255), 0.5);
+  animation: cardFloat 6s ease-in-out infinite;
 }
 
+/* estompe le glow vers le bas/les bords, comme dans la référence */
+.pulse-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(80% 60% at 20% 0%, transparent 0%, #05070f 115%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* halo qui suit le curseur */
 .pulse-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    circle at 30% 0%,
-    rgba(var(--tone-rgb, 255, 138, 0), 0.1),
-    transparent 60%
-  );
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.1), transparent 60%);
   opacity: 0;
-  transition: opacity 0.35s ease;
+  transition: opacity 0.25s ease;
   pointer-events: none;
-}
-
-.pulse-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--tone-hover-border, rgba(255, 138, 0, 0.4));
-  box-shadow: 0 20px 50px -20px rgba(var(--tone-rgb, 255, 138, 0), 0.35);
+  z-index: 1;
 }
 
 .pulse-card:hover::before {
   opacity: 1;
 }
 
+.pulse-card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.pulse-card:hover {
+  border-color: var(--tone-hover-border, rgba(46, 110, 255, 0.4));
+  box-shadow: 0 22px 46px -18px rgba(var(--tone-rgb, 46, 110, 255), 0.55);
+}
+
 .pulse-card:active {
-  transform: translateY(-1px) scale(0.98);
   transition-duration: 0.1s;
+}
+
+@keyframes cardFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
 }
 
 .pulse-logo {
   border-radius: 16px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-  border: 1px solid rgba(var(--tone-rgb, 255, 138, 0), 0.25);
-  box-shadow: 0 0 30px -8px rgba(var(--tone-rgb, 255, 138, 0), 0.5);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.pulse-card:hover .pulse-logo {
-  transform: scale(1.08) rotate(-2deg);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(var(--tone-rgb, 46, 110, 255), 0.25);
+  box-shadow: 0 0 24px -6px rgba(var(--tone-rgb, 46, 110, 255), 0.55);
 }
 
 .pulse-badge {
@@ -139,9 +154,9 @@ body {
   align-items: center;
   gap: 7px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 999px;
-  padding: 7px 14px;
+  padding: 8px 14px;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -153,26 +168,33 @@ body {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: rgb(var(--tone-rgb, 255, 138, 0));
-  box-shadow: 0 0 10px 1px rgb(var(--tone-rgb, 255, 138, 0));
+  background: rgb(var(--tone-rgb, 46, 110, 255));
+  box-shadow: 0 0 8px 1px rgb(var(--tone-rgb, 46, 110, 255));
 }
 
 .pulse-explore {
   position: relative;
-  gap: 6px;
-  transition: gap 0.25s ease;
+  gap: 5px;
+  transition: gap 0.2s ease;
 }
 
 .pulse-card:hover .pulse-explore {
-  gap: 10px;
+  gap: 9px;
 }
 
 .pulse-explore svg {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s ease;
 }
 
 .pulse-card:hover .pulse-explore svg {
-  transform: translate(2px, -2px);
+  transform: translate(3px, -3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-card {
+    animation: none;
+    transition: none;
+  }
 }
 
 /* Frosted-glass card background: lets the colored glow bleed through,

@@ -32,13 +32,6 @@ export function SideMenu({ onClose }: { onClose: () => void }) {
                 subtitle="Mes commandes en cours"
                 onClick={onClose}
               />
-              <MenuItem
-                href="/compte/portefeuille"
-                icon="👛"
-                title="Portefeuille"
-                subtitle={`${account.walletBalance.toFixed(2)} € de crédit`}
-                onClick={onClose}
-              />
             </>
           ) : (
             <>

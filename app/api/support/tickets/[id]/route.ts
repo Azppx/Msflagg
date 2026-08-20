@@ -16,4 +16,3 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   if (!ticket) return NextResponse.json({ error: "Ticket introuvable." }, { status: 404 });
   return NextResponse.json({ ticket });
 }
-

@@ -1,18 +1,15 @@
 import Link from "next/link";
 import { ServiceCard } from "@/components/ServiceCard";
-import { ServicesCarousel } from "@/components/ServicesCarousel";
 import { siteConfig } from "@/lib/config";
 
 export default function HomePage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col px-5 pb-16 pt-12">
-      <ServicesCarousel />
-
-      <div className="mt-12 text-center">
+      <div className="text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-electric/40 bg-electric/10 px-4 py-1.5 text-xs font-semibold tracking-widest text-electric-soft">
           ✦ EXPLORE
         </span>
-        <h1 className="font-display mt-6 text-5xl tracking-tight text-white">
+        <h1 className="font-display mt-6 -skew-x-3 text-5xl italic uppercase leading-[0.95] tracking-tight text-white">
           {siteConfig.brandTagline}
         </h1>
         <span className="mx-auto mt-4 block h-1 w-16 rounded-full bg-gradient-to-r from-electric to-transparent" />

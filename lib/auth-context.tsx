@@ -6,7 +6,6 @@ export type PublicAccount = {
   id: string;
   email: string;
   name: string;
-  walletBalance: number;
   createdAt: string;
 };
 

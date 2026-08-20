@@ -11,4 +11,3 @@ export async function GET(req: NextRequest) {
   const tickets = await listTickets();
   return NextResponse.json({ tickets });
 }
-
