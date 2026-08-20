@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-type Tone = "electric" | "violet" | "gold" | "teal";
+type Tone = "electric" | "violet" | "gold" | "teal" | "indigo";
 
 type ServiceCategory = {
   id: string;
@@ -81,12 +81,23 @@ const toneClasses: Record<
     caption: "text-teal-soft",
     dot: "bg-teal",
   },
+  indigo: {
+    badge: "border-indigo/40 bg-indigo/10 text-indigo-soft",
+    iconBox: "border-indigo/40 text-indigo-soft shadow-[0_0_40px_-8px_rgba(88,101,242,0.6)]",
+    eyebrow: "text-indigo-soft",
+    check: "border-indigo/40 text-indigo-soft",
+    cta: "bg-indigo text-white hover:bg-indigo-soft",
+    cardBorder: "border-indigo/40",
+    cardShadow: "shadow-[0_0_90px_-12px_rgba(88,101,242,0.65)]",
+    caption: "text-indigo-soft",
+    dot: "bg-indigo",
+  },
 };
 
 const categories: ServiceCategory[] = [
   {
     id: "premium",
-    tabLabel: "Services",
+    tabLabel: "Premium",
     badge: "RECOMMANDÉ",
     icon: <CrownIcon />,
     title: "Premium",
@@ -102,6 +113,50 @@ const categories: ServiceCategory[] = [
     tone: "electric",
     captionEyebrow: "LE SAVOIR-FAIRE DES PROS",
     captionText: "Le meilleur de nos services.",
+  },
+  {
+    id: "abonnement",
+    tabLabel: "Abonnement",
+    icon: <RefreshIcon />,
+    title: "Abonnement",
+    subtitle: "Abonnement à prix cassé.",
+    features: ["Prix réduit", "Livraison rapide", "Escrow disponible"],
+    ctaLabel: "Découvrir Abonnement",
+    href: "/produit",
+    tone: "violet",
+    captionEyebrow: "ÉCONOMISE SUR TES APPS PRÉFÉRÉES",
+    captionText: "Abonnement à prix cassé.",
+  },
+  {
+    id: "discord",
+    tabLabel: "Discord",
+    icon: <ChatIcon />,
+    title: "Discord",
+    subtitle: "Nitro, Boost & Membres.",
+    features: [
+      "Nitro à prix cassé",
+      "Boosts instantanés",
+      "Membres garantis",
+      "Livraison 24/7",
+    ],
+    ctaLabel: "Découvrir Discord",
+    href: "/produit",
+    tone: "indigo",
+    captionEyebrow: "BOOST TON SERVEUR",
+    captionText: "Nitro, Boost & Membres.",
+  },
+  {
+    id: "fournisseur",
+    tabLabel: "Fournisseur",
+    icon: <TruckIcon />,
+    title: "Fournisseur",
+    subtitle: "Tous les fournisseurs vérifiés.",
+    features: ["Sourcing direct", "Contacts vérifiés", "Escrow disponible"],
+    ctaLabel: "Découvrir Fournisseur",
+    href: "/produit",
+    tone: "teal",
+    captionEyebrow: "SOURCING DIRECT & CONTACTS",
+    captionText: "Tous les fournisseurs vérifiés.",
   },
 ];
 
@@ -312,11 +367,14 @@ function RefreshIcon() {
     </svg>
   );
 }
-function DiamondIcon() {
+function ChatIcon() {
   return (
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M3 9l4-6h10l4 6-11 12L3 9z" strokeLinejoin="round" strokeLinecap="round" />
-      <path d="M3 9h18M9.5 3l-2 6 4.5 12 4.5-12-2-6" strokeLinejoin="round" strokeLinecap="round" />
+      <path
+        d="M4 4h16v12H8l-4 4V4z"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
