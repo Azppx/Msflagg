@@ -4,10 +4,15 @@ import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { ButtonLink } from "@/components/Button";
 import { QuantityStepper } from "@/components/QuantityStepper";
+import { GlowCard } from "@/components/GlowCard";
 import { useCart } from "@/lib/cart-context";
+import { getProductBySlug } from "@/lib/catalog";
+import { catalogToneRgb } from "@/components/catalog-icons";
 
 export default function PanierPage() {
   const { items, updateQuantity, removeItem, clearCart, totalPrice, hydrated } = useCart();
+  const firstTone = items[0] ? getProductBySlug(items[0].slug)?.tone : undefined;
+  const totalToneRgb = firstTone ? catalogToneRgb[firstTone] : catalogToneRgb.electric;
 
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
@@ -17,53 +22,57 @@ export default function PanierPage() {
         {!hydrated && <p className="text-sm text-white/40">Chargement…</p>}
 
         {hydrated && items.length === 0 && (
-          <div className="glass-panel mt-4 rounded-xl2 border border-panelBorder p-8 text-center">
+          <GlowCard toneRgb={catalogToneRgb.electric} className="bounce-in mt-4 text-center">
             <p className="text-4xl">🛒</p>
             <p className="mt-3 font-semibold">Ton panier est vide</p>
             <p className="mt-1 text-sm text-white/50">
               Ajoute des produits depuis le catalogue pour commencer.
             </p>
-            <ButtonLink href="/premium" variant="primary" className="mt-6">
+            <ButtonLink href="/premium" variant="custom" className="btn-glow-blue mt-6">
               VOIR LE CATALOGUE
             </ButtonLink>
-          </div>
+          </GlowCard>
         )}
 
         {hydrated && items.length > 0 && (
           <>
             <div className="mt-4 space-y-3">
-              {items.map((item) => (
-                <div
-                  key={item.slug}
-                  className="glass-panel rounded-xl2 border border-panelBorder p-4"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <p className="font-semibold">{item.name}</p>
-                      <p className="text-sm text-white/50">
-                        {item.unitPrice.toFixed(2)} {item.currency} / unité
-                      </p>
+              {items.map((item) => {
+                const tone = getProductBySlug(item.slug)?.tone;
+                const toneRgb = tone ? catalogToneRgb[tone] : catalogToneRgb.electric;
+                return (
+                  <GlowCard key={item.slug} toneRgb={toneRgb} className="bounce-in p-4">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="font-semibold">{item.name}</p>
+                        <p className="text-sm text-white/50">
+                          {item.unitPrice.toFixed(2)} {item.currency} / unité
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => removeItem(item.slug)}
+                        aria-label={`Retirer ${item.name}`}
+                        className="text-white/30 transition-colors hover:text-danger"
+                      >
+                        ✕
+                      </button>
                     </div>
-                    <button
-                      onClick={() => removeItem(item.slug)}
-                      aria-label={`Retirer ${item.name}`}
-                      className="text-white/30 transition-colors hover:text-danger"
-                    >
-                      ✕
-                    </button>
-                  </div>
 
-                  <div className="mt-4 flex items-center justify-between">
-                    <QuantityStepper
-                      value={item.quantity}
-                      onChange={(q) => updateQuantity(item.slug, q)}
-                    />
-                    <span className="font-display text-lg text-accent">
-                      {(item.unitPrice * item.quantity).toFixed(2)} {item.currency}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                    <div className="mt-4 flex items-center justify-between">
+                      <QuantityStepper
+                        value={item.quantity}
+                        onChange={(q) => updateQuantity(item.slug, q)}
+                      />
+                      <span
+                        className="font-display text-lg"
+                        style={{ color: `rgb(${toneRgb})` }}
+                      >
+                        {(item.unitPrice * item.quantity).toFixed(2)} {item.currency}
+                      </span>
+                    </div>
+                  </GlowCard>
+                );
+              })}
             </div>
 
             <button
@@ -73,17 +82,20 @@ export default function PanierPage() {
               Vider le panier
             </button>
 
-            <div className="glass-panel mt-6 rounded-xl2 border border-panelBorder p-5">
+            <GlowCard toneRgb={totalToneRgb} particles className="bounce-in mt-6">
               <div className="flex items-center justify-between">
                 <span className="text-white/50">Total</span>
-                <span className="font-display text-2xl text-accent">
+                <span
+                  className="font-display text-2xl"
+                  style={{ color: `rgb(${totalToneRgb})` }}
+                >
                   {totalPrice.toFixed(2)} €
                 </span>
               </div>
-            </div>
+            </GlowCard>
 
             <div className="mt-6 flex flex-col gap-3">
-              <ButtonLink href="/checkout/informations" variant="primary">
+              <ButtonLink href="/checkout/informations" variant="custom" className="btn-glow-blue">
                 PASSER COMMANDE →
               </ButtonLink>
               <Link

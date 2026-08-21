@@ -4,18 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart, CartItem } from "@/lib/cart-context";
 import { trackOrder } from "@/lib/order-tracking";
-import { CatalogIcon } from "@/components/catalog-icons";
+import { CatalogIcon, catalogToneRgb } from "@/components/catalog-icons";
 import { getProductBySlug } from "@/lib/catalog";
-
-const TONE_RGB: Record<string, string> = {
-  violet: "139,92,246",
-  green: "30,215,96",
-  accent: "255,138,0",
-  electric: "46,110,255",
-  teal: "45,212,191",
-  danger: "255,59,59",
-  gold: "245,197,24",
-};
 
 export function GlowPaymentPanel({
   items,
@@ -97,7 +87,7 @@ export function GlowPaymentPanel({
 
   const firstItem = items[0];
   const catalogItem = firstItem ? getProductBySlug(firstItem.slug) : null;
-  const toneRgb = catalogItem ? TONE_RGB[catalogItem.tone] || TONE_RGB.electric : TONE_RGB.electric;
+  const toneRgb = catalogItem ? catalogToneRgb[catalogItem.tone] || catalogToneRgb.electric : catalogToneRgb.electric;
 
   const displayTitle = items.length === 1 ? items[0].name : `${items.length} articles`;
   const displayDesc =

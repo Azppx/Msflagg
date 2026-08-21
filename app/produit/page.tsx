@@ -2,7 +2,10 @@ import { PageHeader } from "@/components/PageHeader";
 import { StepIndicator } from "@/components/StepIndicator";
 import { ButtonLink } from "@/components/Button";
 import { AddToCartPanel } from "@/components/AddToCartPanel";
+import { GlowCard } from "@/components/GlowCard";
 import { product } from "@/lib/config";
+
+const ACCENT_RGB = "255,138,0";
 
 export default function ProductPage() {
   return (
@@ -12,33 +15,41 @@ export default function ProductPage() {
       <div className="px-5">
         <StepIndicator current={1} />
 
-        <div className="card-glow-accent glass-panel relative mt-6 rounded-xl2 border border-accent/40 p-6">
+        <GlowCard toneRgb={ACCENT_RGB} particles className="bounce-in mt-6">
           <span className="absolute -top-3 right-5 rounded-full bg-accent px-3 py-1 text-[11px] font-bold tracking-widest text-black">
             {product.badge}
           </span>
 
-          <p className="text-xs font-semibold tracking-widest text-accent-soft">
+          <p
+            className="text-xs font-bold tracking-[3px] text-accent-soft"
+            style={{ textShadow: "0 0 12px rgba(255,138,0,0.5)" }}
+          >
             {product.duration.toUpperCase()}
           </p>
-          <h2 className="font-display mt-2 text-4xl">{product.duration}</h2>
+          <h2 className="mt-2 text-[1.9rem] font-extrabold leading-tight tracking-tight text-white">
+            {product.duration}
+          </h2>
 
-          <div className="mt-5 flex items-end gap-2">
-            <span className="font-display text-6xl text-white">
-              {product.priceTotal.toFixed(0)}€
-            </span>
-          </div>
-          <p className="mt-1 text-sm text-white/50">
+          <p
+            className="mt-5 text-[46px] font-extrabold leading-none text-white"
+            style={{ textShadow: "0 0 30px rgba(255,138,0,0.35)" }}
+          >
+            {product.priceTotal.toFixed(0)}€
+          </p>
+          <p className="mb-6 mt-2 text-sm font-medium text-white/45">
             {product.priceTotal.toFixed(2)}€ au total
           </p>
 
-          <ul className="mt-6 space-y-2">
+          <div className="flex flex-col gap-4">
             {product.features.map((f) => (
-              <li key={f} className="flex items-start gap-2 text-sm text-white/70">
-                <span className="mt-0.5 text-electric-soft">✓</span>
-                {f}
-              </li>
+              <div key={f} className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-accent text-[13px] text-accent-soft shadow-[0_0_10px_rgba(255,138,0,0.35)]">
+                  ✓
+                </span>
+                <span className="text-sm font-medium text-white/70">{f}</span>
+              </div>
             ))}
-          </ul>
+          </div>
 
           <div className="mt-8 flex flex-col gap-3">
             <AddToCartPanel
@@ -51,11 +62,9 @@ export default function ProductPage() {
               REJOINDRE LE DISCORD
             </ButtonLink>
           </div>
-        </div>
+        </GlowCard>
 
-        <p className="mt-6 px-1 text-sm leading-relaxed text-white/50">
-          {product.description}
-        </p>
+        <p className="mt-6 px-1 text-sm leading-relaxed text-white/50">{product.description}</p>
       </div>
     </main>
   );
