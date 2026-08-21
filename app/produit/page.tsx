@@ -1,5 +1,4 @@
 import { PageHeader } from "@/components/PageHeader";
-import { StepIndicator } from "@/components/StepIndicator";
 import { ButtonLink } from "@/components/Button";
 import { AddToCartPanel } from "@/components/AddToCartPanel";
 import { GlowCard } from "@/components/GlowCard";
@@ -13,7 +12,6 @@ export default function ProductPage() {
       <PageHeader eyebrow={product.category} title={product.name.toUpperCase()} backHref="/" showCart />
 
       <div className="px-5">
-        <StepIndicator current={1} />
 
         <GlowCard toneRgb={ACCENT_RGB} particles className="bounce-in mt-6">
           <span className="absolute -top-3 right-5 rounded-full bg-accent px-3 py-1 text-[11px] font-bold tracking-widest text-black">

@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
-import { StepIndicator } from "@/components/StepIndicator";
 import { ButtonLink } from "@/components/Button";
 import { AddToCartPanel } from "@/components/AddToCartPanel";
 import { GlowCard } from "@/components/GlowCard";
@@ -22,7 +21,6 @@ export default function CatalogProductPage({ params }: { params: { slug: string 
       <PageHeader eyebrow={item.category} title={item.name.toUpperCase()} backHref="/premium" showCart />
 
       <div className="px-5">
-        <StepIndicator current={1} />
 
         <GlowCard toneRgb={toneRgb} particles className="bounce-in mt-6">
           <p
