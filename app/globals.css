@@ -301,9 +301,9 @@ button {
 }
 
 @keyframes iconSheen {
-  0% { background-position: 140% -40%; }
-  50% { background-position: -40% 140%; }
-  100% { background-position: 140% -40%; }
+  0% { background-position: 140% 50%; }
+  50% { background-position: -40% 50%; }
+  100% { background-position: 140% 50%; }
 }
 
 /* --- Rebond à l'ouverture d'une catégorie / carte --- */
@@ -363,26 +363,28 @@ button {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.09) 48%, rgba(255, 255, 255, 0.02) 55%, transparent 65%);
-  background-size: 250% 250%;
+  background: linear-gradient(90deg, transparent 35%, rgba(255, 255, 255, 0.09) 48%, rgba(255, 255, 255, 0.02) 55%, transparent 65%);
+  background-size: 250% 100%;
   animation: sheenMove 6s ease-in-out infinite;
   pointer-events: none;
   mix-blend-mode: screen;
 }
 
 @keyframes sheenMove {
-  0% { background-position: 120% -20%; }
-  50% { background-position: -20% 120%; }
-  100% { background-position: 120% -20%; }
+  0% { background-position: 130% 50%; }
+  50% { background-position: -30% 50%; }
+  100% { background-position: 130% 50%; }
 }
 
 .glow-particle {
   position: absolute;
-  width: 5px;
-  height: 5px;
+  z-index: 2;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--tone-rgb, 46, 110, 255), 0.9), rgba(var(--tone-rgb, 46, 110, 255), 0));
-  filter: blur(1px);
+  background: radial-gradient(circle, rgba(var(--tone-rgb, 46, 110, 255), 1), rgba(var(--tone-rgb, 46, 110, 255), 0));
+  box-shadow: 0 0 8px 1px rgba(var(--tone-rgb, 46, 110, 255), 0.7);
+  filter: blur(0.5px);
   pointer-events: none;
   animation: particleDrift 6s ease-in-out infinite;
 }
