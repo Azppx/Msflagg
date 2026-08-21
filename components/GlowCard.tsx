@@ -1,6 +1,6 @@
 export function GlowCard({
   toneRgb = "46,110,255",
-  particles = false,
+  particles = true,
   className = "",
   children,
 }: {
@@ -17,9 +17,11 @@ export function GlowCard({
       <div className="glow-poster-sheen" />
       {particles && (
         <>
-          <span className="glow-particle" style={{ top: "10%", left: "8%" }} />
-          <span className="glow-particle" style={{ top: "70%", left: "90%", animationDelay: "1.2s" }} />
-          <span className="glow-particle" style={{ top: "85%", left: "18%", animationDelay: "2.4s" }} />
+          <span className="glow-particle" style={{ top: "8%", left: "6%" }} />
+          <span className="glow-particle" style={{ top: "18%", right: "10%", animationDelay: "0.8s" }} />
+          <span className="glow-particle" style={{ top: "62%", right: "8%", animationDelay: "1.6s" }} />
+          <span className="glow-particle" style={{ bottom: "12%", left: "14%", animationDelay: "2.4s" }} />
+          <span className="glow-particle" style={{ bottom: "22%", right: "22%", animationDelay: "3.2s" }} />
         </>
       )}
       <div className="relative z-[1]">{children}</div>
