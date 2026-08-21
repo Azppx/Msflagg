@@ -1,10 +1,10 @@
 export function GlowCard({
   toneRgb = "46,110,255",
-  particles = false,
   className = "",
   children,
 }: {
   toneRgb?: string;
+  /** @deprecated les particules sont maintenant un effet de fond global, plus par carte. */
   particles?: boolean;
   className?: string;
   children: React.ReactNode;
@@ -15,13 +15,6 @@ export function GlowCard({
       style={{ "--tone-rgb": toneRgb } as React.CSSProperties}
     >
       <div className="glow-poster-sheen" />
-      {particles && (
-        <>
-          <span className="glow-particle" style={{ top: "10%", left: "8%" }} />
-          <span className="glow-particle" style={{ top: "70%", left: "90%", animationDelay: "1.2s" }} />
-          <span className="glow-particle" style={{ top: "85%", left: "18%", animationDelay: "2.4s" }} />
-        </>
-      )}
       <div className="relative z-[1]">{children}</div>
     </div>
   );

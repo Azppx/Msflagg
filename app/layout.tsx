@@ -57,6 +57,12 @@ export default function RootLayout({
           <div className="absolute inset-0 bg-glow-radial" />
           <div className="bg-ambient-blob bg-ambient-blob--accent -top-24 left-1/2 h-72 w-72 -translate-x-1/2" />
           <div className="bg-ambient-blob bg-ambient-blob--electric -bottom-32 -right-16 h-80 w-80" />
+          <span className="glow-particle" style={{ "--tone-rgb": "46,110,255", top: "12%", left: "10%" } as React.CSSProperties} />
+          <span className="glow-particle" style={{ "--tone-rgb": "255,138,0", top: "22%", right: "14%", animationDelay: "0.8s" } as React.CSSProperties} />
+          <span className="glow-particle" style={{ "--tone-rgb": "139,92,246", top: "48%", left: "6%", animationDelay: "1.6s" } as React.CSSProperties} />
+          <span className="glow-particle" style={{ "--tone-rgb": "46,110,255", top: "65%", right: "10%", animationDelay: "2.4s" } as React.CSSProperties} />
+          <span className="glow-particle" style={{ "--tone-rgb": "45,212,191", top: "82%", left: "16%", animationDelay: "3.2s" } as React.CSSProperties} />
+          <span className="glow-particle" style={{ "--tone-rgb": "255,138,0", top: "90%", right: "20%", animationDelay: "4s" } as React.CSSProperties} />
         </div>
         <div className="relative z-10">
           <AuthProvider>
