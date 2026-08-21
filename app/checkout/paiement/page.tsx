@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
+import { StepIndicator } from "@/components/StepIndicator";
 import { ButtonLink } from "@/components/Button";
 import { GlowPaymentPanel } from "@/components/GlowPaymentPanel";
 import { GlowCard } from "@/components/GlowCard";
@@ -43,6 +44,7 @@ function PaiementContent() {
       <PageHeader eyebrow="ÉTAPE 3 / 4" title="PAIEMENT" backHref="/checkout/informations" />
 
       <div className="px-5">
+        <StepIndicator current={3} />
 
         {snapshot === null && <p className="mt-6 text-sm text-white/40">Chargement…</p>}
 
