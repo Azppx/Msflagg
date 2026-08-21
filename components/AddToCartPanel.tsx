@@ -11,12 +11,14 @@ export function AddToCartPanel({
   unitPrice,
   currency,
   ctaClass,
+  ctaStyle,
 }: {
   slug: string;
   name: string;
   unitPrice: number;
   currency: string;
   ctaClass?: string;
+  ctaStyle?: React.CSSProperties;
 }) {
   const router = useRouter();
   const { addItem } = useCart();
@@ -43,7 +45,8 @@ export function AddToCartPanel({
 
       <button
         onClick={handleBuyNow}
-        className={`w-full rounded-2xl px-6 py-4 text-sm font-bold tracking-wide text-black transition-all duration-300 ${
+        style={ctaStyle}
+        className={`glow-cta relative overflow-hidden w-full rounded-2xl px-6 py-4 text-sm font-bold tracking-wide text-black transition-all duration-300 ${
           ctaClass || "bg-accent hover:bg-accent-soft"
         }`}
       >

@@ -418,6 +418,30 @@ button {
   100% { left: 120%; }
 }
 
+/* Bouton bleu "brillant" — Continuer / Passer commande, identique au CTA de la maquette */
+.btn-glow-blue {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #5c94ff, #2e6eff);
+  color: #04101f;
+  box-shadow: 0 18px 40px -12px rgba(46, 110, 255, 0.55);
+}
+
+.btn-glow-blue:hover {
+  background: linear-gradient(180deg, #6fa0ff, #3f7bff);
+}
+
+.btn-glow-blue::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: ctaShine 3s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .glow-poster::before,
   .glow-poster-sheen,

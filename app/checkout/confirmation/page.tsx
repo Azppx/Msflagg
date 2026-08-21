@@ -1,6 +1,7 @@
 import { PageHeader } from "@/components/PageHeader";
 import { StepIndicator } from "@/components/StepIndicator";
 import { ButtonLink } from "@/components/Button";
+import { GlowCard } from "@/components/GlowCard";
 import { getOrder } from "@/lib/orders";
 import { discordConfig } from "@/lib/config";
 
@@ -39,16 +40,16 @@ export default async function ConfirmationPage({
             <h2 className="font-display mt-6 text-3xl">COMMANDE LIVRÉE ✓</h2>
             <p className="mt-3 text-white/60">Voici tes accès, merci pour ta commande.</p>
 
-            <div className="glass-panel mt-6 rounded-xl2 border border-electric/40 p-5 text-left">
+            <GlowCard toneRgb="46,110,255" particles className="mt-6 text-left">
               <p className="text-xs font-semibold tracking-widest text-electric-soft">
                 TA LIVRAISON
               </p>
               <p className="mt-2 whitespace-pre-wrap text-sm text-white/90">
                 {order?.deliveryContent}
               </p>
-            </div>
+            </GlowCard>
 
-            <div className="glass-panel mt-4 rounded-xl2 border border-panelBorder p-5 text-left">
+            <GlowCard toneRgb="46,110,255" className="mt-4 text-left">
               <p className="text-xs font-semibold tracking-widest text-white/40">
                 NUMÉRO DE COMMANDE
               </p>
@@ -56,7 +57,7 @@ export default async function ConfirmationPage({
               <div className="mt-4 h-px bg-panelBorder" />
               <p className="mt-4 text-xs font-semibold tracking-widest text-white/40">PRODUIT(S)</p>
               <OrderItemsList order={order} />
-            </div>
+            </GlowCard>
 
             <div className="mt-8 flex flex-col gap-3">
               <ButtonLink href={discordConfig.inviteUrl} variant="secondary">
@@ -155,8 +156,9 @@ function OrderRecap({
   statusLabel: string;
   statusTone: "accent-soft" | "electric-soft";
 }) {
+  const toneRgb = statusTone === "accent-soft" ? "255,138,0" : "46,110,255";
   return (
-    <div className="glass-panel mt-6 rounded-xl2 border border-panelBorder p-5 text-left">
+    <GlowCard toneRgb={toneRgb} particles className="mt-6 text-left">
       <p className="text-xs font-semibold tracking-widest text-white/40">NUMÉRO DE COMMANDE</p>
       <p className="mt-1 font-mono text-lg">{order?.id}</p>
       <div className="mt-4 h-px bg-panelBorder" />
@@ -165,7 +167,7 @@ function OrderRecap({
       <div className="mt-4 h-px bg-panelBorder" />
       <p className={`mt-4 text-xs font-semibold tracking-widest text-${statusTone}`}>STATUT</p>
       <p className="mt-1">{statusLabel}</p>
-    </div>
+    </GlowCard>
   );
 }
 

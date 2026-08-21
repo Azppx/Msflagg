@@ -6,6 +6,8 @@ import { PageHeader } from "@/components/PageHeader";
 import { StepIndicator } from "@/components/StepIndicator";
 import { ButtonLink } from "@/components/Button";
 import { GlowPaymentPanel } from "@/components/GlowPaymentPanel";
+import { GlowCard } from "@/components/GlowCard";
+import { catalogToneRgb } from "@/components/catalog-icons";
 import { useCart, CartItem } from "@/lib/cart-context";
 import { getWiseConfig } from "@/lib/wise";
 
@@ -47,12 +49,12 @@ function PaiementContent() {
         {snapshot === null && <p className="mt-6 text-sm text-white/40">Chargement…</p>}
 
         {snapshot !== null && items.length === 0 && (
-          <div className="glass-panel mt-6 rounded-xl2 border border-panelBorder p-6 text-center">
+          <GlowCard toneRgb={catalogToneRgb.electric} className="bounce-in mt-6 text-center">
             <p className="text-sm text-white/60">Ton panier est vide.</p>
-            <ButtonLink href="/premium" variant="primary" className="mt-4">
+            <ButtonLink href="/premium" variant="custom" className="btn-glow-blue mt-4">
               VOIR LE CATALOGUE
             </ButtonLink>
-          </div>
+          </GlowCard>
         )}
 
         {items.length > 0 && (
