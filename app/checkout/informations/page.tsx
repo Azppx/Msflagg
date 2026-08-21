@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
+import { StepIndicator } from "@/components/StepIndicator";
 import { Button, ButtonLink } from "@/components/Button";
 import { GlowCard } from "@/components/GlowCard";
 import { useCart } from "@/lib/cart-context";
@@ -34,6 +35,7 @@ export default function InformationsPage() {
       <PageHeader eyebrow="ÉTAPE 2 / 4" title="TES INFORMATIONS" backHref="/panier" />
 
       <div className="px-5">
+        <StepIndicator current={2} />
 
         {hydrated && items.length === 0 && (
           <GlowCard toneRgb={catalogToneRgb.electric} className="bounce-in mt-6 text-center">

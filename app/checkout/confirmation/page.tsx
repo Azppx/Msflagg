@@ -1,4 +1,5 @@
 import { PageHeader } from "@/components/PageHeader";
+import { StepIndicator } from "@/components/StepIndicator";
 import { ButtonLink } from "@/components/Button";
 import { GlowCard } from "@/components/GlowCard";
 import { getOrder } from "@/lib/orders";
@@ -25,6 +26,10 @@ export default async function ConfirmationPage({
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
       <PageHeader eyebrow="ÉTAPE 4 / 4" title="CONFIRMATION" />
+
+      <div className="px-5">
+        <StepIndicator current={4} />
+      </div>
 
       <div className="px-5 pt-6 text-center bounce-in">
         {isDelivered && (
