@@ -136,6 +136,17 @@ export function CatalogIcon({ name }: { name: string }) {
           <circle cx="6" cy="18" r="2" />
         </svg>
       );
+    case "gift":
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <rect x="3" y="9" width="18" height="11" rx="1" strokeLinejoin="round" />
+          <path d="M3 9h18M12 9v11" strokeLinecap="round" />
+          <path
+            d="M12 9c-1-3-4-5-5.5-3.5S8 9 12 9c4 0 6.5-1.9 5.5-3.5S13 6 12 9z"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
     case "office":
       return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

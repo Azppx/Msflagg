@@ -1,11 +1,28 @@
 import Link from "next/link";
 import { ServiceCard } from "@/components/ServiceCard";
+import { GlowCard } from "@/components/GlowCard";
 import { siteConfig } from "@/lib/config";
+import { catalogToneRgb } from "@/components/catalog-icons";
 
 export default function HomePage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col px-5 pb-16 pt-12">
-      <div className="text-center">
+    <main className="mx-auto flex min-h-screen max-w-md flex-col px-5 pb-16 pt-8">
+      <Link href="/produit/pack-basicfit-netflix" className="block">
+        <GlowCard toneRgb={catalogToneRgb.gold} className="sweep-banner text-center">
+          <p className="text-[11px] font-bold tracking-[2px] text-[#F5C518]">🔥 OFFRE LIMITÉE</p>
+          <p className="mt-2 text-xl font-extrabold leading-snug text-white">
+            1 compte Basic-Fit Ultimate
+            <br />+ 2 comptes Netflix Premium
+          </p>
+          <p className="mt-2 text-sm text-white/60">en pack, pour seulement</p>
+          <p className="mt-1 text-3xl font-extrabold text-[#F5C518]">25€</p>
+          <p className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-[#F5C518]">
+            Voir l'offre →
+          </p>
+        </GlowCard>
+      </Link>
+
+      <div className="mt-10 text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-electric/40 bg-electric/10 px-4 py-1.5 text-xs font-semibold tracking-widest text-electric-soft">
           ✦ EXPLORE
         </span>
