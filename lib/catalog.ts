@@ -60,6 +60,23 @@ export const catalogProducts: CatalogProduct[] = [
     icon: "dumbbell",
   },
   {
+    slug: "pack-basicfit-netflix",
+    name: "Pack Basic-Fit + 2 Netflix",
+    category: "OFFRE PACK · LIMITÉE",
+    priceTotal: 25,
+    currency: "EUR",
+    description:
+      "1 compte Basic-Fit Ultimate + 2 comptes Netflix Premium 4K, en pack, pour 25€.",
+    features: [
+      "1 compte Basic-Fit Ultimate",
+      "2 comptes Netflix Premium 4K",
+      "Accès immédiat après paiement",
+      "Support dédié via Discord",
+    ],
+    tone: "gold",
+    icon: "gift",
+  },
+  {
     slug: "iptv",
     name: "IPTV",
     category: "SERVEUR 4K · 1 AN",
