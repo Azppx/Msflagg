@@ -180,6 +180,26 @@ body {
   box-shadow: 0 0 24px -6px rgba(var(--tone-rgb, 46, 110, 255), 0.55);
 }
 
+/* Variante centrée du pulse-card, identique au .svc-card de la maquette
+   "Nos services" (icône ronde 84px, tout centré, pas de badge). */
+.pulse-card.svc-card-style {
+  padding: 40px 22px 30px;
+  text-align: center;
+}
+
+.icon-ring-84 {
+  width: 84px;
+  height: 84px;
+  border-radius: 1.4rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(var(--tone-rgb, 46, 110, 255), 0.4);
+  box-shadow: 0 0 34px -6px rgba(var(--tone-rgb, 46, 110, 255), 0.65);
+}
+
+.pulse-card.svc-card-style:hover .pulse-explore {
+  color: rgb(var(--tone-rgb, 46, 110, 255));
+}
+
 .pulse-badge {
   position: relative;
   display: inline-flex;

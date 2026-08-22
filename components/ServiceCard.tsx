@@ -16,7 +16,6 @@ export function ServiceCard({
   eyebrow,
   title,
   description,
-  badge,
   href,
   accent = "electric",
 }: {
@@ -24,7 +23,8 @@ export function ServiceCard({
   eyebrow: string;
   title: string;
   description: string;
-  badge: string;
+  /** @deprecated conservé pour compat, plus affiché — le style .svc-card n'a pas de badge */
+  badge?: string;
   href: string;
   accent?: Accent;
 }) {
@@ -38,7 +38,7 @@ export function ServiceCard({
       onPointerEnter={onPointerEnter}
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
-      className="pulse-card group block border border-panelBorder"
+      className="pulse-card svc-card-style group block border border-panelBorder"
       style={
         {
           "--tone-rgb": tone.rgb,
@@ -46,27 +46,16 @@ export function ServiceCard({
         } as React.CSSProperties
       }
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="pulse-logo flex h-[60px] w-[60px] items-center justify-center">
-          {icon}
-        </div>
-        <span className="pulse-badge">
-          <span className="dot" />
-          {badge}
-        </span>
-      </div>
+      <div className="icon-ring-84 mx-auto flex items-center justify-center">{icon}</div>
 
-      <p className="mt-5 text-xs font-bold uppercase tracking-widest text-accent-soft">
-        {eyebrow}
-      </p>
-      <h3 className="font-heading mt-1.5 text-[1.7rem] leading-tight tracking-tight">
+      <h2 className="font-heading mt-[22px] text-[23px] font-bold leading-tight tracking-tight">
         {title}
-      </h3>
-      <p className="mt-2.5 text-sm leading-relaxed text-white/55">{description}</p>
+      </h2>
+      <p className="mt-2 text-[13.5px] text-white/55">{description}</p>
 
-      <span className="pulse-explore mt-5 inline-flex items-center text-[0.95rem] font-bold text-accent">
-        Explorer
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <span className="pulse-explore mt-[22px] inline-flex items-center justify-center gap-1.5 text-[11.5px] font-bold uppercase tracking-[0.1em] text-white/35">
+        Découvrir
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M7 17L17 7M17 7H8M17 7v9" />
         </svg>
       </span>
