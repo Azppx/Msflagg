@@ -1,12 +1,15 @@
-import { listOrders } from "@/lib/orders";
+import { listOrders, Order } from "@/lib/orders";
 import { DeliverForm } from "@/components/admin/DeliverForm";
 import { ConfirmPaymentButton } from "@/components/admin/ConfirmPaymentButton";
 import { LogoutButton } from "@/components/admin/LogoutButton";
+import { DeleteOrderButton } from "@/components/admin/DeleteOrderButton";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminOrdersPage() {
   const orders = await listOrders();
+  const delivered = orders.filter((o) => o.status === "PAID" && o.fulfillment === "DELIVERED");
+  const pending = orders.filter((o) => !(o.status === "PAID" && o.fulfillment === "DELIVERED"));
 
   return (
     <main className="mx-auto max-w-2xl px-5 py-10">
@@ -23,59 +26,90 @@ export default async function AdminOrdersPage() {
         <p className="mt-8 text-sm text-white/40">Aucune commande pour l'instant.</p>
       )}
 
-      <div className="mt-6 space-y-4">
-        {orders.map((o) => (
-          <div key={o.id} className="glass-panel rounded-xl2 border border-panelBorder p-5">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="font-mono text-sm text-white/70">{o.id}</span>
-              <StatusBadge status={o.status} fulfillment={o.fulfillment} />
-            </div>
-
-            <div className="mt-3">
-              {o.items && o.items.length > 0 ? (
-                <ul className="space-y-0.5">
-                  {o.items.map((it, i) => (
-                    <li key={i} className="font-semibold">
-                      {it.name} {it.quantity > 1 && `×${it.quantity}`}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="font-semibold">{o.productName}</p>
-              )}
-            </div>
-            <p className="text-sm text-white/50">
-              {o.customerName || "—"} · {o.customerEmail || "—"}
-            </p>
-            <p className="text-sm text-white/50">
-              {o.amount} {o.currency}
-            </p>
-
-            {o.status === "PAID" && (
-              <DeliverForm
-                orderId={o.id}
-                alreadyDelivered={o.fulfillment === "DELIVERED"}
-                existingContent={o.deliveryContent}
-              />
-            )}
-            {o.status === "AWAITING_VERIFICATION" && (
-              <>
-                <p className="mt-3 text-xs text-accent-soft">
-                  Le client dit avoir envoyé le virement Wise — vérifie ton compte Wise avant de
-                  confirmer.
-                </p>
-                <ConfirmPaymentButton orderId={o.id} />
-              </>
-            )}
-            {o.status === "CREATED" && (
-              <p className="mt-3 text-xs text-white/30">
-                En attente que le client envoie son virement Wise.
-              </p>
-            )}
+      {pending.length > 0 && (
+        <section className="mt-8">
+          <h2 className="text-xs font-bold tracking-widest text-accent-soft">
+            PAS ENCORE LIVRÉES ({pending.length})
+          </h2>
+          <div className="mt-3 space-y-4">
+            {pending.map((o) => (
+              <OrderCard key={o.id} order={o} />
+            ))}
           </div>
-        ))}
-      </div>
+        </section>
+      )}
+
+      {delivered.length > 0 && (
+        <section className="mt-10">
+          <h2 className="text-xs font-bold tracking-widest text-electric-soft">
+            DÉJÀ LIVRÉES ({delivered.length})
+          </h2>
+          <div className="mt-3 space-y-4">
+            {delivered.map((o) => (
+              <OrderCard key={o.id} order={o} />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
+  );
+}
+
+function OrderCard({ order: o }: { order: Order }) {
+  return (
+    <div className="glass-panel rounded-xl2 border border-panelBorder p-5">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="font-mono text-sm text-white/70">{o.id}</span>
+        <StatusBadge status={o.status} fulfillment={o.fulfillment} />
+      </div>
+
+      <div className="mt-3">
+        {o.items && o.items.length > 0 ? (
+          <ul className="space-y-0.5">
+            {o.items.map((it, i) => (
+              <li key={i} className="font-semibold">
+                {it.name} {it.quantity > 1 && `×${it.quantity}`}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="font-semibold">{o.productName}</p>
+        )}
+      </div>
+      <p className="text-sm text-white/50">
+        {o.customerName || "—"} · {o.customerEmail || "—"}
+        {o.customerDateOfBirth && ` · né(e) le ${o.customerDateOfBirth}`}
+      </p>
+      <p className="text-sm text-white/50">
+        {o.amount} {o.currency}
+      </p>
+
+      {o.status === "PAID" && (
+        <DeliverForm
+          orderId={o.id}
+          alreadyDelivered={o.fulfillment === "DELIVERED"}
+          existingContent={o.deliveryContent}
+        />
+      )}
+      {o.status === "AWAITING_VERIFICATION" && (
+        <>
+          <p className="mt-3 text-xs text-accent-soft">
+            Le client dit avoir envoyé le virement Wise — vérifie ton compte Wise avant de
+            confirmer.
+          </p>
+          <ConfirmPaymentButton orderId={o.id} />
+        </>
+      )}
+      {o.status === "CREATED" && (
+        <p className="mt-3 text-xs text-white/30">
+          En attente que le client envoie son virement Wise.
+        </p>
+      )}
+
+      <div className="mt-4 flex justify-end border-t border-panelBorder pt-3">
+        <DeleteOrderButton orderId={o.id} />
+      </div>
+    </div>
   );
 }
 

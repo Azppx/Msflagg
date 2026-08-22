@@ -22,6 +22,7 @@ function PaiementContent() {
   const params = useSearchParams();
   const name = params.get("name") || "";
   const email = params.get("email") || "";
+  const dob = params.get("dob") || "";
   const wise = getWiseConfig();
   const cart = useCart();
 
@@ -61,6 +62,7 @@ function PaiementContent() {
               items={items}
               customerName={name}
               customerEmail={email}
+              customerDateOfBirth={dob}
               wiseAccountHolder={wise.accountHolder}
               wiseEmail={wise.email}
               wiseIban={wise.iban}

@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
   const message = typeof body?.message === "string" ? body.message.trim() : "";
   let customerName = typeof body?.name === "string" ? body.name.trim() : "";
   let customerEmail = typeof body?.email === "string" ? body.email.trim() : "";
+  const customerDateOfBirth = typeof body?.dob === "string" ? body.dob.trim() : "";
 
   if (!message) {
     return NextResponse.json({ error: "Un message est requis." }, { status: 400 });
@@ -29,6 +30,7 @@ export async function POST(req: NextRequest) {
     subject,
     customerName,
     customerEmail,
+    customerDateOfBirth,
     accountId: account?.id,
     firstMessage: message,
   });

@@ -33,6 +33,44 @@ const CartContext = createContext<CartContextValue>({
 });
 const STORAGE_KEY = "qulse_cart";
 
+/**
+ * Fusionne les entrées en double (même slug) et nettoie les données
+ * corrompues. Appliqué au chargement ET à chaque mutation, pour que le
+ * panier se répare tout seul si un vieux state buggé traînait en
+ * localStorage (c'est ce qui causait un total qui ne correspondait plus
+ * aux articles affichés).
+ */
+function normalizeItems(raw: unknown): CartItem[] {
+  if (!Array.isArray(raw)) return [];
+  const bySlug = new Map<string, CartItem>();
+  for (const entry of raw) {
+    if (
+      !entry ||
+      typeof entry.slug !== "string" ||
+      typeof entry.name !== "string" ||
+      !Number.isFinite(entry.unitPrice) ||
+      !Number.isFinite(entry.quantity)
+    ) {
+      continue;
+    }
+    const quantity = Math.max(0, Math.min(50, Math.floor(entry.quantity)));
+    if (quantity <= 0) continue;
+    const existing = bySlug.get(entry.slug);
+    if (existing) {
+      existing.quantity = Math.min(50, existing.quantity + quantity);
+    } else {
+      bySlug.set(entry.slug, {
+        slug: entry.slug,
+        name: entry.name,
+        unitPrice: entry.unitPrice,
+        currency: entry.currency || "EUR",
+        quantity,
+      });
+    }
+  }
+  return Array.from(bySlug.values());
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
@@ -41,7 +79,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setItems(JSON.parse(raw));
+      if (raw) setItems(normalizeItems(JSON.parse(raw)));
     } catch {
       // localStorage indisponible ou corrompu : on repart d'un panier vide.
     }
@@ -70,7 +108,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             : i
         );
       }
-      return [...prev, { ...item, quantity: safeQty }];
+      return normalizeItems([...prev, { ...item, quantity: safeQty }]);
     });
   }
 
