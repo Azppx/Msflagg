@@ -1,13 +1,13 @@
 import type { CatalogTone } from "@/lib/catalog";
 
 export const catalogToneRgb: Record<CatalogTone, string> = {
-  electric: "46,110,255",
+  electric: "139,53,255",
   violet: "139,92,246",
-  gold: "245,197,24",
-  teal: "45,212,191",
+  gold: "156,69,255",
+  teal: "124,58,237",
   danger: "255,59,59",
-  accent: "255,138,0",
-  green: "34,197,94",
+  accent: "166,76,255",
+  green: "139,53,255",
 };
 
 export const catalogToneClasses: Record<

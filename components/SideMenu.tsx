@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { InstallAppButton } from "@/components/InstallAppButton";
-import { QluseLogo } from "@/components/QluseLogo";
+import { KyzenLogo } from "@/components/KyzenLogo";
 
 export function SideMenu({ onClose }: { onClose: () => void }) {
   const { account, logout } = useAuth();
@@ -15,7 +15,7 @@ export function SideMenu({ onClose }: { onClose: () => void }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
-          <QluseLogo />
+          <KyzenLogo />
           <button onClick={onClose} aria-label="Fermer" className="text-white/50 hover:text-white">
             ✕
           </button>
@@ -24,7 +24,7 @@ export function SideMenu({ onClose }: { onClose: () => void }) {
         <div className="mt-8 flex flex-col gap-3">
           {account ? (
             <>
-              <MenuItem href="/compte" icon="👤" title="Profil" subtitle="Mon compte Qluse" onClick={onClose} />
+              <MenuItem href="/compte" icon="👤" title="Profil" subtitle="Mon compte KYZEN" onClick={onClose} />
               <MenuItem
                 href="/compte/commandes"
                 icon="🛒"
@@ -46,7 +46,7 @@ export function SideMenu({ onClose }: { onClose: () => void }) {
                 href="/compte/inscription"
                 icon="✨"
                 title="S'inscrire"
-                subtitle="Crée ton compte Qluse"
+                subtitle="Crée ton compte KYZEN"
                 onClick={onClose}
               />
             </>
@@ -56,7 +56,7 @@ export function SideMenu({ onClose }: { onClose: () => void }) {
           <MenuItem
             href="/premium"
             icon="⚡"
-            title="Services Qluse"
+            title="Services KYZEN"
             subtitle="Vos services en temps réel"
             onClick={onClose}
           />

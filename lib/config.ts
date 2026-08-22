@@ -7,8 +7,8 @@
  */
 
 export const siteConfig = {
-  brandName: "Qluse",
-  brandTagline: "NOS SERVICES",
+  brandName: "KYZEN",
+  brandTagline: "Simple. Premium. KYZEN.",
 };
 
 export const product = {

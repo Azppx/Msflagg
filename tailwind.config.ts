@@ -8,16 +8,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        midnight: "#050914",
-        panel: "#0b1120",
-        panelBorder: "rgba(255,255,255,0.06)",
+        midnight: "#050507",
+        panel: "#0d0a13",
+        panelBorder: "rgba(255,255,255,0.09)",
         electric: {
-          DEFAULT: "#2E6EFF",
-          soft: "#5B8CFF",
+          DEFAULT: "#8B35FF",
+          soft: "#B85CFF",
         },
         accent: {
-          DEFAULT: "#FF8A00",
-          soft: "#FFB454",
+          DEFAULT: "#A64CFF",
+          soft: "#C88CFF",
         },
         danger: "#FF3B3B",
         violet: {
@@ -25,20 +25,20 @@ const config: Config = {
           soft: "#B79CFF",
         },
         gold: {
-          DEFAULT: "#F5C518",
-          soft: "#FFDD66",
+          DEFAULT: "#9C45FF",
+          soft: "#D5B1FF",
         },
         teal: {
-          DEFAULT: "#2DD4BF",
-          soft: "#7EEDE1",
+          DEFAULT: "#7C3AED",
+          soft: "#C4A6FF",
         },
         indigo: {
-          DEFAULT: "#5865F2",
-          soft: "#8C95FF",
+          DEFAULT: "#6D28D9",
+          soft: "#A78BFA",
         },
         green: {
-          DEFAULT: "#22C55E",
-          soft: "#6EE7A0",
+          DEFAULT: "#8B35FF",
+          soft: "#B85CFF",
         },
       },
       borderRadius: {

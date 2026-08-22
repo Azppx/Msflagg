@@ -23,7 +23,7 @@ export function LoadingSplash() {
         fading ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
     >
-      <span className="font-display text-2xl tracking-tight text-white">Qluse</span>
+      <span className="font-display text-2xl tracking-tight text-white">KYZEN</span>
       <div className="splash-dashes mt-6">
         <span />
         <span />

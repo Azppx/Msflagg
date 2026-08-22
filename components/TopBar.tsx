@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { QluseLogo } from "@/components/QluseLogo";
+import { KyzenLogo } from "@/components/KyzenLogo";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { SideMenu } from "@/components/SideMenu";
 import { SupportChatModal } from "@/components/SupportChatModal";
@@ -14,8 +14,8 @@ export function TopBar() {
 
   return (
     <>
-      <div className="sticky top-0 z-30 flex items-center justify-between bg-midnight/80 px-5 py-3 backdrop-blur-md">
-        <QluseLogo />
+      <div className="sticky top-3 z-30 mx-3 mt-3 flex items-center justify-between rounded-[20px] border border-white/10 bg-panel/80 px-4 py-2.5 shadow-[0_18px_60px_rgba(0,0,0,0.35),0_0_50px_rgba(120,40,255,0.08)] backdrop-blur-xl">
+        <KyzenLogo />
         <div className="flex items-center gap-2">
           <LanguageSelector />
 
@@ -24,8 +24,8 @@ export function TopBar() {
             target="_blank"
             rel="noreferrer"
             aria-label="Rejoindre le Discord"
-            className="icon-glow-btn flex h-10 w-10 items-center justify-center rounded-full border border-indigo/40 bg-indigo/10 transition-transform hover:scale-105 active:scale-90"
-            style={{ "--icon-glow-rgb": "88,101,242" } as React.CSSProperties}
+            className="icon-glow-btn flex h-10 w-10 items-center justify-center rounded-full border border-electric/40 bg-electric/10 transition-transform hover:scale-105 active:scale-90"
+            style={{ "--icon-glow-rgb": "139,53,255" } as React.CSSProperties}
           >
             <Image src="/icons/discord-mark.png" alt="Discord" width={20} height={20} className="object-contain" />
           </a>
@@ -34,7 +34,7 @@ export function TopBar() {
             onClick={() => setChatOpen(true)}
             aria-label="Ouvrir un ticket support"
             className="icon-glow-btn flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-electric/40 bg-electric/10 transition-transform hover:scale-105 active:scale-90"
-            style={{ "--icon-glow-rgb": "46,110,255" } as React.CSSProperties}
+            style={{ "--icon-glow-rgb": "139,53,255" } as React.CSSProperties}
           >
             <Image
               src="/icons/support-chat.png"
