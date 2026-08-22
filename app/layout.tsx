@@ -6,6 +6,7 @@ import { CartProvider } from "@/lib/cart-context";
 import { AuthProvider } from "@/lib/auth-context";
 import { OrderTrackerWidget } from "@/components/OrderTrackerWidget";
 import { TopBar } from "@/components/TopBar";
+import { LoadingSplash } from "@/components/LoadingSplash";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -67,6 +68,7 @@ export default function RootLayout({
         <div className="relative z-10">
           <AuthProvider>
             <CartProvider>
+              <LoadingSplash />
               <TopBar />
               {children}
               <OrderTrackerWidget />

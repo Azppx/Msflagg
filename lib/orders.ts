@@ -29,6 +29,7 @@ export type Order = {
   deliveredAt?: string;
   customerName?: string;
   customerEmail?: string;
+  customerDateOfBirth?: string;
   createdAt: string;
   type?: "PURCHASE" | "WALLET_RECHARGE";
   accountId?: string;
@@ -109,6 +110,16 @@ export async function deliverOrder(id: string, content: string): Promise<Order |
     deliveryContent: content,
     deliveredAt: new Date().toISOString(),
   });
+}
+
+export async function deleteOrder(id: string): Promise<void> {
+  const redis = getRedis();
+  const order = await getOrder(id);
+  await redis.del(`${ORDER_PREFIX}${id}`);
+  await redis.zrem(INDEX_KEY, id);
+  if (order?.accountId) {
+    await redis.zrem(`orders:by-account:${order.accountId}`, id);
+  }
 }
 
 export function generateOrderId() {

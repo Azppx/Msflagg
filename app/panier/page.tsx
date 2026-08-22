@@ -16,7 +16,7 @@ export default function PanierPage() {
 
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow="TON PANIER" title="PANIER" backHref="/produit" />
+      <PageHeader eyebrow="TON PANIER" title="PANIER" backHref="/premium" />
 
       <div className="px-5">
         {!hydrated && <p className="text-sm text-white/40">Chargement…</p>}

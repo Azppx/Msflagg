@@ -14,18 +14,26 @@ export default function InformationsPage() {
   const { items, totalPrice, hydrated } = useCart();
 
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [dob, setDob] = useState("");
   const [error, setError] = useState("");
   const firstTone = items[0] ? getProductBySlug(items[0].slug)?.tone : undefined;
   const toneRgb = firstTone ? catalogToneRgb[firstTone] : catalogToneRgb.electric;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.includes("@") || name.trim().length < 2) {
-      setError("Merci de renseigner un nom et un email valides.");
+    if (
+      !email.includes("@") ||
+      firstName.trim().length < 2 ||
+      lastName.trim().length < 2 ||
+      !dob
+    ) {
+      setError("Merci de renseigner tous les champs correctement.");
       return;
     }
-    const params = new URLSearchParams({ email, name });
+    const name = `${firstName.trim()} ${lastName.trim()}`;
+    const params = new URLSearchParams({ email, name, dob });
     router.push(`/checkout/paiement?${params.toString()}`);
   }
 
@@ -68,19 +76,34 @@ export default function InformationsPage() {
             </GlowCard>
 
             <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-              <label className="block">
-                <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
-                  NOM
-                </span>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
-                  placeholder="Ton nom"
-                  autoComplete="name"
-                />
-              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <label className="block">
+                  <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
+                    PRÉNOM
+                  </span>
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
+                    placeholder="Ton prénom"
+                    autoComplete="given-name"
+                  />
+                </label>
+                <label className="block">
+                  <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
+                    NOM
+                  </span>
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
+                    placeholder="Ton nom"
+                    autoComplete="family-name"
+                  />
+                </label>
+              </div>
               <label className="block">
                 <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
                   EMAIL
@@ -93,6 +116,18 @@ export default function InformationsPage() {
                   placeholder="ton@email.com"
                   autoComplete="email"
                   inputMode="email"
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
+                  DATE DE NAISSANCE
+                </span>
+                <input
+                  type="date"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                  className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric [color-scheme:dark]"
+                  autoComplete="bday"
                 />
               </label>
 

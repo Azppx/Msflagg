@@ -14,7 +14,7 @@ export function TopBar() {
 
   return (
     <>
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-panelBorder/60 bg-midnight/80 px-5 py-3 backdrop-blur-md">
+      <div className="sticky top-0 z-30 flex items-center justify-between bg-midnight/80 px-5 py-3 backdrop-blur-md">
         <QluseLogo />
         <div className="flex items-center gap-2">
           <LanguageSelector />

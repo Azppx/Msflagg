@@ -8,6 +8,8 @@ export async function POST(req: NextRequest) {
     const requestedItems = Array.isArray(body?.items) ? body.items : [];
     const customerName = typeof body?.customerName === "string" ? body.customerName : "";
     const customerEmail = typeof body?.customerEmail === "string" ? body.customerEmail : "";
+    const customerDateOfBirth =
+      typeof body?.customerDateOfBirth === "string" ? body.customerDateOfBirth : "";
 
     // Le prix n'est JAMAIS lu depuis le corps de la requête : il est
     // recalculé ici, côté serveur, à partir des slugs + quantités uniquement.
@@ -30,6 +32,7 @@ export async function POST(req: NextRequest) {
       fulfillment: "PENDING",
       customerName,
       customerEmail,
+      customerDateOfBirth,
       createdAt: new Date().toISOString(),
     });
 

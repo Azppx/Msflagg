@@ -9,8 +9,10 @@ export function SupportChatModal({ onClose }: { onClose: () => void }) {
   const { account } = useAuth();
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [loading, setLoading] = useState(true);
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [dob, setDob] = useState("");
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -29,14 +31,14 @@ export function SupportChatModal({ onClose }: { onClose: () => void }) {
   }, []);
 
   useEffect(() => {
-    if (!ticket) return;
+    if (!ticket || ticket.status === "CLOSED") return;
     const interval = setInterval(() => {
       fetch(`/api/support/tickets/${ticket.id}`)
         .then((r) => r.json())
         .then((d) => d.ticket && setTicket(d.ticket));
     }, 8000);
     return () => clearInterval(interval);
-  }, [ticket?.id]);
+  }, [ticket?.id, ticket?.status]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
@@ -46,14 +48,15 @@ export function SupportChatModal({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     setError("");
     if (!text.trim()) return;
-    if (!account && (!name.trim() || !email.includes("@"))) {
-      setError("Merci de renseigner ton nom et ton email.");
+    if (!account && (!firstName.trim() || !lastName.trim() || !email.includes("@") || !dob)) {
+      setError("Merci de remplir tous les champs.");
       return;
     }
+    const name = account ? account.name : `${firstName.trim()} ${lastName.trim()}`;
     const res = await fetch("/api/support/tickets", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ subject: "Demande de support", message: text, name, email }),
+      body: JSON.stringify({ subject: "Demande de support", message: text, name, email, dob }),
     });
     const data = await res.json();
     if (!res.ok) {
@@ -78,6 +81,13 @@ export function SupportChatModal({ onClose }: { onClose: () => void }) {
       setTicket(data.ticket);
       setText("");
     }
+  }
+
+  function handleNewTicket() {
+    clearStoredTicketId();
+    setTicket(null);
+    setText("");
+    setError("");
   }
 
   return (
@@ -105,17 +115,32 @@ export function SupportChatModal({ onClose }: { onClose: () => void }) {
             </p>
             {!account && (
               <>
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Ton nom"
-                  className="rounded-xl border border-panelBorder bg-white/5 px-4 py-3 text-sm outline-none focus:border-electric"
-                />
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="Prénom"
+                    className="rounded-xl border border-panelBorder bg-white/5 px-4 py-3 text-sm outline-none focus:border-electric"
+                  />
+                  <input
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Nom"
+                    className="rounded-xl border border-panelBorder bg-white/5 px-4 py-3 text-sm outline-none focus:border-electric"
+                  />
+                </div>
                 <input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="ton@email.com"
                   className="rounded-xl border border-panelBorder bg-white/5 px-4 py-3 text-sm outline-none focus:border-electric"
+                />
+                <input
+                  type="date"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                  placeholder="Date de naissance"
+                  className="rounded-xl border border-panelBorder bg-white/5 px-4 py-3 text-sm text-white/70 outline-none focus:border-electric [color-scheme:dark]"
                 />
               </>
             )}
@@ -172,6 +197,17 @@ export function SupportChatModal({ onClose }: { onClose: () => void }) {
                   →
                 </button>
               </form>
+            )}
+
+            {ticket.status === "CLOSED" && (
+              <div className="border-t border-panelBorder p-3">
+                <button
+                  onClick={handleNewTicket}
+                  className="w-full rounded-xl bg-accent px-4 py-3 text-sm font-bold text-black"
+                >
+                  Ouvrir un nouveau ticket
+                </button>
+              </div>
             )}
           </>
         )}

@@ -13,6 +13,7 @@ export type Ticket = {
   subject: string;
   customerName: string;
   customerEmail: string;
+  customerDateOfBirth?: string;
   accountId?: string;
   status: "OPEN" | "CLOSED";
   messages: TicketMessage[];
@@ -27,6 +28,7 @@ export async function createTicket(input: {
   subject: string;
   customerName: string;
   customerEmail: string;
+  customerDateOfBirth?: string;
   accountId?: string;
   firstMessage: string;
 }): Promise<Ticket> {
@@ -37,6 +39,7 @@ export async function createTicket(input: {
     subject: input.subject,
     customerName: input.customerName,
     customerEmail: input.customerEmail,
+    customerDateOfBirth: input.customerDateOfBirth,
     accountId: input.accountId,
     status: "OPEN",
     messages: [{ id: randomUUID(), from: "customer", text: input.firstMessage, createdAt: now }],
