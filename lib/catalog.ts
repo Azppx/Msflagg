@@ -253,6 +253,17 @@ export const catalogProducts: CatalogProduct[] = [
     icon: "gamepad",
   },
   {
+    slug: "ccv",
+    name: "CCV",
+    category: "CARTE VIRTUELLE",
+    priceTotal: 15,
+    currency: "EUR",
+    description: "Carte bancaire virtuelle.",
+    features: genericFeatures,
+    tone: "violet",
+    icon: "card",
+  },
+  {
     slug: "duolingo",
     name: "Duolingo",
     category: "SUPER · 1 AN",

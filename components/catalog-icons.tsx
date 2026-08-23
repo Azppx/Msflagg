@@ -203,6 +203,14 @@ export function CatalogIcon({ name }: { name: string }) {
           <circle cx="17.8" cy="13.3" r="0.9" fill="currentColor" stroke="none" />
         </svg>
       );
+    case "card":
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <rect x="2.5" y="5.5" width="19" height="13" rx="2.5" />
+          <path d="M2.5 9.5h19" />
+          <path d="M6 14.5h4" strokeLinecap="round" />
+        </svg>
+      );
     case "clapper":
       return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
