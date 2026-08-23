@@ -103,9 +103,9 @@ export default function HomePage() {
         </Link>
 
         <div className="mt-3 grid grid-cols-3 gap-2.5">
-          <MiniFeature icon="⚡" label="Livraison" text="Traitement rapide" />
-          <MiniFeature icon="✦" label="Qualité" text="Présentation premium" />
-          <MiniFeature icon="◆" label="Support" text="Assistance dispo" />
+          <MiniFeature icon="⚡" label="Livraison" text="" />
+          <MiniFeature icon="✦" label="Qualité" text="" />
+          <MiniFeature icon="◆" label="Support" text="" />
         </div>
       </section>
 
