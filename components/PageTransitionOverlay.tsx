@@ -9,7 +9,6 @@ export function PageTransitionOverlay() {
   const router = useRouter();
   const pathname = usePathname();
   const [phase, setPhase] = useState<Phase>("idle");
-  const [origin, setOrigin] = useState({ x: "50%", y: "50%" });
   const pendingHref = useRef<string | null>(null);
 
   // Miroir synchrone de `phase`, lisible dans le listener sans avoir à le
@@ -38,18 +37,13 @@ export function PageTransitionOverlay() {
 
       e.preventDefault();
 
-      const rect = anchor.getBoundingClientRect();
-      setOrigin({
-        x: `${rect.left + rect.width / 2}px`,
-        y: `${rect.top + rect.height / 2}px`,
-      });
       pendingHref.current = href;
 
-      // Étape clé : on démarre à "idle" (cercle fermé, rayon 0) puis on
-      // passe à "covering" seulement au frame suivant. L'élément existe
+      // Étape clé : on démarre à "idle" (panneau hors-écran à gauche) puis
+      // on passe à "covering" seulement au frame suivant. L'élément existe
       // déjà dans le DOM (voir plus bas, il est toujours monté), donc le
       // navigateur a bien un état de départ à partir duquel animer — sans
-      // ça, le cercle apparaît directement "explosé" sans transition.
+      // ça, le panneau apparaît directement "en place" sans transition.
       requestAnimationFrame(() => setPhase("covering"));
     }
 
@@ -60,7 +54,7 @@ export function PageTransitionOverlay() {
   // Une fois le cercle a fini de recouvrir l'écran (fin réelle de la
   // transition CSS, pas une estimation par setTimeout), on navigue.
   function handleTransitionEnd(e: React.TransitionEvent) {
-    if (e.propertyName !== "clip-path") return;
+    if (e.propertyName !== "transform") return;
     if (phase === "covering") {
       setPhase("waiting");
       if (pendingHref.current) router.push(pendingHref.current);
@@ -90,22 +84,36 @@ export function PageTransitionOverlay() {
     return () => clearTimeout(timeout);
   }, [phase]);
 
-  // L'élément reste TOUJOURS monté (même à l'état "idle", rayon 0 et
-  // invisible) : c'est ce qui permet à la transition CSS de partir d'un
-  // vrai état de départ au lieu d'apparaître déjà "explosée".
-  const covering = phase === "covering" || phase === "waiting";
+  // L'élément reste TOUJOURS monté (même à l'état "idle", hors-écran à
+  // gauche) : c'est ce qui permet à la transition CSS de partir d'un vrai
+  // état de départ au lieu d'apparaître déjà "en place".
+  //
+  // Séquence du balayage :
+  // - idle      : panneau caché hors-écran, à gauche (translateX(-100%))
+  // - covering  : panneau glisse vers translateX(0%) → couvre tout l'écran
+  // - waiting   : navigation déclenchée, panneau reste en place le temps
+  //               que la nouvelle page soit montée
+  // - revealing : panneau continue son glissement vers translateX(100%),
+  //               sortant à droite → "ouvre" la nouvelle page derrière lui
+  let translate = "-100%";
+  if (phase === "covering" || phase === "waiting") translate = "0%";
+  if (phase === "revealing") translate = "100%";
 
   return (
     <div
       aria-hidden
       onTransitionEnd={handleTransitionEnd}
-      className="pointer-events-none fixed inset-0 z-[95]"
-      style={{
-        clipPath: `circle(${covering ? "150%" : "0%"} at ${origin.x} ${origin.y})`,
-        transition: phase === "idle" ? "none" : "clip-path 0.45s cubic-bezier(0.65,0,0.35,1)",
-        background:
-          "radial-gradient(circle at center, rgba(139,53,255,0.35), rgba(8,5,13,0.98) 70%)",
-      }}
-    />
+      className="pointer-events-none fixed inset-0 z-[95] overflow-hidden"
+    >
+      <div
+        className="absolute inset-0"
+        style={{
+          transform: `translateX(${translate})`,
+          transition: phase === "idle" ? "none" : "transform 0.5s cubic-bezier(0.65,0,0.35,1)",
+          background:
+            "linear-gradient(100deg, rgba(8,5,13,0.98) 0%, rgba(139,53,255,0.35) 50%, rgba(8,5,13,0.98) 100%)",
+        }}
+      />
+    </div>
   );
 }
