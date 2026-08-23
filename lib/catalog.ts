@@ -242,6 +242,17 @@ export const catalogProducts: CatalogProduct[] = [
     icon: "youtube",
   },
   {
+    slug: "valorant",
+    name: "Valorant Acc",
+    category: "COMPTE",
+    priceTotal: 10,
+    currency: "EUR",
+    description: "Compte Valorant prêt à jouer.",
+    features: genericFeatures,
+    tone: "violet",
+    icon: "gamepad",
+  },
+  {
     slug: "duolingo",
     name: "Duolingo",
     category: "SUPER · 1 AN",
