@@ -7,45 +7,68 @@ import { catalogToneRgb } from "@/components/catalog-icons";
 export default function HomePage() {
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col px-5 pb-16 pt-10">
-      {/* ---------- HERO ---------- */}
+      {/* ---------- HERO 3D ---------- */}
       <section className="relative text-center">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-0 h-[340px] w-[340px] -translate-x-1/2 -translate-y-1/4 rounded-full blur-[8px]"
-          style={{ background: "radial-gradient(circle, rgba(139,53,255,.22), transparent 68%)" }}
-        />
-
-        <span className="relative inline-flex items-center gap-2 rounded-full border border-electric/30 bg-electric/10 px-3.5 py-2 text-[11px] font-semibold tracking-wide text-white/80">
-          <span className="kyzen-badge-live" />
-          KYZEN • SERVICES PREMIUM
-        </span>
-
-        <h1 className="relative mt-6 text-[56px] font-[850] leading-[0.88] tracking-tighter text-white">
-          Simple.
-          <br />
-          <span className="text-kyzen-gradient">Premium.</span>
-          <br />
-          KYZEN.
-        </h1>
-
-        <p className="relative mx-auto mt-5 max-w-[32ch] text-[14px] leading-[1.7] text-white/50">
-          Découvre les services KYZEN, nos offres et notre communauté. Une expérience rapide,
-          élégante et pensée pour rester minimaliste.
-        </p>
-
-        <div className="relative mt-7 flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-3">
           <Link
             href="/produit/pack-basicfit-netflix"
             className="btn-glow-purple rounded-xl px-5 py-3.5 text-[13px] font-bold transition-transform"
           >
-            Voir l'offre
+            Découvrir l'offre
           </Link>
           <Link
             href="/premium"
             className="rounded-xl border border-panelBorder bg-white/[0.035] px-5 py-3.5 text-[13px] font-bold text-white transition-transform hover:-translate-y-0.5"
           >
-            Nos services
+            Explorer KYZEN
           </Link>
+        </div>
+
+        <div className="kyzen-orbit-stage mt-6">
+          <div className="kyzen-orbit-ring kyzen-orbit-ring--1" />
+          <div className="kyzen-orbit-ring kyzen-orbit-ring--2" />
+          <span className="kyzen-k-outline">K</span>
+
+          <div className="kyzen-float-badge" style={{ top: "6%", right: "0%" }}>
+            <span className="label">Statut</span>
+            <span className="value">
+              <span className="kyzen-badge-live" /> En ligne
+            </span>
+          </div>
+          <div className="kyzen-float-badge" style={{ bottom: "8%", left: "-2%", animationDelay: "1.5s" }}>
+            <span className="label">Collection</span>
+            <span className="value">Services Premium</span>
+          </div>
+          <div className="kyzen-float-badge" style={{ bottom: "0%", right: "2%", animationDelay: "3s" }}>
+            <span className="label">Communauté</span>
+            <span className="value">Discord KYZEN</span>
+          </div>
+        </div>
+
+        <h1 className="kyzen-wordmark mt-8 text-white">
+          ky<span className="accent">zen</span>
+        </h1>
+
+        <p className="relative mx-auto mt-5 max-w-[32ch] text-[14px] leading-[1.7] text-white/50">
+          Une expérience simple, rapide et pensée pour accéder à tous les services de KYZEN.
+        </p>
+
+        <div className="mt-8 grid grid-cols-1 gap-3.5">
+          <Link href="/premium" className="kyzen-mini-card">
+            <div className="kyzen-mini-icon">✦</div>
+            <h2 className="mt-[18px] text-[17px] font-semibold">KYZEN services</h2>
+            <span className="kyzen-mini-arrow">→</span>
+          </Link>
+          <a
+            href="https://discord.gg/"
+            target="_blank"
+            rel="noreferrer"
+            className="kyzen-mini-card"
+          >
+            <div className="kyzen-mini-icon">◌</div>
+            <h2 className="mt-[18px] text-[17px] font-semibold">Discord</h2>
+            <span className="kyzen-mini-arrow">→</span>
+          </a>
         </div>
       </section>
 

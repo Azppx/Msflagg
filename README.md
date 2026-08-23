@@ -107,18 +107,18 @@ seule l'implémentation change.
 ### 1. Créer le repository GitHub
 
 1. Va sur [github.com/new](https://github.com/new)
-2. Donne un nom au repository (ex. `boutique-premium`)
+2. Donne un nom au repository (ex. `kyzen`)
 3. Laisse-le vide (sans README, sans .gitignore) si tu importes ce projet existant
 
 ### 2. Mettre le projet sur GitHub
 
 ```bash
-cd boutique-premium
+cd kyzen
 git init
 git add .
 git commit -m "Initial commit"
 git branch -M main
-git remote add origin https://github.com/TON-COMPTE/boutique-premium.git
+git remote add origin https://github.com/TON-COMPTE/kyzen.git
 git push -u origin main
 ```
 
@@ -126,7 +126,7 @@ git push -u origin main
 
 1. Va sur [vercel.com/new](https://vercel.com/new)
 2. Connecte ton compte GitHub
-3. Sélectionne le repository `boutique-premium`
+3. Sélectionne le repository `kyzen`
 4. Vercel détecte automatiquement Next.js — laisse les réglages par défaut
 
 ### 4. Ajouter les variables d'environnement
