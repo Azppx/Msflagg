@@ -7,6 +7,7 @@ import { AuthProvider } from "@/lib/auth-context";
 import { OrderTrackerWidget } from "@/components/OrderTrackerWidget";
 import { TopBar } from "@/components/TopBar";
 import { LoadingSplash } from "@/components/LoadingSplash";
+import { PageTransitionOverlay } from "@/components/PageTransitionOverlay";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -64,6 +65,7 @@ export default function RootLayout({
           <AuthProvider>
             <CartProvider>
               <LoadingSplash />
+              <PageTransitionOverlay />
               <TopBar />
               {children}
               <OrderTrackerWidget />

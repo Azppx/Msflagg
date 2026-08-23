@@ -1,4 +1,4 @@
-const KEY = "qulse_ticket_id";
+const KEY = "kyzen_ticket_id";
 
 export function getStoredTicketId(): string | null {
   if (typeof window === "undefined") return null;

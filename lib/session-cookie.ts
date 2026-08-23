@@ -1,1 +1,1 @@
-export const SESSION_COOKIE = "qulse_session";
+export const SESSION_COOKIE = "kyzen_session";

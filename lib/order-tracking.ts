@@ -1,6 +1,6 @@
 export type TrackedOrder = { id: string; createdAt: string };
 
-const KEY = "qulse_tracked_orders";
+const KEY = "kyzen_tracked_orders";
 
 export function trackOrder(id: string) {
   if (typeof window === "undefined") return;

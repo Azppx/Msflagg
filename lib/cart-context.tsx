@@ -31,7 +31,7 @@ const CartContext = createContext<CartContextValue>({
   totalPrice: 0,
   hydrated: false,
 });
-const STORAGE_KEY = "qulse_cart";
+const STORAGE_KEY = "kyzen_cart";
 
 /**
  * Fusionne les entrées en double (même slug) et nettoie les données
