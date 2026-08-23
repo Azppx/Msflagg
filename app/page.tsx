@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { GlowCard } from "@/components/GlowCard";
-import { ServiceCard } from "@/components/ServiceCard";
 import { siteConfig } from "@/lib/config";
 import { catalogToneRgb } from "@/components/catalog-icons";
 
@@ -110,72 +109,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------- SERVICES KYZEN ---------- */}
-      <section className="mt-14">
-        <p className="text-[22px] font-bold tracking-tight">Services KYZEN</p>
-        <p className="mt-1 text-xs text-white/40">Tout ce dont tu as besoin, au même endroit.</p>
-
-        <div className="mt-5 flex flex-col gap-5">
-          <ServiceCard
-            href="/premium"
-            accent="electric"
-            eyebrow="Catalogue"
-            title="Services KYZEN"
-            description="Retrouve ici tous les services, offres et produits disponibles chez KYZEN."
-            icon={<LightningIcon />}
-          />
-          <ServiceCard
-            href="/support"
-            accent="electric"
-            eyebrow="Assistance"
-            title="Support"
-            description="Une question sur une commande ou un service ? Contacte facilement notre support."
-            icon={<SupportIcon />}
-          />
-          <ServiceCard
-            href="/discord"
-            accent="electric"
-            eyebrow="Communauté"
-            title="Discord"
-            description="Rejoins le serveur KYZEN pour les annonces, nouveautés, offres et communauté."
-            icon={<DiscordGlyphIcon />}
-          />
-        </div>
-      </section>
-
-      {/* ---------- POURQUOI KYZEN ---------- */}
-      <section className="mt-14">
-        <p className="text-[22px] font-bold tracking-tight">Pourquoi KYZEN ?</p>
-        <p className="mt-1 text-xs text-white/40">Une interface simple, sans surcharge.</p>
-
-        <div className="mt-5 flex flex-col gap-5">
-          <ServiceCard
-            href="/premium"
-            accent="electric"
-            eyebrow="Design"
-            title="Minimaliste"
-            description="Une identité sombre et violette avec des effets glow subtils pour garder une interface propre."
-            icon={<DiamondIcon />}
-          />
-          <ServiceCard
-            href="/premium"
-            accent="electric"
-            eyebrow="Expérience"
-            title="Immersif"
-            description="Profondeur, halos lumineux, particules et interactions pour une sensation premium."
-            icon={<CubeIcon />}
-          />
-          <ServiceCard
-            href="/premium"
-            accent="electric"
-            eyebrow="Partout"
-            title="Responsive"
-            description="Le design s'adapte automatiquement au téléphone, à la tablette et à l'ordinateur."
-            icon={<ArrowIcon />}
-          />
-        </div>
-      </section>
-
       <p className="mt-14 text-center text-[11px] tracking-widest text-white/25">
         © 2026 {siteConfig.brandName} — TOUS DROITS RÉSERVÉS
       </p>
@@ -197,55 +130,5 @@ function MiniFeature({ icon, label, text }: { icon: string; label: string; text:
       </p>
       <p className="mt-1 text-[10.5px] leading-snug text-white/45">{text}</p>
     </div>
-  );
-}
-
-function LightningIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-      <path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z" strokeLinejoin="round" strokeLinecap="round" />
-    </svg>
-  );
-}
-function SupportIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 16v.01M12 8a2.5 2.5 0 0 1 2.5 2.5c0 1.5-2.5 2-2.5 3.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-function DiscordGlyphIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8">
-      <path
-        d="M7 5c3.3-1 6.7-1 10 0l1 4c1 3 1 6-.5 9-1.5-1-2.5-2-2.5-2s-1.5 1-3 1-3-1-3-1-1 1-2.5 2C5 18 5 15 6 12l1-7z"
-        strokeLinejoin="round"
-      />
-      <circle cx="9" cy="12" r="1.1" fill="white" stroke="none" />
-      <circle cx="15" cy="12" r="1.1" fill="white" stroke="none" />
-    </svg>
-  );
-}
-function DiamondIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8">
-      <path d="M3 9l4-6h10l4 6-11 12L3 9z" strokeLinejoin="round" strokeLinecap="round" />
-    </svg>
-  );
-}
-function CubeIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8">
-      <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" strokeLinejoin="round" />
-      <path d="M4 7.5 12 12l8-4.5M12 12v9" strokeLinejoin="round" />
-    </svg>
-  );
-}
-function ArrowIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-      <path d="M7 17 17 7M9 7h8v8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
   );
 }
