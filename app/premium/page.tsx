@@ -5,7 +5,7 @@ import { GlowProductCard } from "@/components/GlowProductCard";
 
 export default function PremiumCatalogPage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col px-5 pb-16 pt-8">
+    <main className="mx-auto flex min-h-screen max-w-md flex-col overflow-x-hidden px-5 pb-16 pt-8">
       <div className="flex items-center justify-between">
         <Link
           href="/"
@@ -35,11 +35,39 @@ export default function PremiumCatalogPage() {
         <CartHeaderLink />
       </div>
 
-      <div className="mt-4 space-y-[22px]">
+      <div className="mt-6 flex flex-col">
         {catalogProducts.map((item, i) => (
-          <GlowProductCard key={item.slug} item={item} delay={(i % 5) * 0.4} />
+          <FloatingCard key={item.slug} index={i}>
+            <GlowProductCard item={item} delay={(i % 5) * 0.4} />
+          </FloatingCard>
         ))}
       </div>
     </main>
+  );
+}
+
+// Décalage horizontal + légère rotation, différents pour chaque carte, pour
+// casser l'alignement rigide en liste et donner une sensation de flottement.
+const SCATTER = [
+  { x: 0, rot: -1.4, mt: 0 },
+  { x: 18, rot: 1.1, mt: -6 },
+  { x: -14, rot: -0.9, mt: -4 },
+  { x: 10, rot: 1.6, mt: -8 },
+  { x: -20, rot: -1.3, mt: -2 },
+  { x: 6, rot: 0.8, mt: -6 },
+];
+
+function FloatingCard({ index, children }: { index: number; children: React.ReactNode }) {
+  const s = SCATTER[index % SCATTER.length];
+  return (
+    <div
+      className="relative"
+      style={{
+        transform: `translateX(${s.x}px) rotate(${s.rot}deg)`,
+        marginTop: index === 0 ? 0 : `${22 + s.mt}px`,
+      }}
+    >
+      {children}
+    </div>
   );
 }
