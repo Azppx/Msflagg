@@ -8,8 +8,8 @@ export function LoadingSplash() {
   const [wiping, setWiping] = useState(false);
 
   useEffect(() => {
-    // Progression fluide et non-linéaire (accélère puis ralentit en approchant 100%),
-    // pour un effet plus "vivant" qu'un simple remplissage linéaire.
+    // Progression fluide et non-linéaire (accélère puis ralentit en approchant
+    // 100%), pour un effet plus vivant qu'un simple remplissage linéaire.
     let raf: number;
     const start = performance.now();
     const duration = 1000;
@@ -21,18 +21,26 @@ export function LoadingSplash() {
       if (t < 1) {
         raf = requestAnimationFrame(tick);
       } else {
-        setTimeout(() => setWiping(true), 150);
-        setTimeout(() => setVisible(false), 750);
+        // Un frame de battement avant de lancer l'effet de cercle, pour que
+        // la barre à 100% soit bien visible une fraction de seconde.
+        requestAnimationFrame(() => requestAnimationFrame(() => setWiping(true)));
       }
     }
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, []);
 
+  function handleTransitionEnd(e: React.TransitionEvent) {
+    if (e.propertyName === "clip-path" && wiping) {
+      setVisible(false);
+    }
+  }
+
   if (!visible) return null;
 
   return (
     <div
+      onTransitionEnd={handleTransitionEnd}
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-midnight"
       style={{
         clipPath: wiping ? "circle(0% at 50% 50%)" : "circle(150% at 50% 50%)",
