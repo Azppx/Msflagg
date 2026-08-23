@@ -231,6 +231,17 @@ export const catalogProducts: CatalogProduct[] = [
     icon: "discord",
   },
   {
+    slug: "youtube",
+    name: "YouTube FA",
+    category: "FAMILY ACCESS",
+    priceTotal: 10,
+    currency: "EUR",
+    description: "Accès YouTube Premium via Family Access, sans pub sur toute la plateforme.",
+    features: genericFeatures,
+    tone: "violet",
+    icon: "youtube",
+  },
+  {
     slug: "duolingo",
     name: "Duolingo",
     category: "SUPER · 1 AN",
