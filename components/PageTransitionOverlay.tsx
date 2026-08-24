@@ -3,12 +3,21 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-type Phase = "idle" | "covering" | "waiting" | "revealing";
+type Phase = "idle" | "covering" | "revealing";
 
 // Nombre de lames qui balaient l'écran en cascade.
 const PANEL_COUNT = 6;
 const PANEL_DURATION_MS = 500;
 const PANEL_STAGGER_MS = 42;
+// Durée totale d'une cascade = durée d'une lame + décalage cumulé de la
+// dernière + marge de sécurité.
+const SWEEP_MS = PANEL_DURATION_MS + (PANEL_COUNT - 1) * PANEL_STAGGER_MS + 80;
+
+// Couleurs PLEINES (hexadécimal, zéro canal alpha) : aucune ambiguïté de
+// transparence possible, contrairement à rgba()/transparent utilisés
+// précédemment. Chaque lame est garantie 100% opaque du premier au
+// dernier pixel.
+const PANEL_COLORS = ["#1c0e30", "#241238", "#170b28", "#2a1440", "#190c2c", "#20103a"];
 
 export function PageTransitionOverlay() {
   const router = useRouter();
@@ -45,24 +54,20 @@ export function PageTransitionOverlay() {
     return () => document.removeEventListener("click", onClick, true);
   }, [pathname]);
 
-  // Minuteurs fixes (pas `transitionend`, peu fiable sur mobile).
-  const SWEEP_MS = PANEL_DURATION_MS + (PANEL_COUNT - 1) * PANEL_STAGGER_MS + 60;
-
+  // IMPORTANT : tout est piloté par des minuteurs fixes, de bout en bout.
+  // On ne dépend plus de `usePathname()` pour enchaîner les étapes — si le
+  // changement de route n'était pas détecté à temps pour une raison ou une
+  // autre, l'overlay restait bloqué indéfiniment en position "couverte".
+  // Là, la navigation ET le passage à "revealing" se déclenchent au même
+  // instant, sans rien attendre d'autre.
   useEffect(() => {
     if (phase !== "covering") return;
     const timeout = setTimeout(() => {
-      setPhase("waiting");
       if (pendingHref.current) router.push(pendingHref.current);
+      setPhase("revealing");
     }, SWEEP_MS);
     return () => clearTimeout(timeout);
   }, [phase, router]);
-
-  useEffect(() => {
-    if (phase === "waiting") {
-      setPhase("revealing");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
 
   useEffect(() => {
     if (phase !== "revealing") return;
@@ -73,17 +78,18 @@ export function PageTransitionOverlay() {
     return () => clearTimeout(timeout);
   }, [phase]);
 
+  // Sécurité anti-blocage ultime.
   useEffect(() => {
     if (phase === "idle") return;
     const timeout = setTimeout(() => {
       setPhase("idle");
       pendingHref.current = null;
-    }, 4500);
+    }, 4000);
     return () => clearTimeout(timeout);
   }, [phase]);
 
   const noTransition = phase === "idle";
-  const covering = phase === "covering" || phase === "waiting";
+  const covering = phase === "covering";
   const visible = phase !== "idle";
 
   function panelTranslate(): string {
@@ -92,13 +98,8 @@ export function PageTransitionOverlay() {
     return "-101%";
   }
 
-  // Lames DROITES (pas d'inclinaison) : chaque lame fait très légèrement
-  // plus que 1/N de l'écran et chevauche sa voisine de quelques dixièmes
-  // de %, ce qui suffit à effacer tout interstice quelle que soit la
-  // résolution — contrairement à un skew, une lame droite ne peut pas
-  // laisser de vide.
   const rawWidth = 100 / PANEL_COUNT;
-  const overlap = 0.4;
+  const overlap = 0.6; // marge généreuse, garantit zéro interstice
 
   const logoOpacity = covering ? 1 : 0;
   const logoDelay = phase === "covering" ? PANEL_DURATION_MS * 0.55 : 0;
@@ -118,7 +119,7 @@ export function PageTransitionOverlay() {
         }}
       />
 
-      {/* Les lames, en cascade — droites et totalement opaques */}
+      {/* Les lames, en cascade — couleur pleine, 100% opaque garanti */}
       {Array.from({ length: PANEL_COUNT }).map((_, i) => {
         const delayMs = i * PANEL_STAGGER_MS;
         return (
@@ -133,10 +134,7 @@ export function PageTransitionOverlay() {
               transition: noTransition
                 ? "none"
                 : `transform ${PANEL_DURATION_MS}ms cubic-bezier(0.65,0,0.35,1) ${delayMs}ms`,
-              // Couche de fond solide et quasi-opaque en premier plan de
-              // pile (garantit qu'on ne voit JAMAIS la page à travers),
-              // puis un dégradé violet de la marque par-dessus.
-              backgroundImage: `linear-gradient(${170 + i * 4}deg, rgba(139,53,255,${(0.28 + (i % 3) * 0.1).toFixed(2)}) 0%, transparent 45%, rgba(139,53,255,${(0.28 + (i % 3) * 0.1).toFixed(2)}) 100%), linear-gradient(0deg, rgba(10,6,18,0.99), rgba(10,6,18,0.99))`,
+              backgroundColor: PANEL_COLORS[i],
               boxShadow: "3px 0 26px rgba(139,53,255,0.4)",
             }}
           />
