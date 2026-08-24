@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { ButtonLink } from "@/components/Button";
+import { GlowCard } from "@/components/GlowCard";
 import { SupportChatModal } from "@/components/SupportChatModal";
 import { discordConfig } from "@/lib/config";
 
@@ -27,6 +28,24 @@ export default function SupportPage() {
           <ButtonLink href={discordConfig.inviteUrl} variant="ghost">
             OUVRIR LE DISCORD
           </ButtonLink>
+        </div>
+
+        {/* Widget Discord — en test, à valider ou retirer */}
+        <div className="mt-10">
+          <p className="mb-2 text-left text-xs font-semibold tracking-widest text-white/30">
+            EN TEST · WIDGET DISCORD
+          </p>
+          <GlowCard toneRgb="88,101,242" className="flex justify-center !p-3">
+            <iframe
+              src="https://discord.com/widget?id=1504131016892088571&theme=dark"
+              width="100%"
+              height="500"
+              allowTransparency
+              frameBorder={0}
+              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+              className="max-w-[350px] rounded-xl"
+            />
+          </GlowCard>
         </div>
       </div>
 
