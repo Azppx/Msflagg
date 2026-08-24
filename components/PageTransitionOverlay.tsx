@@ -5,9 +5,9 @@ import { usePathname, useRouter } from "next/navigation";
 
 type Phase = "idle" | "covering" | "waiting" | "revealing";
 
-// Nombre de "lames" de verre qui balaient l'écran en cascade diagonale.
+// Nombre de lames qui balaient l'écran en cascade.
 const PANEL_COUNT = 6;
-const PANEL_DURATION_MS = 520;
+const PANEL_DURATION_MS = 500;
 const PANEL_STAGGER_MS = 42;
 
 export function PageTransitionOverlay() {
@@ -45,9 +45,7 @@ export function PageTransitionOverlay() {
     return () => document.removeEventListener("click", onClick, true);
   }, [pathname]);
 
-  // Durée totale d'une cascade = durée d'une lame + le décalage cumulé de
-  // la dernière lame + une petite marge. Minuteurs fixes (pas
-  // `transitionend`, peu fiable en 3D/cascade sur mobile).
+  // Minuteurs fixes (pas `transitionend`, peu fiable sur mobile).
   const SWEEP_MS = PANEL_DURATION_MS + (PANEL_COUNT - 1) * PANEL_STAGGER_MS + 60;
 
   useEffect(() => {
@@ -75,7 +73,6 @@ export function PageTransitionOverlay() {
     return () => clearTimeout(timeout);
   }, [phase]);
 
-  // Sécurité anti-blocage ultime.
   useEffect(() => {
     if (phase === "idle") return;
     const timeout = setTimeout(() => {
@@ -89,17 +86,19 @@ export function PageTransitionOverlay() {
   const covering = phase === "covering" || phase === "waiting";
   const visible = phase !== "idle";
 
-  // Position de chaque lame : hors-écran à gauche (idle), en place
-  // (covering/waiting), hors-écran à droite (revealing).
   function panelTranslate(): string {
-    if (phase === "revealing") return "140%";
+    if (phase === "revealing") return "101%";
     if (covering) return "0%";
-    return "-140%";
+    return "-101%";
   }
 
-  const panelWidth = 100 / PANEL_COUNT + 6; // largeur généreuse : les lames
-  // se chevauchent légèrement pour ne laisser aucun interstice visible une
-  // fois inclinées (skew).
+  // Lames DROITES (pas d'inclinaison) : chaque lame fait très légèrement
+  // plus que 1/N de l'écran et chevauche sa voisine de quelques dixièmes
+  // de %, ce qui suffit à effacer tout interstice quelle que soit la
+  // résolution — contrairement à un skew, une lame droite ne peut pas
+  // laisser de vide.
+  const rawWidth = 100 / PANEL_COUNT;
+  const overlap = 0.4;
 
   const logoOpacity = covering ? 1 : 0;
   const logoDelay = phase === "covering" ? PANEL_DURATION_MS * 0.55 : 0;
@@ -108,7 +107,6 @@ export function PageTransitionOverlay() {
     <div
       aria-hidden
       className="pointer-events-none fixed inset-0 z-[95] overflow-hidden"
-      style={{ perspective: "1400px" }}
     >
       {/* Lueur ambiante de fond, respire doucement */}
       <div
@@ -120,7 +118,7 @@ export function PageTransitionOverlay() {
         }}
       />
 
-      {/* Les lames de verre, en cascade diagonale */}
+      {/* Les lames, en cascade — droites et totalement opaques */}
       {Array.from({ length: PANEL_COUNT }).map((_, i) => {
         const delayMs = i * PANEL_STAGGER_MS;
         return (
@@ -128,16 +126,17 @@ export function PageTransitionOverlay() {
             key={i}
             className="absolute top-0 h-full"
             style={{
-              left: `${i * (100 / PANEL_COUNT) - 3}%`,
-              width: `${panelWidth}%`,
-              transform: `translateX(${panelTranslate()}) skewX(-16deg)`,
-              transformStyle: "preserve-3d",
-              backfaceVisibility: "hidden",
+              left: `${i * rawWidth - overlap / 2}%`,
+              width: `${rawWidth + overlap}%`,
+              transform: `translateX(${panelTranslate()})`,
               willChange: "transform",
               transition: noTransition
                 ? "none"
                 : `transform ${PANEL_DURATION_MS}ms cubic-bezier(0.65,0,0.35,1) ${delayMs}ms`,
-              backgroundImage: `linear-gradient(${164 + i * 5}deg, rgba(8,5,13,0.97) 0%, rgba(139,53,255,${(0.22 + (i % 3) * 0.08).toFixed(2)}) 55%, rgba(8,5,13,0.97) 100%)`,
+              // Couche de fond solide et quasi-opaque en premier plan de
+              // pile (garantit qu'on ne voit JAMAIS la page à travers),
+              // puis un dégradé violet de la marque par-dessus.
+              backgroundImage: `linear-gradient(${170 + i * 4}deg, rgba(139,53,255,${(0.28 + (i % 3) * 0.1).toFixed(2)}) 0%, transparent 45%, rgba(139,53,255,${(0.28 + (i % 3) * 0.1).toFixed(2)}) 100%), linear-gradient(0deg, rgba(10,6,18,0.99), rgba(10,6,18,0.99))`,
               boxShadow: "3px 0 26px rgba(139,53,255,0.4)",
             }}
           />
