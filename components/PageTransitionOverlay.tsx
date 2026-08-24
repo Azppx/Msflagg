@@ -5,14 +5,17 @@ import { usePathname, useRouter } from "next/navigation";
 
 type Phase = "idle" | "covering" | "waiting" | "revealing";
 
+// Nombre de "lames" de verre qui balaient l'écran en cascade diagonale.
+const PANEL_COUNT = 6;
+const PANEL_DURATION_MS = 520;
+const PANEL_STAGGER_MS = 42;
+
 export function PageTransitionOverlay() {
   const router = useRouter();
   const pathname = usePathname();
   const [phase, setPhase] = useState<Phase>("idle");
   const pendingHref = useRef<string | null>(null);
 
-  // Miroir synchrone de `phase`, lisible dans le listener sans le recréer
-  // à chaque changement de phase.
   const phaseRef = useRef<Phase>("idle");
   useEffect(() => {
     phaseRef.current = phase;
@@ -35,10 +38,6 @@ export function PageTransitionOverlay() {
 
       e.preventDefault();
       pendingHref.current = href;
-
-      // On démarre à "idle" (point invisible) puis on passe à "covering"
-      // au frame suivant, pour que le navigateur ait un vrai état de
-      // départ à partir duquel animer.
       requestAnimationFrame(() => setPhase("covering"));
     }
 
@@ -46,18 +45,17 @@ export function PageTransitionOverlay() {
     return () => document.removeEventListener("click", onClick, true);
   }, [pathname]);
 
-  // Minuteurs fixes plutôt que `transitionend` (peu fiable en 3D sur
-  // mobile) : ils garantissent que la navigation et la disparition de
-  // l'overlay se produisent toujours au bon moment, sur tous les appareils.
-  const COVER_MS = 580;
-  const REVEAL_MS = 580;
+  // Durée totale d'une cascade = durée d'une lame + le décalage cumulé de
+  // la dernière lame + une petite marge. Minuteurs fixes (pas
+  // `transitionend`, peu fiable en 3D/cascade sur mobile).
+  const SWEEP_MS = PANEL_DURATION_MS + (PANEL_COUNT - 1) * PANEL_STAGGER_MS + 60;
 
   useEffect(() => {
     if (phase !== "covering") return;
     const timeout = setTimeout(() => {
       setPhase("waiting");
       if (pendingHref.current) router.push(pendingHref.current);
-    }, COVER_MS);
+    }, SWEEP_MS);
     return () => clearTimeout(timeout);
   }, [phase, router]);
 
@@ -73,7 +71,7 @@ export function PageTransitionOverlay() {
     const timeout = setTimeout(() => {
       setPhase("idle");
       pendingHref.current = null;
-    }, REVEAL_MS);
+    }, SWEEP_MS);
     return () => clearTimeout(timeout);
   }, [phase]);
 
@@ -83,116 +81,117 @@ export function PageTransitionOverlay() {
     const timeout = setTimeout(() => {
       setPhase("idle");
       pendingHref.current = null;
-    }, 4000);
+    }, 4500);
     return () => clearTimeout(timeout);
   }, [phase]);
 
   const noTransition = phase === "idle";
+  const covering = phase === "covering" || phase === "waiting";
   const visible = phase !== "idle";
 
-  // Échelle du volet net : part d'un point minuscule invisible au centre,
-  // grossit pour couvrir tout l'écran (covering), puis continue de grossir
-  // en s'effaçant pour "s'envoler" vers le spectateur et révéler la page
-  // suivante derrière lui (revealing).
-  let mainScale = 0.08;
-  let mainOpacity = 0;
-  if (phase === "covering" || phase === "waiting") {
-    mainScale = 1;
-    mainOpacity = 1;
-  } else if (phase === "revealing") {
-    mainScale = 2.5;
-    mainOpacity = 0;
+  // Position de chaque lame : hors-écran à gauche (idle), en place
+  // (covering/waiting), hors-écran à droite (revealing).
+  function panelTranslate(): string {
+    if (phase === "revealing") return "140%";
+    if (covering) return "0%";
+    return "-140%";
   }
 
-  // L'aura suit la même trajectoire mais toujours un cran plus grande et
-  // plus floue : elle déborde du volet net et crée le halo/glow tout
-  // autour, renforçant l'impression de volume 3D.
-  let auraScale = 0.08;
-  let auraOpacity = 0;
-  if (phase === "covering" || phase === "waiting") {
-    auraScale = 1.4;
-    auraOpacity = 0.8;
-  } else if (phase === "revealing") {
-    auraScale = 3;
-    auraOpacity = 0;
-  }
+  const panelWidth = 100 / PANEL_COUNT + 6; // largeur généreuse : les lames
+  // se chevauchent légèrement pour ne laisser aucun interstice visible une
+  // fois inclinées (skew).
+
+  const logoOpacity = covering ? 1 : 0;
+  const logoDelay = phase === "covering" ? PANEL_DURATION_MS * 0.55 : 0;
 
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-[95]"
-      style={{ perspective: "1300px" }}
+      className="pointer-events-none fixed inset-0 z-[95] overflow-hidden"
+      style={{ perspective: "1400px" }}
     >
-      <style>{`
-        @keyframes kyzenZoomPulse {
-          0% { transform: scale(0.25); opacity: 0.9; }
-          100% { transform: scale(2.6); opacity: 0; }
-        }
-      `}</style>
-
-      {/* Lueur ambiante : respire doucement derrière tout le reste */}
+      {/* Lueur ambiante de fond, respire doucement */}
       <div
         className="absolute inset-0"
         style={{
-          background: "radial-gradient(circle at center, rgba(139,53,255,0.28), transparent 62%)",
+          background: "radial-gradient(circle at center, rgba(139,53,255,0.25), transparent 60%)",
           opacity: visible ? 1 : 0,
           transition: noTransition ? "none" : "opacity 0.5s ease-out",
         }}
       />
 
-      {/* Onde de choc : un anneau lumineux jaillit et s'estompe à chaque
-          étape clé (covering, waiting, revealing) — `key={phase}` force le
-          remontage pour relancer l'animation depuis le début à chaque fois. */}
-      {phase !== "idle" && (
-        <div
-          key={phase}
-          className="absolute left-1/2 top-1/2"
-          style={{
-            width: "60vmax",
-            height: "60vmax",
-            marginLeft: "-30vmax",
-            marginTop: "-30vmax",
-            borderRadius: "50%",
-            border: "2px solid rgba(196,150,255,0.85)",
-            boxShadow: "0 0 60px 10px rgba(139,53,255,0.5)",
-            animation: "kyzenZoomPulse 0.6s cubic-bezier(0.25,0.8,0.4,1) forwards",
-          }}
-        />
-      )}
+      {/* Les lames de verre, en cascade diagonale */}
+      {Array.from({ length: PANEL_COUNT }).map((_, i) => {
+        const delayMs = i * PANEL_STAGGER_MS;
+        return (
+          <div
+            key={i}
+            className="absolute top-0 h-full"
+            style={{
+              left: `${i * (100 / PANEL_COUNT) - 3}%`,
+              width: `${panelWidth}%`,
+              transform: `translateX(${panelTranslate()}) skewX(-16deg)`,
+              transformStyle: "preserve-3d",
+              backfaceVisibility: "hidden",
+              willChange: "transform",
+              transition: noTransition
+                ? "none"
+                : `transform ${PANEL_DURATION_MS}ms cubic-bezier(0.65,0,0.35,1) ${delayMs}ms`,
+              backgroundImage: `linear-gradient(${164 + i * 5}deg, rgba(8,5,13,0.97) 0%, rgba(139,53,255,${(0.22 + (i % 3) * 0.08).toFixed(2)}) 55%, rgba(8,5,13,0.97) 100%)`,
+              boxShadow: "3px 0 26px rgba(139,53,255,0.4)",
+            }}
+          />
+        );
+      })}
 
-      {/* Aura floutée : volume 3D + glow, déborde du volet net */}
+      {/* Halo derrière le K, pulse doucement au pic de la couverture */}
       <div
-        className="absolute inset-0"
+        className="absolute left-1/2 top-1/2"
         style={{
-          transform: `scale(${auraScale})`,
-          transformStyle: "preserve-3d",
-          backfaceVisibility: "hidden",
-          willChange: "transform, opacity",
-          opacity: auraOpacity,
-          transition: noTransition
-            ? "none"
-            : "transform 0.55s cubic-bezier(0.22,1,0.36,1), opacity 0.5s ease-out",
-          background: "radial-gradient(circle at 50% 50%, rgba(139,53,255,0.55), transparent 70%)",
-          filter: "blur(50px)",
+          width: "340px",
+          height: "340px",
+          marginLeft: "-170px",
+          marginTop: "-170px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(139,53,255,0.55), transparent 70%)",
+          filter: "blur(30px)",
+          opacity: logoOpacity,
+          transition: noTransition ? "none" : `opacity 0.4s ease-out ${logoDelay}ms`,
         }}
       />
 
-      {/* Volet net : couvre réellement l'écran en zoomant depuis le centre */}
+      {/* Le K de la marque, flash au moment où l'écran est entièrement couvert */}
       <div
-        className="absolute inset-0"
+        className="absolute left-1/2 top-1/2"
         style={{
-          transform: `scale(${mainScale})`,
-          transformStyle: "preserve-3d",
-          backfaceVisibility: "hidden",
-          willChange: "transform, opacity",
-          opacity: mainOpacity,
+          width: "120px",
+          height: "150px",
+          marginLeft: "-60px",
+          marginTop: "-75px",
+          opacity: logoOpacity,
+          transform: `scale(${covering ? 1 : 0.75})`,
           transition: noTransition
             ? "none"
-            : "transform 0.5s cubic-bezier(0.22,1,0.36,1), opacity 0.45s ease-out",
-          backgroundImage:
-            "radial-gradient(circle at 50% 50%, rgba(139,53,255,0.35), transparent 65%), linear-gradient(135deg, rgba(8,5,13,0.98) 0%, rgba(30,12,48,0.98) 50%, rgba(8,5,13,0.98) 100%)",
+            : `opacity 0.4s ease-out ${logoDelay}ms, transform 0.45s cubic-bezier(0.34,1.56,0.64,1) ${logoDelay}ms`,
         }}
-      />
+      >
+        <svg viewBox="0 0 70 100" width="100%" height="100%" fill="none">
+          <defs>
+            <linearGradient id="kyzenKGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#ffffff" />
+              <stop offset="100%" stopColor="#c496ff" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M10 6 L10 94 M10 50 L58 6 M10 50 L58 94"
+            stroke="url(#kyzenKGrad)"
+            strokeWidth="7"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ filter: "drop-shadow(0 0 14px rgba(196,150,255,0.9))" }}
+          />
+        </svg>
+      </div>
     </div>
   );
 }
