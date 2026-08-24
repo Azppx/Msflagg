@@ -211,6 +211,17 @@ export function CatalogIcon({ name }: { name: string }) {
           <path d="M6 14.5h4" strokeLinecap="round" />
         </svg>
       );
+    case "ghost":
+      return (
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path
+            d="M12 3.5c-4 0-6.5 3-6.5 7v4.2c-.9.4-1.6 1.1-1.9 1.8-.2.5.1 1 .6 1 .7 0 1.2.5 1.9 1 .8.6 1.7 1.1 2.7.6.5-.2.8-.6 1.2-.6s.6.5 1.1.9c.6.5 1.3.9 1.9.9s1.3-.4 1.9-.9c.5-.4.7-.9 1.1-.9s.7.4 1.2.6c1 .5 1.9 0 2.7-.6.7-.5 1.2-1 1.9-1 .5 0 .8-.5.6-1-.3-.7-1-1.4-1.9-1.8V10.5c0-4-2.5-7-6.5-7z"
+            strokeLinejoin="round"
+          />
+          <circle cx="9.3" cy="11" r="0.9" fill="currentColor" stroke="none" />
+          <circle cx="14.7" cy="11" r="0.9" fill="currentColor" stroke="none" />
+        </svg>
+      );
     case "clapper":
       return (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -236,6 +247,12 @@ export function CatalogIcon({ name }: { name: string }) {
           <circle cx="9" cy="11" r="1.4" fill="currentColor" stroke="none" />
           <circle cx="15" cy="11" r="1.4" fill="currentColor" stroke="none" />
           <path d="M10.5 15a2.5 2 0 0 0 3 0" strokeLinecap="round" />
+        </svg>
+      );
+    case "asterisk":
+      return (
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M12 4v16M5 7.5l14 9M19 7.5l-14 9" strokeLinecap="round" />
         </svg>
       );
     default:

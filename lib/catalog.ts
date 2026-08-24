@@ -27,6 +27,18 @@ const genericFeatures = [
 
 export const catalogProducts: CatalogProduct[] = [
   {
+    slug: "snapchat-3-mois",
+    name: "Snapchat + [ 3 Months ]",
+    category: "PREMIUM À VIE",
+    priceTotal: 5,
+    currency: "EUR",
+    description:
+      "Profitez de Snapchat+ avec un accès à vie, idéal pour débloquer des fonctionnalités exclusives, des options de personnalisation, des fonctionnalités prioritaires et bien plus encore. ✨ Livraison rapide, configuration simple et prêt à l'emploi dès l'achat.",
+    features: genericFeatures,
+    tone: "gold",
+    icon: "ghost",
+  },
+  {
     slug: "deezer",
     name: "Deezer",
     category: "PREMIUM À VIE",
@@ -262,6 +274,36 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "card",
+  },
+  {
+    slug: "snapchat-plus",
+    name: "Snapchat+ [ 3 Months ]",
+    category: "ABONNEMENT",
+    priceTotal: 5,
+    currency: "EUR",
+    description:
+      "Profitez de Snapchat+ avec un accès à vie, idéal pour débloquer des fonctionnalités exclusives, des options de personnalisation, des fonctionnalités prioritaires et bien plus encore. ✨ Livraison rapide, configuration simple et prêt à l'emploi dès l'achat.",
+    features: genericFeatures,
+    tone: "violet",
+    icon: "ghost",
+  },
+  {
+    slug: "claude-unlimited-method",
+    name: "Claude Unlimited Method",
+    category: "MÉTHODE",
+    priceTotal: 25,
+    currency: "EUR",
+    description: "Méthode pour un accès à tous les modèles de Claude FA.",
+    features: [
+      "Abonnement garanti — Accès à tous les modèles de Claude FA",
+      "Entièrement vérifié — Vérifié et testé pour garantir un fonctionnement optimal",
+      "Livraison immédiate — Lien et code prêts à l'emploi",
+      "Haute qualité et facile à revendre — Idéal pour un usage personnel ou la revente",
+      "Garantie complète de 7 jours — Couverture gratuite pendant 7 jours",
+      "Assistance et remplacement — Remplacements gratuits en cas de problème",
+    ],
+    tone: "violet",
+    icon: "asterisk",
   },
   {
     slug: "duolingo",
