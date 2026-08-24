@@ -89,6 +89,25 @@ export const catalogProducts: CatalogProduct[] = [
     icon: "gift",
   },
   {
+    slug: "pack-spotify-basicfit-netflix-youtube",
+    name: "Pack Spotify + Basic-Fit + Netflix + YouTube Premium",
+    category: "OFFRE PACK · LIMITÉE",
+    priceTotal: 35,
+    currency: "EUR",
+    description:
+      "1 compte Spotify Premium + 1 compte Basic-Fit Ultimate + 1 compte Netflix Premium 4K + 1 compte YouTube Premium, en pack, pour 35€.",
+    features: [
+      "1 compte Spotify Premium",
+      "1 compte Basic-Fit Ultimate",
+      "1 compte Netflix Premium 4K",
+      "1 compte YouTube Premium",
+      "Accès immédiat après paiement",
+      "Support dédié via Discord",
+    ],
+    tone: "violet",
+    icon: "gift",
+  },
+  {
     slug: "iptv",
     name: "IPTV",
     category: "SERVEUR 4K · 1 AN",
@@ -274,18 +293,6 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "card",
-  },
-  {
-    slug: "snapchat-plus",
-    name: "Snapchat+ [ 3 Months ]",
-    category: "ABONNEMENT",
-    priceTotal: 5,
-    currency: "EUR",
-    description:
-      "Profitez de Snapchat+ avec un accès à vie, idéal pour débloquer des fonctionnalités exclusives, des options de personnalisation, des fonctionnalités prioritaires et bien plus encore. ✨ Livraison rapide, configuration simple et prêt à l'emploi dès l'achat.",
-    features: genericFeatures,
-    tone: "violet",
-    icon: "ghost",
   },
   {
     slug: "claude-unlimited-method",
