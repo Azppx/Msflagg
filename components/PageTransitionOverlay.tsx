@@ -5,27 +5,14 @@ import { usePathname, useRouter } from "next/navigation";
 
 type Phase = "idle" | "covering" | "waiting" | "revealing";
 
-// -1 = hors-écran à gauche (repos, avant tout clic)
-//  0 = couvre l'écran (le volet est "à plat", pile en face de nous)
-//  1 = hors-écran à droite (après la sortie)
-// Le balayage va toujours de gauche à droite ; combiné à une légère
-// rotation 3D (rotateY) et à un recul en profondeur (translateZ), ça donne
-// l'impression d'un volet qui pivote légèrement en glissant, plutôt qu'un
-// simple aplat qui traverse l'écran à plat.
-function phaseValue(phase: Phase): number {
-  if (phase === "idle") return -1;
-  if (phase === "revealing") return 1;
-  return 0; // covering / waiting
-}
-
 export function PageTransitionOverlay() {
   const router = useRouter();
   const pathname = usePathname();
   const [phase, setPhase] = useState<Phase>("idle");
   const pendingHref = useRef<string | null>(null);
 
-  // Miroir synchrone de `phase`, lisible dans le listener sans avoir à le
-  // recréer à chaque changement de phase.
+  // Miroir synchrone de `phase`, lisible dans le listener sans le recréer
+  // à chaque changement de phase.
   const phaseRef = useRef<Phase>("idle");
   useEffect(() => {
     phaseRef.current = phase;
@@ -34,8 +21,6 @@ export function PageTransitionOverlay() {
   // Intercepte les clics sur tout lien interne du site.
   useEffect(() => {
     function onClick(e: MouseEvent) {
-      // Ignore si une transition est déjà en cours, pour éviter tout
-      // chevauchement/course entre deux clics rapides.
       if (phaseRef.current !== "idle") return;
       if (e.defaultPrevented || e.button !== 0) return;
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -51,9 +36,9 @@ export function PageTransitionOverlay() {
       e.preventDefault();
       pendingHref.current = href;
 
-      // On démarre à "idle" (hors-écran) puis on passe à "covering"
-      // seulement au frame suivant, pour que le navigateur ait un vrai état
-      // de départ à partir duquel animer.
+      // On démarre à "idle" (point invisible) puis on passe à "covering"
+      // au frame suivant, pour que le navigateur ait un vrai état de
+      // départ à partir duquel animer.
       requestAnimationFrame(() => setPhase("covering"));
     }
 
@@ -61,18 +46,12 @@ export function PageTransitionOverlay() {
     return () => document.removeEventListener("click", onClick, true);
   }, [pathname]);
 
-  // Durée réelle de la couche la plus lente (l'aura, 0.58s) : c'est ce qui
-  // détermine quand le balayage est visuellement terminé.
-  const COVER_MS = 600;
-  const REVEAL_MS = 600;
+  // Minuteurs fixes plutôt que `transitionend` (peu fiable en 3D sur
+  // mobile) : ils garantissent que la navigation et la disparition de
+  // l'overlay se produisent toujours au bon moment, sur tous les appareils.
+  const COVER_MS = 580;
+  const REVEAL_MS = 580;
 
-  // IMPORTANT : on pilote les étapes avec des minuteurs fixes plutôt qu'avec
-  // l'événement `transitionend`. Sur mobile, `transitionend` se déclenche de
-  // façon peu fiable sur des transformations 3D (`preserve-3d` +
-  // `perspective`) — il arrivait qu'il ne se déclenche jamais, ce qui
-  // faisait attendre le filet de sécurité (~2s) et laissait le halo violet
-  // affiché à l'écran sans même naviguer. Un minuteur fixe, lui, se
-  // déclenche toujours au bon moment, sur tous les appareils.
   useEffect(() => {
     if (phase !== "covering") return;
     const timeout = setTimeout(() => {
@@ -82,8 +61,6 @@ export function PageTransitionOverlay() {
     return () => clearTimeout(timeout);
   }, [phase, router]);
 
-  // Dès que la nouvelle page est montée (pathname changé) pendant qu'on
-  // attend, on lance la révélation.
   useEffect(() => {
     if (phase === "waiting") {
       setPhase("revealing");
@@ -100,9 +77,7 @@ export function PageTransitionOverlay() {
     return () => clearTimeout(timeout);
   }, [phase]);
 
-  // Sécurité anti-blocage ultime : si jamais la navigation ne se produit
-  // pas (route invalide, etc.) et qu'on reste bloqué en "waiting" plus de
-  // quelques secondes, on force la sortie.
+  // Sécurité anti-blocage ultime.
   useEffect(() => {
     if (phase === "idle") return;
     const timeout = setTimeout(() => {
@@ -112,18 +87,35 @@ export function PageTransitionOverlay() {
     return () => clearTimeout(timeout);
   }, [phase]);
 
-  const value = phaseValue(phase);
   const noTransition = phase === "idle";
   const visible = phase !== "idle";
 
-  // Volet net (couche du dessus) : rapide, c'est lui qui couvre réellement
-  // l'écran. Recul en profondeur (translateZ négatif) uniquement pendant le
-  // trajet, à plat (0) une fois en place — c'est ce qui crée l'arc 3D.
-  const mainTransform = `translate3d(${value * 100}%, 0, ${-Math.abs(value) * 140}px) rotateY(${value * 16}deg)`;
-  // Halo flouté (couche du dessous) : plus lent et légèrement plus reculé
-  // en permanence, il "rattrape" le volet net et donne l'impression de
-  // traînée lumineuse + de volume derrière le bord d'attaque.
-  const auraTransform = `translate3d(${value * 100}%, 0, ${-Math.abs(value) * 140 - 70}px) rotateY(${value * 22}deg)`;
+  // Échelle du volet net : part d'un point minuscule invisible au centre,
+  // grossit pour couvrir tout l'écran (covering), puis continue de grossir
+  // en s'effaçant pour "s'envoler" vers le spectateur et révéler la page
+  // suivante derrière lui (revealing).
+  let mainScale = 0.08;
+  let mainOpacity = 0;
+  if (phase === "covering" || phase === "waiting") {
+    mainScale = 1;
+    mainOpacity = 1;
+  } else if (phase === "revealing") {
+    mainScale = 2.5;
+    mainOpacity = 0;
+  }
+
+  // L'aura suit la même trajectoire mais toujours un cran plus grande et
+  // plus floue : elle déborde du volet net et crée le halo/glow tout
+  // autour, renforçant l'impression de volume 3D.
+  let auraScale = 0.08;
+  let auraOpacity = 0;
+  if (phase === "covering" || phase === "waiting") {
+    auraScale = 1.4;
+    auraOpacity = 0.8;
+  } else if (phase === "revealing") {
+    auraScale = 3;
+    auraOpacity = 0;
+  }
 
   return (
     <div
@@ -131,73 +123,76 @@ export function PageTransitionOverlay() {
       className="pointer-events-none fixed inset-0 z-[95]"
       style={{ perspective: "1300px" }}
     >
+      <style>{`
+        @keyframes kyzenZoomPulse {
+          0% { transform: scale(0.25); opacity: 0.9; }
+          100% { transform: scale(2.6); opacity: 0; }
+        }
+      `}</style>
+
       {/* Lueur ambiante : respire doucement derrière tout le reste */}
       <div
         className="absolute inset-0"
         style={{
           background: "radial-gradient(circle at center, rgba(139,53,255,0.28), transparent 62%)",
           opacity: visible ? 1 : 0,
-          transition: noTransition ? "none" : "opacity 0.6s ease-out",
+          transition: noTransition ? "none" : "opacity 0.5s ease-out",
         }}
       />
 
-      {/* Aura floutée : volume 3D + traînée lumineuse, la plus lente */}
+      {/* Onde de choc : un anneau lumineux jaillit et s'estompe à chaque
+          étape clé (covering, waiting, revealing) — `key={phase}` force le
+          remontage pour relancer l'animation depuis le début à chaque fois. */}
+      {phase !== "idle" && (
+        <div
+          key={phase}
+          className="absolute left-1/2 top-1/2"
+          style={{
+            width: "60vmax",
+            height: "60vmax",
+            marginLeft: "-30vmax",
+            marginTop: "-30vmax",
+            borderRadius: "50%",
+            border: "2px solid rgba(196,150,255,0.85)",
+            boxShadow: "0 0 60px 10px rgba(139,53,255,0.5)",
+            animation: "kyzenZoomPulse 0.6s cubic-bezier(0.25,0.8,0.4,1) forwards",
+          }}
+        />
+      )}
+
+      {/* Aura floutée : volume 3D + glow, déborde du volet net */}
       <div
         className="absolute inset-0"
         style={{
-          transform: auraTransform,
+          transform: `scale(${auraScale})`,
           transformStyle: "preserve-3d",
           backfaceVisibility: "hidden",
-          willChange: "transform",
-          opacity: visible ? 0.85 : 0,
+          willChange: "transform, opacity",
+          opacity: auraOpacity,
           transition: noTransition
             ? "none"
-            : "transform 0.58s cubic-bezier(0.65,0,0.35,1), opacity 0.4s ease-out",
-          background: "radial-gradient(circle at 50% 50%, rgba(139,53,255,0.55), transparent 72%)",
-          filter: "blur(46px)",
+            : "transform 0.55s cubic-bezier(0.22,1,0.36,1), opacity 0.5s ease-out",
+          background: "radial-gradient(circle at 50% 50%, rgba(139,53,255,0.55), transparent 70%)",
+          filter: "blur(50px)",
         }}
       />
 
-      {/* Volet net : couvre réellement l'écran, arrive en premier */}
+      {/* Volet net : couvre réellement l'écran en zoomant depuis le centre */}
       <div
         className="absolute inset-0"
         style={{
-          transform: mainTransform,
+          transform: `scale(${mainScale})`,
           transformStyle: "preserve-3d",
           backfaceVisibility: "hidden",
-          willChange: "transform",
-          transition: noTransition ? "none" : "transform 0.42s cubic-bezier(0.65,0,0.35,1)",
+          willChange: "transform, opacity",
+          opacity: mainOpacity,
+          transition: noTransition
+            ? "none"
+            : "transform 0.5s cubic-bezier(0.22,1,0.36,1), opacity 0.45s ease-out",
           backgroundImage:
-            "linear-gradient(180deg, rgba(255,255,255,0.07), transparent 30%), linear-gradient(100deg, rgba(8,5,13,0.98) 0%, rgba(139,53,255,0.42) 55%, rgba(8,5,13,0.98) 100%)",
+            "radial-gradient(circle at 50% 50%, rgba(139,53,255,0.35), transparent 65%), linear-gradient(135deg, rgba(8,5,13,0.98) 0%, rgba(30,12,48,0.98) 50%, rgba(8,5,13,0.98) 100%)",
         }}
-      >
-        {/* Halo large et doux juste devant le bord d'attaque */}
-        <div
-          className="absolute top-0 h-full"
-          style={{
-            right: "-160px",
-            width: "260px",
-            background:
-              "linear-gradient(90deg, rgba(139,53,255,0.55), rgba(255,255,255,0.35) 45%, transparent 100%)",
-            filter: "blur(40px)",
-            mixBlendMode: "screen",
-            opacity: visible ? 1 : 0,
-            transition: noTransition ? "none" : "opacity 0.15s ease-out",
-          }}
-        />
-        {/* Lame nette : le trait de lumière qui découpe l'écran en avançant */}
-        <div
-          className="absolute top-0 h-full"
-          style={{
-            right: "-3px",
-            width: "6px",
-            background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.95), transparent)",
-            boxShadow: "0 0 24px 6px rgba(196,150,255,0.9), 0 0 60px 18px rgba(139,53,255,0.5)",
-            opacity: visible ? 1 : 0,
-            transition: noTransition ? "none" : "opacity 0.15s ease-out",
-          }}
-        />
-      </div>
+      />
     </div>
   );
 }
