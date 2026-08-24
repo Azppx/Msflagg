@@ -101,12 +101,35 @@ export default function HomePage() {
             </div>
           </GlowCard>
         </Link>
+      </section>
 
-        <div className="mt-3 grid grid-cols-3 gap-2.5">
-          <MiniFeature icon="⚡" label="Livraison" text="Traitement rapide" />
-          <MiniFeature icon="✦" label="Qualité" text="Présentation premium" />
-          <MiniFeature icon="◆" label="Support" text="Assistance dispo" />
-        </div>
+      {/* ---------- 2E PACK ---------- */}
+      <section className="mt-8">
+        <Link href="/produit/pack-spotify-basicfit-netflix-youtube" className="block">
+          <GlowCard toneRgb={catalogToneRgb.violet} className="text-left">
+            <span className="inline-block rounded-full border border-violet/30 bg-violet/10 px-2.5 py-1 text-[10px] font-extrabold tracking-wide text-violet-soft">
+              ✦ PACK COMPLET
+            </span>
+            <h3 className="mt-4 text-[28px] font-extrabold leading-[1.05] tracking-tight text-white">
+              <span className="text-violet-soft">SPOTIFY + BASIC-FIT</span>
+              <br />
+              + NETFLIX + YOUTUBE
+            </h3>
+            <p className="mt-3 text-[13px] leading-relaxed text-white/50">
+              1 compte Spotify Premium + 1 compte Basic-Fit Ultimate + 1 compte Netflix Premium
+              4K + 1 compte YouTube Premium, en pack, livraison immédiate après paiement.
+            </p>
+            <div className="mt-5 flex items-center justify-between gap-3">
+              <p>
+                <span className="text-3xl font-extrabold tracking-tight">35€</span>
+                <span className="ml-1 text-[11px] text-white/40">/ bundle</span>
+              </p>
+              <span className="btn-glow-purple rounded-xl px-4 py-3 text-[12px] font-bold">
+                Commander →
+              </span>
+            </div>
+          </GlowCard>
+        </Link>
       </section>
 
       <p className="mt-14 text-center text-[11px] tracking-widest text-white/25">
@@ -119,16 +142,5 @@ export default function HomePage() {
         Admin
       </Link>
     </main>
-  );
-}
-
-function MiniFeature({ icon, label, text }: { icon: string; label: string; text: string }) {
-  return (
-    <div className="rounded-2xl border border-panelBorder bg-white/[0.025] p-3.5">
-      <p className="text-[13px] font-bold text-white">
-        {icon} {label}
-      </p>
-      <p className="mt-1 text-[10.5px] leading-snug text-white/45">{text}</p>
-    </div>
   );
 }
