@@ -5,27 +5,21 @@ import { usePathname, useRouter } from "next/navigation";
 
 type Phase = "idle" | "covering" | "revealing";
 
-// Nombre de lames qui balaient l'écran en cascade.
-const PANEL_COUNT = 6;
-const PANEL_DURATION_MS = 500;
-const PANEL_STAGGER_MS = 42;
-// Durée totale d'une cascade = durée d'une lame + décalage cumulé de la
-// dernière + marge de sécurité.
-const SWEEP_MS = PANEL_DURATION_MS + (PANEL_COUNT - 1) * PANEL_STAGGER_MS + 80;
-
-// Couleurs PLEINES (hexadécimal, zéro canal alpha) : aucune ambiguïté de
-// transparence possible, contrairement à rgba()/transparent utilisés
-// précédemment. Chaque lame est garantie 100% opaque du premier au
-// dernier pixel.
-const PANEL_COLORS = ["#1c0e30", "#241238", "#170b28", "#2a1440", "#190c2c", "#20103a"];
+// Timing piloté par minuteurs fixes de bout en bout (pas de dépendance à
+// usePathname pour enchaîner les étapes — évite tout blocage si le
+// changement de route n'est pas détecté à temps).
+const BLOOM_MS = 620;
+const HOLD_MS = 140;
+const EXIT_MS = 560;
 
 export function PageTransitionOverlay() {
   const router = useRouter();
   const pathname = usePathname();
   const [phase, setPhase] = useState<Phase>("idle");
+  const [origin, setOrigin] = useState({ x: "50%", y: "50%" });
   const pendingHref = useRef<string | null>(null);
-
   const phaseRef = useRef<Phase>("idle");
+
   useEffect(() => {
     phaseRef.current = phase;
   }, [phase]);
@@ -46,6 +40,11 @@ export function PageTransitionOverlay() {
       if (href === pathname) return;
 
       e.preventDefault();
+      const rect = anchor.getBoundingClientRect();
+      setOrigin({
+        x: `${rect.left + rect.width / 2}px`,
+        y: `${rect.top + rect.height / 2}px`,
+      });
       pendingHref.current = href;
       requestAnimationFrame(() => setPhase("covering"));
     }
@@ -54,122 +53,109 @@ export function PageTransitionOverlay() {
     return () => document.removeEventListener("click", onClick, true);
   }, [pathname]);
 
-  // IMPORTANT : tout est piloté par des minuteurs fixes, de bout en bout.
-  // On ne dépend plus de `usePathname()` pour enchaîner les étapes — si le
-  // changement de route n'était pas détecté à temps pour une raison ou une
-  // autre, l'overlay restait bloqué indéfiniment en position "couverte".
-  // Là, la navigation ET le passage à "revealing" se déclenchent au même
-  // instant, sans rien attendre d'autre.
+  // Le halo finit de fleurir → on navigue après une courte pause, puis on
+  // repart en sens inverse pour révéler la page.
   useEffect(() => {
     if (phase !== "covering") return;
-    const timeout = setTimeout(() => {
+    const t = setTimeout(() => {
       if (pendingHref.current) router.push(pendingHref.current);
-      setPhase("revealing");
-    }, SWEEP_MS);
-    return () => clearTimeout(timeout);
+      setTimeout(() => setPhase("revealing"), HOLD_MS);
+    }, BLOOM_MS);
+    return () => clearTimeout(t);
   }, [phase, router]);
 
   useEffect(() => {
     if (phase !== "revealing") return;
-    const timeout = setTimeout(() => {
+    const t = setTimeout(() => {
       setPhase("idle");
       pendingHref.current = null;
-    }, SWEEP_MS);
-    return () => clearTimeout(timeout);
+    }, EXIT_MS);
+    return () => clearTimeout(t);
   }, [phase]);
 
   // Sécurité anti-blocage ultime.
   useEffect(() => {
     if (phase === "idle") return;
-    const timeout = setTimeout(() => {
+    const t = setTimeout(() => {
       setPhase("idle");
       pendingHref.current = null;
     }, 4000);
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(t);
   }, [phase]);
 
   const noTransition = phase === "idle";
-  const covering = phase === "covering";
   const visible = phase !== "idle";
-
-  function panelTranslate(): string {
-    if (phase === "revealing") return "101%";
-    if (covering) return "0%";
-    return "-101%";
-  }
-
-  const rawWidth = 100 / PANEL_COUNT;
-  const overlap = 0.6; // marge généreuse, garantit zéro interstice
-
-  const logoOpacity = covering ? 1 : 0;
-  const logoDelay = phase === "covering" ? PANEL_DURATION_MS * 0.55 : 0;
+  const covering = phase === "covering";
 
   return (
-    <div
-      aria-hidden
-      className="pointer-events-none fixed inset-0 z-[95] overflow-hidden"
-    >
-      {/* Lueur ambiante de fond, respire doucement */}
+    <div aria-hidden className="pointer-events-none fixed inset-0 z-[95] overflow-hidden">
+      {/* Voile de fond — s'assombrit pendant que le halo grossit */}
       <div
         className="absolute inset-0"
         style={{
-          background: "radial-gradient(circle at center, rgba(139,53,255,0.25), transparent 60%)",
-          opacity: visible ? 1 : 0,
-          transition: noTransition ? "none" : "opacity 0.5s ease-out",
+          background: "#0a0612",
+          opacity: visible ? 0.94 : 0,
+          transition: noTransition ? "none" : `opacity ${covering ? BLOOM_MS : EXIT_MS}ms ease`,
         }}
       />
 
-      {/* Les lames, en cascade — couleur pleine, 100% opaque garanti */}
-      {Array.from({ length: PANEL_COUNT }).map((_, i) => {
-        const delayMs = i * PANEL_STAGGER_MS;
-        return (
-          <div
-            key={i}
-            className="absolute top-0 h-full"
-            style={{
-              left: `${i * rawWidth - overlap / 2}%`,
-              width: `${rawWidth + overlap}%`,
-              transform: `translateX(${panelTranslate()})`,
-              willChange: "transform",
-              transition: noTransition
-                ? "none"
-                : `transform ${PANEL_DURATION_MS}ms cubic-bezier(0.65,0,0.35,1) ${delayMs}ms`,
-              backgroundColor: PANEL_COLORS[i],
-              boxShadow: "3px 0 26px rgba(139,53,255,0.4)",
-            }}
-          />
-        );
-      })}
-
-      {/* Halo derrière le K, pulse doucement au pic de la couverture */}
+      {/* Halo violet qui fleurit depuis le point cliqué et recouvre l'écran */}
       <div
-        className="absolute left-1/2 top-1/2"
+        className="absolute"
         style={{
-          width: "340px",
-          height: "340px",
-          marginLeft: "-170px",
-          marginTop: "-170px",
+          left: origin.x,
+          top: origin.y,
+          width: "60px",
+          height: "60px",
+          marginLeft: "-30px",
+          marginTop: "-30px",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(139,53,255,0.55), transparent 70%)",
-          filter: "blur(30px)",
-          opacity: logoOpacity,
-          transition: noTransition ? "none" : `opacity 0.4s ease-out ${logoDelay}ms`,
-        }}
-      />
-
-      {/* Le K de la marque, flash au moment où l'écran est entièrement couvert */}
-      <div
-        className="absolute left-1/2 top-1/2"
-        style={{
-          width: "120px",
-          height: "150px",
-          marginLeft: "-60px",
-          marginTop: "-75px",
-          opacity: logoOpacity,
-          transform: `scale(${covering ? 1 : 0.75})`,
+          background:
+            "radial-gradient(circle, rgba(139,53,255,0.9) 0%, rgba(139,53,255,0.5) 35%, transparent 70%)",
+          filter: "blur(20px)",
+          transform: `scale(${covering ? 45 : 0.3})`,
+          opacity: visible ? 1 : 0,
           transition: noTransition
             ? "none"
-            : `opacity 0.4s ease-out ${logoDelay}ms, transform 0.45s cubic-bezier(0.34,1.56,0.64,1) ${logoDelay}ms`,
+            : `transform ${covering ? BLOOM_MS : EXIT_MS}ms cubic-bezier(0.65,0,0.35,1), opacity ${
+                covering ? BLOOM_MS : EXIT_MS
+              }ms ease`,
+        }}
+      />
+
+      {/* Anneau en orbite, identique au héro — tourne doucement pendant la transition */}
+      <div
+        className="kyzen-orbit-ring"
+        style={{
+          left: origin.x,
+          top: origin.y,
+          width: "220px",
+          height: "130px",
+          marginLeft: "-110px",
+          marginTop: "-65px",
+          opacity: covering ? 0.8 : 0,
+          transition: noTransition ? "none" : "opacity 0.35s ease",
+          animation: "orbitSpin1 3.5s linear infinite",
+        }}
+      />
+
+      {/* Le K de la marque, pulse au pic de la couverture */}
+      <div
+        className="absolute"
+        style={{
+          left: origin.x,
+          top: origin.y,
+          width: "84px",
+          height: "104px",
+          marginLeft: "-42px",
+          marginTop: "-52px",
+          opacity: covering ? 1 : 0,
+          transform: `scale(${covering ? 1 : 0.6})`,
+          transition: noTransition
+            ? "none"
+            : `opacity 0.35s ease ${covering ? BLOOM_MS * 0.45 : 0}ms, transform 0.4s cubic-bezier(0.34,1.56,0.64,1) ${
+                covering ? BLOOM_MS * 0.45 : 0
+              }ms`,
         }}
       >
         <svg viewBox="0 0 70 100" width="100%" height="100%" fill="none">
