@@ -4,6 +4,8 @@ import "./globals.css";
 import { siteConfig } from "@/lib/config";
 import { CartProvider } from "@/lib/cart-context";
 import { AuthProvider } from "@/lib/auth-context";
+import { LocaleProvider } from "@/lib/i18n/locale-context";
+import { AudioPlayerProvider } from "@/lib/audio-player-context";
 import { OrderTrackerWidget } from "@/components/OrderTrackerWidget";
 import { TopBar } from "@/components/TopBar";
 import { LoadingSplash } from "@/components/LoadingSplash";
@@ -62,14 +64,18 @@ export default function RootLayout({
           <div className="frame-line" />
         </div>
         <div className="relative z-10">
-          <AuthProvider>
-            <CartProvider>
-              <LoadingSplash />
-              <TopBar />
-              <PageTransition>{children}</PageTransition>
-              <OrderTrackerWidget />
-            </CartProvider>
-          </AuthProvider>
+          <LocaleProvider>
+            <AuthProvider>
+              <CartProvider>
+                <AudioPlayerProvider>
+                  <LoadingSplash />
+                  <TopBar />
+                  <PageTransition>{children}</PageTransition>
+                  <OrderTrackerWidget />
+                </AudioPlayerProvider>
+              </CartProvider>
+            </AuthProvider>
+          </LocaleProvider>
         </div>
       </body>
     </html>

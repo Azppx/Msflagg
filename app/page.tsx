@@ -1,10 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { GlowCard } from "@/components/GlowCard";
 import { siteConfig } from "@/lib/config";
 import { catalogToneRgb } from "@/components/catalog-icons";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export default function HomePage() {
+  const t = useTranslation();
+
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col px-5 pb-16 pt-10">
       {/* ---------- HERO 3D ---------- */}
@@ -14,13 +19,13 @@ export default function HomePage() {
             href="/produit/pack-basicfit-netflix"
             className="btn-glow-purple rounded-xl px-5 py-3.5 text-[13px] font-bold transition-transform"
           >
-            Découvrir l'offre
+            {t("home.cta_discover")}
           </Link>
           <Link
             href="/premium"
             className="rounded-xl border border-panelBorder bg-white/[0.035] px-5 py-3.5 text-[13px] font-bold text-white transition-transform hover:-translate-y-0.5"
           >
-            Explorer KYZEN
+            {t("home.cta_explore")}
           </Link>
         </div>
 
@@ -30,18 +35,18 @@ export default function HomePage() {
           <span className="kyzen-k-outline">K</span>
 
           <div className="kyzen-float-badge" style={{ top: "6%", right: "0%" }}>
-            <span className="label">Statut</span>
+            <span className="label">{t("home.status_label")}</span>
             <span className="value">
-              <span className="kyzen-badge-live" /> En ligne
+              <span className="kyzen-badge-live" /> {t("home.status_value")}
             </span>
           </div>
           <div className="kyzen-float-badge" style={{ bottom: "8%", left: "-2%", animationDelay: "1.5s" }}>
-            <span className="label">Collection</span>
-            <span className="value">Services Premium</span>
+            <span className="label">{t("home.collection_label")}</span>
+            <span className="value">{t("home.collection_value")}</span>
           </div>
           <div className="kyzen-float-badge" style={{ bottom: "0%", right: "2%", animationDelay: "3s" }}>
-            <span className="label">Communauté</span>
-            <span className="value">Discord KYZEN</span>
+            <span className="label">{t("home.community_label")}</span>
+            <span className="value">{t("home.community_value")}</span>
           </div>
         </div>
 
@@ -50,7 +55,7 @@ export default function HomePage() {
         </h1>
 
         <p className="relative mx-auto mt-5 max-w-[32ch] text-[14px] leading-[1.7] text-white/50">
-          Une expérience simple, rapide et pensée pour accéder à tous les services de KYZEN.
+          {t("home.tagline")}
         </p>
 
         <div className="mt-8 grid grid-cols-1 gap-3.5">
@@ -58,7 +63,7 @@ export default function HomePage() {
             <div className="kyzen-mini-icon">
               <Image src="/icons/logo-k.png" alt="KYZEN" width={26} height={26} priority />
             </div>
-            <h2 className="mt-[18px] text-[17px] font-semibold">KYZEN services</h2>
+            <h2 className="mt-[18px] text-[17px] font-semibold">{t("home.card_services")}</h2>
             <span className="kyzen-mini-arrow">→</span>
           </Link>
           <a
@@ -70,7 +75,7 @@ export default function HomePage() {
             <div className="kyzen-mini-icon">
               <Image src="/icons/discord-mark.png" alt="Discord" width={22} height={22} />
             </div>
-            <h2 className="mt-[18px] text-[17px] font-semibold">Discord</h2>
+            <h2 className="mt-[18px] text-[17px] font-semibold">{t("home.card_discord")}</h2>
             <span className="kyzen-mini-arrow">→</span>
           </a>
         </div>
@@ -78,30 +83,27 @@ export default function HomePage() {
 
       {/* ---------- OFFRE EN VEDETTE ---------- */}
       <section className="mt-14">
-        <p className="text-[22px] font-bold tracking-tight">Offre en vedette</p>
-        <p className="mt-1 text-xs text-white/40">Le bundle KYZEN du moment</p>
+        <p className="text-[22px] font-bold tracking-tight">{t("home.featured_title")}</p>
+        <p className="mt-1 text-xs text-white/40">{t("home.featured_subtitle")}</p>
 
         <Link href="/produit/pack-basicfit-netflix" className="mt-5 block">
           <GlowCard toneRgb={catalogToneRgb.electric} className="text-left">
             <span className="inline-block rounded-full border border-electric/30 bg-electric/10 px-2.5 py-1 text-[10px] font-extrabold tracking-wide text-violet-soft">
-              ★ BEST SELLER
+              {t("home.best_seller")}
             </span>
             <h3 className="mt-4 text-[28px] font-extrabold leading-[1.05] tracking-tight text-white">
-              <span className="text-violet-soft">BASIC FIT</span>
+              <span className="text-violet-soft">{t("home.pack1_title_line1")}</span>
               <br />
-              25€ avec 2 comptes Netflix offerts
+              {t("home.pack1_title_line2")}
             </h3>
-            <p className="mt-3 text-[13px] leading-relaxed text-white/50">
-              1 compte Basic-Fit Ultimate + 2 comptes Netflix Premium 4K, en pack, livraison
-              immédiate après paiement.
-            </p>
+            <p className="mt-3 text-[13px] leading-relaxed text-white/50">{t("home.pack1_desc")}</p>
             <div className="mt-5 flex items-center justify-between gap-3">
               <p>
                 <span className="text-3xl font-extrabold tracking-tight">25€</span>
-                <span className="ml-1 text-[11px] text-white/40">/ bundle</span>
+                <span className="ml-1 text-[11px] text-white/40">{t("home.per_bundle")}</span>
               </p>
               <span className="btn-glow-purple rounded-xl px-4 py-3 text-[12px] font-bold">
-                Commander →
+                {t("home.order_cta")}
               </span>
             </div>
           </GlowCard>
@@ -113,24 +115,21 @@ export default function HomePage() {
         <Link href="/produit/pack-spotify-basicfit-netflix-youtube" className="block">
           <GlowCard toneRgb={catalogToneRgb.violet} className="text-left">
             <span className="inline-block rounded-full border border-violet/30 bg-violet/10 px-2.5 py-1 text-[10px] font-extrabold tracking-wide text-violet-soft">
-              ✦ PACK COMPLET
+              {t("home.pack_complete")}
             </span>
             <h3 className="mt-4 text-[28px] font-extrabold leading-[1.05] tracking-tight text-white">
-              <span className="text-violet-soft">SPOTIFY + BASIC-FIT</span>
+              <span className="text-violet-soft">{t("home.pack2_title_line1")}</span>
               <br />
-              + NETFLIX + YOUTUBE
+              {t("home.pack2_title_line2")}
             </h3>
-            <p className="mt-3 text-[13px] leading-relaxed text-white/50">
-              1 compte Spotify Premium + 1 compte Basic-Fit Ultimate + 1 compte Netflix Premium
-              4K + 1 compte YouTube Premium, en pack, livraison immédiate après paiement.
-            </p>
+            <p className="mt-3 text-[13px] leading-relaxed text-white/50">{t("home.pack2_desc")}</p>
             <div className="mt-5 flex items-center justify-between gap-3">
               <p>
                 <span className="text-3xl font-extrabold tracking-tight">35€</span>
-                <span className="ml-1 text-[11px] text-white/40">/ bundle</span>
+                <span className="ml-1 text-[11px] text-white/40">{t("home.per_bundle")}</span>
               </p>
               <span className="btn-glow-purple rounded-xl px-4 py-3 text-[12px] font-bold">
-                Commander →
+                {t("home.order_cta")}
               </span>
             </div>
           </GlowCard>
@@ -138,13 +137,13 @@ export default function HomePage() {
       </section>
 
       <p className="mt-14 text-center text-[11px] tracking-widest text-white/25">
-        © 2026 {siteConfig.brandName} — TOUS DROITS RÉSERVÉS
+        © 2026 {siteConfig.brandName} — {t("home.rights")}
       </p>
       <Link
         href="/admin/login"
         className="mt-2 block text-center text-[11px] tracking-widest text-white/15 transition-colors hover:text-white/40"
       >
-        Admin
+        {t("home.admin_link")}
       </Link>
     </main>
   );

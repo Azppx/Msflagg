@@ -4,9 +4,11 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
 import { InstallAppButton } from "@/components/InstallAppButton";
 import { KyzenLogo } from "@/components/KyzenLogo";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export function SideMenu({ onClose }: { onClose: () => void }) {
   const { account, logout } = useAuth();
+  const t = useTranslation();
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm" onClick={onClose}>
@@ -16,7 +18,7 @@ export function SideMenu({ onClose }: { onClose: () => void }) {
       >
         <div className="flex items-center justify-between">
           <KyzenLogo />
-          <button onClick={onClose} aria-label="Fermer" className="text-white/50 hover:text-white">
+          <button onClick={onClose} aria-label={t("nav.close")} className="text-white/50 hover:text-white">
             ✕
           </button>
         </div>
@@ -24,12 +26,12 @@ export function SideMenu({ onClose }: { onClose: () => void }) {
         <div className="mt-8 flex flex-col gap-3">
           {account ? (
             <>
-              <MenuItem href="/compte" icon="👤" title="Profil" subtitle="Mon compte KYZEN" onClick={onClose} />
+              <MenuItem href="/compte" icon="👤" title={t("nav.profile")} subtitle={t("nav.profile_subtitle")} onClick={onClose} />
               <MenuItem
                 href="/compte/commandes"
                 icon="🛒"
-                title="Commandes"
-                subtitle="Mes commandes en cours"
+                title={t("nav.orders")}
+                subtitle={t("nav.orders_subtitle")}
                 onClick={onClose}
               />
             </>
@@ -38,29 +40,30 @@ export function SideMenu({ onClose }: { onClose: () => void }) {
               <MenuItem
                 href="/compte/connexion"
                 icon="👤"
-                title="Se connecter"
-                subtitle="Accède à ton compte"
+                title={t("nav.login")}
+                subtitle={t("nav.login_subtitle")}
                 onClick={onClose}
               />
               <MenuItem
                 href="/compte/inscription"
                 icon="✨"
-                title="S'inscrire"
-                subtitle="Crée ton compte KYZEN"
+                title={t("nav.signup")}
+                subtitle={t("nav.signup_subtitle")}
                 onClick={onClose}
               />
             </>
           )}
 
-          <MenuItem href="/support" icon="❓" title="Aide" subtitle="Support & SAV" onClick={onClose} />
+          <MenuItem href="/support" icon="❓" title={t("nav.help")} subtitle={t("nav.help_subtitle")} onClick={onClose} />
           <MenuItem
             href="/premium"
             icon="⚡"
-            title="Services KYZEN"
-            subtitle="Vos services en temps réel"
+            title={t("nav.services")}
+            subtitle={t("nav.services_subtitle")}
             onClick={onClose}
           />
-          <MenuItem href="/avis" icon="⭐" title="Avis Clients" subtitle="Retours de la communauté" onClick={onClose} />
+          <MenuItem href="/avis" icon="⭐" title={t("nav.reviews")} subtitle={t("nav.reviews_subtitle")} onClick={onClose} />
+          <MenuItem href="/musique" icon="🎵" title={t("nav.music")} subtitle={t("nav.music_subtitle")} onClick={onClose} />
         </div>
 
         <div className="mt-6">
@@ -75,7 +78,7 @@ export function SideMenu({ onClose }: { onClose: () => void }) {
             }}
             className="mt-8 text-sm font-semibold text-white/40 hover:text-white/70"
           >
-            Se déconnecter
+            {t("nav.logout")}
           </button>
         )}
       </div>

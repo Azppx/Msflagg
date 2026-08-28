@@ -7,10 +7,12 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { SideMenu } from "@/components/SideMenu";
 import { SupportChatModal } from "@/components/SupportChatModal";
 import { discordConfig } from "@/lib/config";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export function TopBar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const t = useTranslation();
 
   return (
     <>
@@ -23,7 +25,7 @@ export function TopBar() {
             href={discordConfig.inviteUrl}
             target="_blank"
             rel="noreferrer"
-            aria-label="Rejoindre le Discord"
+            aria-label={t("nav.join_discord")}
             className="icon-glow-btn flex h-10 w-10 items-center justify-center rounded-full border border-electric/40 bg-electric/10 transition-transform hover:scale-105 active:scale-90"
             style={{ "--icon-glow-rgb": "139,53,255" } as React.CSSProperties}
           >
@@ -32,7 +34,7 @@ export function TopBar() {
 
           <button
             onClick={() => setChatOpen(true)}
-            aria-label="Ouvrir un ticket support"
+            aria-label={t("nav.support")}
             className="icon-glow-btn flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-electric/40 bg-electric/10 transition-transform hover:scale-105 active:scale-90"
             style={{ "--icon-glow-rgb": "139,53,255" } as React.CSSProperties}
           >
@@ -47,7 +49,7 @@ export function TopBar() {
 
           <button
             onClick={() => setMenuOpen(true)}
-            aria-label="Menu"
+            aria-label={t("nav.menu")}
             className="flex h-10 w-10 items-center justify-center rounded-full border border-panelBorder bg-white/5 text-lg transition-colors hover:bg-white/10 active:scale-90"
           >
             ☰

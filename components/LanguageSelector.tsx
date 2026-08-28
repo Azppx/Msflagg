@@ -1,35 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale } from "@/lib/i18n/locale-context";
+import type { Locale } from "@/lib/i18n/dictionaries";
 
-const LANGS = [
+const LANGS: { code: Locale; flag: string; label: string }[] = [
   { code: "fr", flag: "🇫🇷", label: "Français" },
   { code: "en", flag: "🇬🇧", label: "English" },
 ];
 
 export function LanguageSelector() {
   const [open, setOpen] = useState(false);
-  const [lang, setLang] = useState("fr");
-  const [notice, setNotice] = useState(false);
+  const { locale, setLocale, t } = useLocale();
 
-  function select(code: string) {
+  function select(code: Locale) {
     setOpen(false);
-    if (code !== "fr") {
-      // Le site n'est pour l'instant disponible qu'en français.
-      setNotice(true);
-      setTimeout(() => setNotice(false), 2000);
-      return;
-    }
-    setLang(code);
+    setLocale(code);
   }
 
-  const current = LANGS.find((l) => l.code === lang)!;
+  const current = LANGS.find((l) => l.code === locale) ?? LANGS[0];
 
   return (
     <div className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        aria-label="Choisir la langue"
+        aria-label={t("nav.choose_language")}
         className="flex h-10 w-10 items-center justify-center rounded-full border border-panelBorder bg-white/5 text-lg transition-colors hover:bg-white/10"
       >
         {current.flag}
@@ -41,18 +36,15 @@ export function LanguageSelector() {
             <button
               key={l.code}
               onClick={() => select(l.code)}
-              className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-white/80 hover:bg-white/10"
+              className={`flex w-full items-center gap-2 px-4 py-3 text-left text-sm hover:bg-white/10 ${
+                l.code === locale ? "text-white" : "text-white/80"
+              }`}
             >
               <span>{l.flag}</span>
               <span>{l.label}</span>
+              {l.code === locale && <span className="ml-auto text-white/40">✓</span>}
             </button>
           ))}
-        </div>
-      )}
-
-      {notice && (
-        <div className="absolute right-0 top-12 z-30 w-48 rounded-xl border border-panelBorder bg-midnight/95 p-3 text-xs text-white/60">
-          Bientôt disponible en anglais 🙂
         </div>
       )}
     </div>

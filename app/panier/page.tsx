@@ -8,28 +8,28 @@ import { GlowCard } from "@/components/GlowCard";
 import { useCart } from "@/lib/cart-context";
 import { getProductBySlug } from "@/lib/catalog";
 import { catalogToneRgb } from "@/components/catalog-icons";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export default function PanierPage() {
   const { items, updateQuantity, removeItem, clearCart, totalPrice, hydrated } = useCart();
   const firstTone = items[0] ? getProductBySlug(items[0].slug)?.tone : undefined;
   const totalToneRgb = firstTone ? catalogToneRgb[firstTone] : catalogToneRgb.electric;
+  const t = useTranslation();
 
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow="TON PANIER" title="PANIER" backHref="/premium" />
+      <PageHeader eyebrow={t("cart.eyebrow")} title={t("cart.title")} backHref="/premium" />
 
       <div className="px-5">
-        {!hydrated && <p className="text-sm text-white/40">Chargement…</p>}
+        {!hydrated && <p className="text-sm text-white/40">{t("cart.loading")}</p>}
 
         {hydrated && items.length === 0 && (
           <GlowCard toneRgb={catalogToneRgb.electric} className="bounce-in mt-4 text-center">
             <p className="text-4xl">🛒</p>
-            <p className="mt-3 font-semibold">Ton panier est vide</p>
-            <p className="mt-1 text-sm text-white/50">
-              Ajoute des produits depuis le catalogue pour commencer.
-            </p>
+            <p className="mt-3 font-semibold">{t("cart.empty_title")}</p>
+            <p className="mt-1 text-sm text-white/50">{t("cart.empty_subtitle")}</p>
             <ButtonLink href="/premium" variant="custom" className="btn-glow-blue mt-6">
-              VOIR LE CATALOGUE
+              {t("cart.view_catalog")}
             </ButtonLink>
           </GlowCard>
         )}
@@ -46,12 +46,12 @@ export default function PanierPage() {
                       <div>
                         <p className="font-semibold">{item.name}</p>
                         <p className="text-sm text-white/50">
-                          {item.unitPrice.toFixed(2)} {item.currency} / unité
+                          {item.unitPrice.toFixed(2)} {item.currency} {t("cart.per_unit")}
                         </p>
                       </div>
                       <button
                         onClick={() => removeItem(item.slug)}
-                        aria-label={`Retirer ${item.name}`}
+                        aria-label={`${t("cart.remove_item")} ${item.name}`}
                         className="text-white/30 transition-colors hover:text-danger"
                       >
                         ✕
@@ -79,12 +79,12 @@ export default function PanierPage() {
               onClick={clearCart}
               className="mt-4 text-xs font-semibold tracking-wide text-white/30 hover:text-white/60"
             >
-              Vider le panier
+              {t("cart.clear")}
             </button>
 
             <GlowCard toneRgb={totalToneRgb} particles className="bounce-in mt-6">
               <div className="flex items-center justify-between">
-                <span className="text-white/50">Total</span>
+                <span className="text-white/50">{t("cart.total")}</span>
                 <span
                   className="font-display text-2xl"
                   style={{ color: `rgb(${totalToneRgb})` }}
@@ -96,13 +96,13 @@ export default function PanierPage() {
 
             <div className="mt-6 flex flex-col gap-3">
               <ButtonLink href="/checkout/informations" variant="custom" className="btn-glow-blue">
-                PASSER COMMANDE →
+                {t("cart.checkout_cta")}
               </ButtonLink>
               <Link
                 href="/premium"
                 className="text-center text-sm font-semibold text-white/50 hover:text-white/80"
               >
-                ← Continuer mes achats
+                {t("cart.continue_shopping")}
               </Link>
             </div>
           </>

@@ -8,10 +8,12 @@ import { GlowCard } from "@/components/GlowCard";
 import { useCart } from "@/lib/cart-context";
 import { getProductBySlug } from "@/lib/catalog";
 import { catalogToneRgb } from "@/components/catalog-icons";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export default function InformationsPage() {
   const router = useRouter();
   const { items, totalPrice, hydrated } = useCart();
+  const t = useTranslation();
 
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -29,7 +31,7 @@ export default function InformationsPage() {
       lastName.trim().length < 2 ||
       !dob
     ) {
-      setError("Merci de renseigner tous les champs correctement.");
+      setError(t("checkout.info.error"));
       return;
     }
     const name = `${firstName.trim()} ${lastName.trim()}`;
@@ -39,15 +41,15 @@ export default function InformationsPage() {
 
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow="ÉTAPE 2 / 4" title="TES INFORMATIONS" backHref="/panier" />
+      <PageHeader eyebrow={t("checkout.info.step")} title={t("checkout.info.title")} backHref="/panier" />
 
       <div className="px-5">
 
         {hydrated && items.length === 0 && (
           <GlowCard toneRgb={catalogToneRgb.electric} className="bounce-in mt-6 text-center">
-            <p className="text-sm text-white/60">Ton panier est vide.</p>
+            <p className="text-sm text-white/60">{t("checkout.info.empty_cart")}</p>
             <ButtonLink href="/premium" variant="custom" className="btn-glow-blue mt-4">
-              VOIR LE CATALOGUE
+              {t("cart.view_catalog")}
             </ButtonLink>
           </GlowCard>
         )}
@@ -55,7 +57,7 @@ export default function InformationsPage() {
         {items.length > 0 && (
           <div className="bounce-in">
             <GlowCard toneRgb={toneRgb} particles className="mt-6">
-              <p className="text-sm text-white/50">Produits sélectionnés</p>
+              <p className="text-sm text-white/50">{t("checkout.info.selected_products")}</p>
               <div className="mt-2 space-y-1.5">
                 {items.map((item) => (
                   <div key={item.slug} className="flex items-center justify-between text-sm">
@@ -70,7 +72,7 @@ export default function InformationsPage() {
               </div>
               <div className="mt-3 h-px bg-panelBorder" />
               <div className="mt-3 flex items-center justify-between font-semibold">
-                <span>Total</span>
+                <span>{t("checkout.info.total")}</span>
                 <span style={{ color: `rgb(${toneRgb})` }}>{totalPrice.toFixed(2)} €</span>
               </div>
             </GlowCard>
@@ -79,34 +81,34 @@ export default function InformationsPage() {
               <div className="grid grid-cols-2 gap-3">
                 <label className="block">
                   <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
-                    PRÉNOM
+                    {t("checkout.info.first_name")}
                   </span>
                   <input
                     type="text"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
-                    placeholder="Ton prénom"
+                    placeholder={t("checkout.info.first_name_placeholder")}
                     autoComplete="given-name"
                   />
                 </label>
                 <label className="block">
                   <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
-                    NOM
+                    {t("checkout.info.last_name")}
                   </span>
                   <input
                     type="text"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
-                    placeholder="Ton nom"
+                    placeholder={t("checkout.info.last_name_placeholder")}
                     autoComplete="family-name"
                   />
                 </label>
               </div>
               <label className="block">
                 <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
-                  EMAIL
+                  {t("checkout.info.email")}
                 </span>
                 <input
                   type="email"
@@ -120,7 +122,7 @@ export default function InformationsPage() {
               </label>
               <label className="block">
                 <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
-                  DATE DE NAISSANCE
+                  {t("checkout.info.dob")}
                 </span>
                 <input
                   type="date"
@@ -134,7 +136,7 @@ export default function InformationsPage() {
               {error && <p className="text-sm text-danger">{error}</p>}
 
               <Button type="submit" variant="custom" className="btn-glow-blue mt-2">
-                CONTINUER →
+                {t("checkout.info.continue")}
               </Button>
             </form>
           </div>
