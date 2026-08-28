@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { GlowCard } from "@/components/GlowCard";
 import { siteConfig } from "@/lib/config";
 import { catalogToneRgb } from "@/components/catalog-icons";
@@ -54,7 +55,9 @@ export default function HomePage() {
 
         <div className="mt-8 grid grid-cols-1 gap-3.5">
           <Link href="/premium" className="kyzen-mini-card">
-            <div className="kyzen-mini-icon">✦</div>
+            <div className="kyzen-mini-icon">
+              <Image src="/icons/logo-k.png" alt="KYZEN" width={26} height={26} priority />
+            </div>
             <h2 className="mt-[18px] text-[17px] font-semibold">KYZEN services</h2>
             <span className="kyzen-mini-arrow">→</span>
           </Link>
@@ -62,9 +65,11 @@ export default function HomePage() {
             href="https://discord.gg/"
             target="_blank"
             rel="noreferrer"
-            className="kyzen-mini-card"
+            className="kyzen-mini-card kyzen-mini-card--discord"
           >
-            <div className="kyzen-mini-icon">◌</div>
+            <div className="kyzen-mini-icon">
+              <Image src="/icons/discord-mark.png" alt="Discord" width={22} height={22} />
+            </div>
             <h2 className="mt-[18px] text-[17px] font-semibold">Discord</h2>
             <span className="kyzen-mini-arrow">→</span>
           </a>
