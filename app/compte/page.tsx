@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { useAuth } from "@/lib/auth-context";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export default function ComptePage() {
   const router = useRouter();
   const { account, loading, logout } = useAuth();
+  const t = useTranslation();
 
   useEffect(() => {
     if (!loading && !account) router.push("/compte/connexion");
@@ -17,14 +19,14 @@ export default function ComptePage() {
   if (loading || !account) {
     return (
       <main className="mx-auto min-h-screen max-w-md px-5 pb-16 pt-12">
-        <p className="text-sm text-white/40">Chargement…</p>
+        <p className="text-sm text-white/40">{t("account.loading")}</p>
       </main>
     );
   }
 
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow="MON COMPTE" title="PROFIL" backHref="/" />
+      <PageHeader eyebrow={t("account.eyebrow")} title={t("account.title")} backHref="/" />
       <div className="px-5">
         <div className="glass-panel rounded-xl2 border border-panelBorder p-5">
           <p className="font-display text-xl">{account.name}</p>
@@ -32,8 +34,8 @@ export default function ComptePage() {
         </div>
 
         <div className="mt-4 flex flex-col gap-3">
-          <MenuLink href="/compte/commandes" title="Mes commandes" subtitle="Historique et suivi" />
-          <MenuLink href="/support" title="Aide" subtitle="Support & SAV" />
+          <MenuLink href="/compte/commandes" title={t("account.my_orders")} subtitle={t("account.my_orders_subtitle")} />
+          <MenuLink href="/support" title={t("account.help")} subtitle={t("account.help_subtitle")} />
         </div>
 
         <button
@@ -43,7 +45,7 @@ export default function ComptePage() {
           }}
           className="mt-8 w-full rounded-2xl border border-panelBorder bg-white/5 px-6 py-3.5 text-sm font-semibold tracking-wide text-white/70 transition-colors hover:bg-white/10"
         >
-          Se déconnecter
+          {t("account.logout")}
         </button>
       </div>
     </main>

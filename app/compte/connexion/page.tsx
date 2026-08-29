@@ -6,10 +6,12 @@ import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/Button";
 import { useAuth } from "@/lib/auth-context";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export default function ConnexionPage() {
   const router = useRouter();
   const { refresh } = useAuth();
+  const t = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -27,7 +29,7 @@ export default function ConnexionPage() {
     const data = await res.json();
     setLoading(false);
     if (!res.ok) {
-      setError(data.error || "Erreur de connexion.");
+      setError(data.error || t("auth.login_error"));
       return;
     }
     await refresh();
@@ -36,12 +38,12 @@ export default function ConnexionPage() {
 
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow="MON COMPTE" title="CONNEXION" backHref="/" />
+      <PageHeader eyebrow={t("account.eyebrow")} title={t("auth.login_title")} backHref="/" />
       <div className="px-5">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <label className="block">
             <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
-              EMAIL
+              {t("auth.email")}
             </span>
             <input
               type="email"
@@ -53,7 +55,7 @@ export default function ConnexionPage() {
           </label>
           <label className="block">
             <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
-              MOT DE PASSE
+              {t("auth.password")}
             </span>
             <input
               type="password"
@@ -67,14 +69,14 @@ export default function ConnexionPage() {
           {error && <p className="text-sm text-danger">{error}</p>}
 
           <Button type="submit" variant="primary" className="mt-2" disabled={loading}>
-            {loading ? "…" : "SE CONNECTER →"}
+            {loading ? "…" : t("auth.login_cta")}
           </Button>
         </form>
 
         <p className="mt-6 text-center text-sm text-white/50">
-          Pas encore de compte ?{" "}
+          {t("auth.no_account")}{" "}
           <Link href="/compte/inscription" className="font-semibold text-electric-soft">
-            Inscris-toi
+            {t("auth.signup_link")}
           </Link>
         </p>
       </div>

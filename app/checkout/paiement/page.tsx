@@ -9,6 +9,7 @@ import { GlowCard } from "@/components/GlowCard";
 import { catalogToneRgb } from "@/components/catalog-icons";
 import { useCart, CartItem } from "@/lib/cart-context";
 import { getWiseConfig } from "@/lib/wise";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export default function PaiementPage() {
   return (
@@ -25,6 +26,7 @@ function PaiementContent() {
   const dob = params.get("dob") || "";
   const wise = getWiseConfig();
   const cart = useCart();
+  const t = useTranslation();
 
   // On fige le contenu du panier au moment où l'étape paiement démarre :
   // le panneau vide le panier dès que la commande est créée, il ne faut
@@ -41,17 +43,17 @@ function PaiementContent() {
 
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow="ÉTAPE 3 / 4" title="PAIEMENT" backHref="/checkout/informations" />
+      <PageHeader eyebrow={t("checkout.pay.step")} title={t("checkout.pay.title")} backHref="/checkout/informations" />
 
       <div className="px-5">
 
-        {snapshot === null && <p className="mt-6 text-sm text-white/40">Chargement…</p>}
+        {snapshot === null && <p className="mt-6 text-sm text-white/40">{t("checkout.pay.loading")}</p>}
 
         {snapshot !== null && items.length === 0 && (
           <GlowCard toneRgb={catalogToneRgb.electric} className="bounce-in mt-6 text-center">
-            <p className="text-sm text-white/60">Ton panier est vide.</p>
+            <p className="text-sm text-white/60">{t("checkout.pay.empty_cart")}</p>
             <ButtonLink href="/premium" variant="custom" className="btn-glow-blue mt-4">
-              VOIR LE CATALOGUE
+              {t("cart.view_catalog")}
             </ButtonLink>
           </GlowCard>
         )}

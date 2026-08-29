@@ -7,6 +7,7 @@ import { trackOrder } from "@/lib/order-tracking";
 import { CatalogIcon, catalogToneRgb } from "@/components/catalog-icons";
 import { getProductBySlug } from "@/lib/catalog";
 import { GlowCard } from "@/components/GlowCard";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export function GlowPaymentPanel({
   items,
@@ -29,6 +30,7 @@ export function GlowPaymentPanel({
 }) {
   const router = useRouter();
   const { clearCart } = useCart();
+  const t = useTranslation();
   const [orderId, setOrderId] = useState<string | null>(null);
   const [amount, setAmount] = useState<string | null>(null);
   const [currency, setCurrency] = useState<string>("EUR");
@@ -75,7 +77,7 @@ export function GlowPaymentPanel({
     const res = await fetch(`/api/orders/${orderId}/mark-sent`, { method: "POST" });
     setConfirming(false);
     if (!res.ok) {
-      setError("Erreur lors de la confirmation, réessaie.");
+      setError(t("checkout.pay.confirm_error"));
       return;
     }
     router.push(`/checkout/confirmation?orderId=${orderId}`);
@@ -86,14 +88,14 @@ export function GlowPaymentPanel({
   }
 
   if (!orderId || !amount) {
-    return <p className="text-sm text-white/40">Préparation de ta commande…</p>;
+    return <p className="text-sm text-white/40">{t("checkout.pay.preparing")}</p>;
   }
 
   const firstItem = items[0];
   const catalogItem = firstItem ? getProductBySlug(firstItem.slug) : null;
   const toneRgb = catalogItem ? catalogToneRgb[catalogItem.tone] || catalogToneRgb.electric : catalogToneRgb.electric;
 
-  const displayTitle = items.length === 1 ? items[0].name : `${items.length} articles`;
+  const displayTitle = items.length === 1 ? items[0].name : `${items.length} ${t("checkout.pay.items_count")}`;
   const displayDesc =
     items.length === 1
       ? catalogItem?.description || items[0].name
@@ -112,7 +114,7 @@ export function GlowPaymentPanel({
           className="text-xs font-bold tracking-[3px] text-[rgb(var(--tone-rgb))]"
           style={{ textShadow: "0 0 12px rgba(var(--tone-rgb),0.5)" }}
         >
-          COMMANDE
+          {t("checkout.pay.order_label")}
         </p>
 
         <div className="mt-2.5 flex items-start justify-between gap-3">
@@ -130,14 +132,14 @@ export function GlowPaymentPanel({
 
         <div className="my-6 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
-        <p className="mb-3 text-xs font-bold tracking-[2.5px] text-white/40">STATUT</p>
+        <p className="mb-3 text-xs font-bold tracking-[2.5px] text-white/40">{t("checkout.pay.status_label")}</p>
         <div className="mb-5 flex items-center gap-2.5">
           <span
             className="h-2 w-2 shrink-0 animate-pulse rounded-full"
             style={{ background: `rgb(var(--tone-rgb))`, boxShadow: `0 0 10px 2px rgba(var(--tone-rgb),0.8)` }}
           />
           <span className="text-[15px] font-bold" style={{ color: `rgb(var(--tone-rgb))` }}>
-            En attente de ton virement Wise
+            {t("checkout.pay.awaiting_wise")}
           </span>
         </div>
 
@@ -162,7 +164,7 @@ export function GlowPaymentPanel({
 
       {/* --- Carte "virement" --- */}
       <GlowCard toneRgb={toneRgb}>
-        <p className="text-xs font-bold tracking-[2.5px] text-white/40">VIREMENT WISE</p>
+        <p className="text-xs font-bold tracking-[2.5px] text-white/40">{t("checkout.pay.wise_transfer")}</p>
         <p
           className="my-3 text-[44px] font-extrabold leading-none text-white"
           style={{ textShadow: `0 0 30px rgba(var(--tone-rgb),0.35)` }}
@@ -171,10 +173,10 @@ export function GlowPaymentPanel({
         </p>
 
         <div className="mt-5 space-y-3 text-sm">
-          <Row label="Bénéficiaire" value={wiseAccountHolder} toneRgb={toneRgb} />
-          {wiseEmail && <Row label="Email Wise" value={wiseEmail} toneRgb={toneRgb} />}
-          {wiseIban && <Row label="IBAN" value={wiseIban} toneRgb={toneRgb} />}
-          <Row label="Référence à indiquer" value={orderId} toneRgb={toneRgb} emphasize />
+          <Row label={t("checkout.pay.beneficiary")} value={wiseAccountHolder} toneRgb={toneRgb} />
+          {wiseEmail && <Row label={t("checkout.pay.wise_email")} value={wiseEmail} toneRgb={toneRgb} />}
+          {wiseIban && <Row label={t("checkout.pay.iban")} value={wiseIban} toneRgb={toneRgb} />}
+          <Row label={t("checkout.pay.reference")} value={orderId} toneRgb={toneRgb} emphasize />
         </div>
 
         {wisePaymentLink && (
@@ -185,15 +187,11 @@ export function GlowPaymentPanel({
             className="mt-5 inline-flex items-center gap-1 text-sm font-bold"
             style={{ color: `rgb(var(--tone-rgb))` }}
           >
-            Ouvrir le lien de paiement Wise ↗
+            {t("checkout.pay.open_wise_link")}
           </a>
         )}
 
-        <p className="mt-6 text-xs leading-relaxed text-white/35">
-          Une fois le virement envoyé, confirme ci-dessous. Ta commande sera vérifiée
-          manuellement puis livrée sous 24h. Tu peux retrouver son statut à tout moment via
-          l'icône 📦 en bas de l'écran.
-        </p>
+        <p className="mt-6 text-xs leading-relaxed text-white/35">{t("checkout.pay.instructions")}</p>
 
         <button
           onClick={handleConfirmSent}
@@ -204,7 +202,7 @@ export function GlowPaymentPanel({
             boxShadow: `0 18px 40px -12px rgba(var(--tone-rgb),0.55)`,
           }}
         >
-          {confirming ? "…" : "J'AI ENVOYÉ LE PAIEMENT"} <span>›</span>
+          {confirming ? "…" : t("checkout.pay.confirm_sent")} <span>›</span>
         </button>
       </GlowCard>
     </div>

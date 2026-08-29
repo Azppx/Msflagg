@@ -1,9 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { catalogProducts } from "@/lib/catalog";
 import { CartHeaderLink } from "@/components/CartHeaderLink";
 import { GlowProductCard } from "@/components/GlowProductCard";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export default function PremiumCatalogPage() {
+  const t = useTranslation();
+
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col overflow-x-hidden px-5 pb-16 pt-8">
       <div className="flex items-center justify-between">
@@ -15,19 +20,19 @@ export default function PremiumCatalogPage() {
           ←
         </Link>
         <span className="rounded-full border border-electric/40 bg-electric/10 px-3 py-1.5 text-[11px] font-semibold text-electric-soft">
-          ● En ligne
+          {t("premium.online")}
         </span>
       </div>
 
       <div className="mt-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-electric-soft">
-          Catalogue
+          {t("premium.eyebrow")}
         </p>
         <h1 className="font-heading mt-2 text-[1.75rem] font-bold leading-tight tracking-tight">
-          Vos services, en un accès.
+          {t("premium.title")}
         </h1>
         <p className="mt-2 max-w-[34ch] text-sm leading-relaxed text-white/55">
-          Choisissez un service, l'accès est livré automatiquement après paiement.
+          {t("premium.subtitle")}
         </p>
       </div>
 

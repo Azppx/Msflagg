@@ -6,11 +6,13 @@ import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { useAuth } from "@/lib/auth-context";
 import type { Order } from "@/lib/orders";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export default function CommandesPage() {
   const router = useRouter();
   const { account, loading } = useAuth();
   const [orders, setOrders] = useState<Order[] | null>(null);
+  const t = useTranslation();
 
   useEffect(() => {
     if (!loading && !account) router.push("/compte/connexion");
@@ -26,19 +28,19 @@ export default function CommandesPage() {
   if (loading || !account) {
     return (
       <main className="mx-auto min-h-screen max-w-md px-5 pb-16 pt-12">
-        <p className="text-sm text-white/40">Chargement…</p>
+        <p className="text-sm text-white/40">{t("account.loading")}</p>
       </main>
     );
   }
 
   return (
     <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow="MON COMPTE" title="MES COMMANDES" backHref="/compte" />
+      <PageHeader eyebrow={t("account.eyebrow")} title={t("orders.title")} backHref="/compte" />
       <div className="px-5">
-        {orders === null && <p className="text-sm text-white/40">Chargement…</p>}
+        {orders === null && <p className="text-sm text-white/40">{t("account.loading")}</p>}
 
         {orders !== null && orders.length === 0 && (
-          <p className="text-sm text-white/40">Aucune commande pour l'instant.</p>
+          <p className="text-sm text-white/40">{t("orders.empty")}</p>
         )}
 
         <div className="space-y-3">
@@ -54,10 +56,10 @@ export default function CommandesPage() {
                 <span className="text-white/50">{o.amount} {o.currency}</span>
                 <span className="text-white/40">
                   {o.status === "PAID" && o.fulfillment === "DELIVERED"
-                    ? "Livrée ✓"
+                    ? t("orders.status_delivered")
                     : o.status === "PAID"
-                    ? "En cours"
-                    : "En attente"}
+                    ? t("orders.status_processing")
+                    : t("orders.status_pending")}
                 </span>
               </div>
             </Link>
