@@ -903,6 +903,35 @@ button {
 .kyzen-island-play {
   background: linear-gradient(135deg, #a64cff, #6d1dff);
   box-shadow: 0 8px 24px -6px rgba(139, 53, 255, 0.6);
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.kyzen-island-play:hover {
+  box-shadow: 0 10px 32px -6px rgba(139, 53, 255, 0.85), 0 0 20px -2px rgba(166, 76, 255, 0.6);
+  transform: scale(1.04);
+}
+
+.kyzen-island-mini-btn {
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.kyzen-island-mini-btn:active {
+  transform: scale(0.85);
+}
+
+.kyzen-island-icon-btn {
+  border-radius: 999px;
+  transition: color 0.2s ease, background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
+}
+
+.kyzen-island-icon-btn:hover {
+  color: #fff;
+  background: rgba(166, 76, 255, 0.12);
+  box-shadow: 0 0 16px -2px rgba(139, 53, 255, 0.5);
+}
+
+.kyzen-island-icon-btn:active {
+  transform: scale(0.88);
 }
 
 .kyzen-island-volume {
@@ -938,5 +967,49 @@ button {
 @media (prefers-reduced-motion: reduce) {
   .kyzen-island {
     animation: none !important;
+  }
+}
+
+/* ---------- Écran de chargement : barre 100% CSS (pas de JS par frame) ---------- */
+.kyzen-splash-bar {
+  transform: scaleX(0);
+  background: linear-gradient(90deg, #8b35ff, #b85cff);
+  box-shadow: 0 0 12px 1px rgba(139, 53, 255, 0.7);
+  animation: kyzenSplashProgress 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform;
+}
+
+@keyframes kyzenSplashProgress {
+  0% { transform: scaleX(0); }
+  65% { transform: scaleX(0.8); }
+  100% { transform: scaleX(0.97); }
+}
+
+/* Pendant l'écran de chargement, on gèle toutes les animations continues du
+   reste du site : elles reprendront pile là où elles en étaient une fois le
+   splash disparu, mais ne consomment plus de temps machine pendant que la
+   barre de progression tourne. C'est ce qui évite l'effet de freeze sur les
+   téléphones moins puissants (ou simplement sous charge au démarrage). */
+body.kyzen-splash-active .pulse-card,
+body.kyzen-splash-active .bg-ambient-blob,
+body.kyzen-splash-active .kyzen-orbit-ring,
+body.kyzen-splash-active .kyzen-k-outline,
+body.kyzen-splash-active .kyzen-float-badge,
+body.kyzen-splash-active .glow-icon-pulse,
+body.kyzen-splash-active .icon-glow-btn,
+body.kyzen-splash-active .glow-cta,
+body.kyzen-splash-active .btn-glow-blue,
+body.kyzen-splash-active .btn-glow-purple,
+body.kyzen-splash-active .sweep-banner,
+body.kyzen-splash-active .kyzen-mini-card,
+body.kyzen-splash-active .kyzen-eq-bar,
+body.kyzen-splash-active .kyzen-island {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kyzen-splash-bar {
+    animation: none !important;
+    transform: scaleX(1);
   }
 }

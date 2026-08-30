@@ -2,37 +2,30 @@
 
 import { useEffect, useState } from "react";
 
+const BAR_DURATION = 900;
+
 export function LoadingSplash() {
   const [visible, setVisible] = useState(true);
-  const [progress, setProgress] = useState(0);
   const [wiping, setWiping] = useState(false);
 
   useEffect(() => {
-    // Progression fluide et non-linéaire (accélère puis ralentit en approchant
-    // 100%), pour un effet plus vivant qu'un simple remplissage linéaire.
-    let raf: number;
-    const start = performance.now();
-    const duration = 1000;
+    // Pendant l'écran de chargement, on met en pause toutes les animations
+    // continues du reste du site (anneaux du héro, halos, flottements...).
+    // Sans ça, elles tournent déjà en arrière-plan pendant que la barre de
+    // progression s'anime, ce qui sature le thread principal sur téléphone
+    // et donne cette impression de freeze.
+    document.body.classList.add("kyzen-splash-active");
 
-    function tick(now: number) {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      setProgress(eased * 100);
-      if (t < 1) {
-        raf = requestAnimationFrame(tick);
-      } else {
-        // Un frame de battement avant de lancer l'effet de cercle, pour que
-        // la barre à 100% soit bien visible une fraction de seconde.
-        requestAnimationFrame(() => requestAnimationFrame(() => setWiping(true)));
-      }
-    }
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    // Une seule minuterie (pas de boucle par frame) : la barre elle-même
+    // est animée en CSS pur, gérée par le compositeur du navigateur.
+    const t = setTimeout(() => setWiping(true), BAR_DURATION + 150);
+    return () => clearTimeout(t);
   }, []);
 
   function handleTransitionEnd(e: React.TransitionEvent) {
     if (e.propertyName === "clip-path" && wiping) {
       setVisible(false);
+      document.body.classList.remove("kyzen-splash-active");
     }
   }
 
@@ -41,7 +34,7 @@ export function LoadingSplash() {
   return (
     <div
       onTransitionEnd={handleTransitionEnd}
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-midnight"
+      className="kyzen-splash-root fixed inset-0 z-[100] flex flex-col items-center justify-center bg-midnight"
       style={{
         clipPath: wiping ? "circle(0% at 50% 50%)" : "circle(150% at 50% 50%)",
         transition: "clip-path 0.6s cubic-bezier(0.65,0,0.35,1)",
@@ -52,18 +45,11 @@ export function LoadingSplash() {
       </span>
 
       <div className="mt-7 h-[3px] w-40 overflow-hidden rounded-full bg-white/10">
-        <div
-          className="h-full rounded-full"
-          style={{
-            width: `${progress}%`,
-            background: "linear-gradient(90deg, #8b35ff, #b85cff)",
-            boxShadow: "0 0 12px 1px rgba(139,53,255,0.7)",
-          }}
-        />
+        <div className="kyzen-splash-bar h-full w-full origin-left rounded-full" />
       </div>
 
       <p className="mt-4 text-[11px] font-semibold tracking-widest text-white/40">
-        CHARGEMENT DE KYZEN — {Math.round(progress)}%
+        CHARGEMENT DE KYZEN
       </p>
     </div>
   );

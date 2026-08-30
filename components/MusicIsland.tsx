@@ -4,6 +4,15 @@ import { useState } from "react";
 import Image from "next/image";
 import { useAudioPlayer } from "@/lib/audio-player-context";
 import { useTranslation } from "@/lib/i18n/locale-context";
+import {
+  PlayIcon,
+  PauseIcon,
+  PreviousIcon,
+  NextIcon,
+  VolumeLowIcon,
+  VolumeHighIcon,
+  CloseIcon,
+} from "@/components/MusicPlayerIcons";
 
 /**
  * Bulle flottante façon "Dynamic Island" : compacte par défaut (pochette +
@@ -20,7 +29,7 @@ export function MusicIsland() {
   if (!currentTrack) return null;
 
   return (
-    <div className="fixed inset-x-0 top-[70px] z-20 flex justify-center px-3">
+    <div className="fixed inset-x-0 top-[104px] z-20 flex justify-center px-3">
       <div
         className={`kyzen-island ${expanded ? "kyzen-island--expanded" : ""}`}
         onClick={() => !expanded && setExpanded(true)}
@@ -41,9 +50,9 @@ export function MusicIsland() {
                 isPlaying ? pause() : play();
               }}
               aria-label={isPlaying ? t("music.pause") : t("music.play")}
-              className="ml-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white/90"
+              className="kyzen-island-mini-btn ml-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white/90"
             >
-              {isPlaying ? "❚❚" : "▶"}
+              {isPlaying ? <PauseIcon className="h-3 w-3" /> : <PlayIcon className="h-3 w-3" />}
             </button>
             <div className="kyzen-island-progress">
               <div className="kyzen-island-progress-fill" style={{ width: `${progress * 100}%` }} />
@@ -64,9 +73,9 @@ export function MusicIsland() {
               <button
                 onClick={() => setExpanded(false)}
                 aria-label={t("nav.close")}
-                className="shrink-0 text-white/40 hover:text-white/70"
+                className="kyzen-island-icon-btn shrink-0 text-white/40"
               >
-                ✕
+                <CloseIcon className="h-4 w-4" />
               </button>
             </div>
 
@@ -78,28 +87,28 @@ export function MusicIsland() {
               <button
                 onClick={previous}
                 aria-label={t("music.previous")}
-                className="flex h-9 w-9 items-center justify-center text-lg text-white/80 transition-transform active:scale-90"
+                className="kyzen-island-icon-btn flex h-9 w-9 items-center justify-center text-white/80"
               >
-                ⏮
+                <PreviousIcon className="h-4 w-4" />
               </button>
               <button
                 onClick={() => (isPlaying ? pause() : play())}
                 aria-label={isPlaying ? t("music.pause") : t("music.play")}
-                className="kyzen-island-play flex h-12 w-12 items-center justify-center rounded-full text-lg text-white transition-transform active:scale-90"
+                className="kyzen-island-play flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform active:scale-90"
               >
-                {isPlaying ? "❚❚" : "▶"}
+                {isPlaying ? <PauseIcon className="h-5 w-5" /> : <PlayIcon className="h-5 w-5" />}
               </button>
               <button
                 onClick={next}
                 aria-label={t("music.next")}
-                className="flex h-9 w-9 items-center justify-center text-lg text-white/80 transition-transform active:scale-90"
+                className="kyzen-island-icon-btn flex h-9 w-9 items-center justify-center text-white/80"
               >
-                ⏭
+                <NextIcon className="h-4 w-4" />
               </button>
             </div>
 
             <div className="mt-4 flex items-center gap-2.5">
-              <span className="text-xs text-white/40">🔈</span>
+              <VolumeLowIcon className="h-4 w-4 shrink-0 text-white/40" />
               <input
                 type="range"
                 min={0}
@@ -110,7 +119,7 @@ export function MusicIsland() {
                 aria-label={t("music.volume")}
                 className="kyzen-island-volume flex-1"
               />
-              <span className="text-xs text-white/40">🔊</span>
+              <VolumeHighIcon className="h-4 w-4 shrink-0 text-white/40" />
             </div>
 
             <button
