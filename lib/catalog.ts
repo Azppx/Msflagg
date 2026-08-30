@@ -16,7 +16,8 @@ export type CatalogProduct = {
   description: string;
   features: string[];
   tone: CatalogTone;
-  icon: string; // clé vers l'icône, voir components/catalog-icons.tsx
+  icon: string; // clé vers l'icône SVG de secours, voir components/catalog-icons.tsx
+  logo?: string; // chemin vers le vrai logo officiel dans /public/logos, si disponible
 };
 
 const genericFeatures = [
@@ -37,6 +38,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "gold",
     icon: "ghost",
+    logo: "/logos/snapchat.png",
   },
   {
     slug: "deezer",
@@ -48,6 +50,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "heart",
+    logo: "/logos/deezer.png",
   },
   {
     slug: "spotify",
@@ -59,6 +62,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "green",
     icon: "spotify",
+    logo: "/logos/spotify.png",
   },
   {
     slug: "basic-fit",
@@ -139,6 +143,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "accent",
     icon: "moon",
+    logo: "/logos/crunchyroll.png",
   },
   {
     slug: "canva",
@@ -150,6 +155,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "teal",
     icon: "canva",
+    logo: "/logos/canva.jpg",
   },
   {
     slug: "adobe",
@@ -161,6 +167,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "danger",
     icon: "adobe",
+    logo: "/logos/adobe.png",
   },
   {
     slug: "capcut",
@@ -172,6 +179,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "electric",
     icon: "capcut",
+    logo: "/logos/capcut.png",
   },
   {
     slug: "office365",
@@ -183,6 +191,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "accent",
     icon: "office",
+    logo: "/logos/office365.jpg",
   },
   {
     slug: "prime-video",
@@ -194,6 +203,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "electric",
     icon: "play",
+    logo: "/logos/primevideo.png",
   },
   {
     slug: "nordvpn",
@@ -205,6 +215,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "electric",
     icon: "shield",
+    logo: "/logos/nordvpn.png",
   },
   {
     slug: "chatgpt",
@@ -216,6 +227,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "green",
     icon: "spark",
+    logo: "/logos/chatgpt.png",
   },
   {
     slug: "paramount",
@@ -227,6 +239,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "electric",
     icon: "mountain",
+    logo: "/logos/paramount.png",
   },
   {
     slug: "disney",
@@ -238,6 +251,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "electric",
     icon: "star",
+    logo: "/logos/disney.png",
   },
   {
     slug: "hbomax",
@@ -249,6 +263,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "clapper",
+    logo: "/logos/hbomax.png",
   },
   {
     slug: "discord",
@@ -260,6 +275,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "discord",
+    logo: "/logos/discord.png",
   },
   {
     slug: "youtube",
@@ -271,6 +287,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "youtube",
+    logo: "/logos/youtube.png",
   },
   {
     slug: "valorant",
@@ -282,6 +299,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "gamepad",
+    logo: "/logos/valorant.png",
   },
   {
     slug: "ccv",
@@ -311,6 +329,7 @@ export const catalogProducts: CatalogProduct[] = [
     ],
     tone: "violet",
     icon: "asterisk",
+    logo: "/logos/claude.png",
   },
   {
     slug: "duolingo",
@@ -322,6 +341,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "green",
     icon: "owl",
+    logo: "/logos/duolingo.png",
   },
 ];
 

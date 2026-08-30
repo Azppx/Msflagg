@@ -842,3 +842,101 @@ button {
     animation: none !important;
   }
 }
+
+/* ---------- Lecteur audio : bulle flottante style "Dynamic Island" ---------- */
+.kyzen-island {
+  cursor: pointer;
+  border-radius: 999px;
+  background: rgba(12, 8, 20, 0.88);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid rgba(166, 76, 255, 0.25);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 12px 40px -10px rgba(0, 0, 0, 0.6),
+    0 0 30px -8px rgba(139, 53, 255, 0.45);
+  transition: border-radius 0.35s cubic-bezier(0.34, 1.2, 0.4, 1), transform 0.2s ease;
+  animation: kyzen-island-in 0.35s cubic-bezier(0.34, 1.2, 0.4, 1);
+}
+
+.kyzen-island:active {
+  transform: scale(0.98);
+}
+
+.kyzen-island--expanded {
+  border-radius: 28px;
+  cursor: default;
+  border-color: rgba(166, 76, 255, 0.4);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 20px 60px -12px rgba(0, 0, 0, 0.7),
+    0 0 50px -6px rgba(139, 53, 255, 0.55);
+}
+
+@keyframes kyzen-island-in {
+  from { opacity: 0; transform: translateY(-14px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.kyzen-island-progress {
+  position: relative;
+  width: 34px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.kyzen-island-progress--wide {
+  width: 100%;
+  height: 4px;
+}
+
+.kyzen-island-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #a64cff, #6d1dff);
+  box-shadow: 0 0 8px rgba(166, 76, 255, 0.7);
+  transition: width 0.2s linear;
+}
+
+.kyzen-island-play {
+  background: linear-gradient(135deg, #a64cff, #6d1dff);
+  box-shadow: 0 8px 24px -6px rgba(139, 53, 255, 0.6);
+}
+
+.kyzen-island-volume {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  outline: none;
+}
+
+.kyzen-island-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(166, 76, 255, 0.9);
+  cursor: pointer;
+}
+
+.kyzen-island-volume::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(166, 76, 255, 0.9);
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kyzen-island {
+    animation: none !important;
+  }
+}

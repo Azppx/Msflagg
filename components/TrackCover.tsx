@@ -4,8 +4,8 @@ import Image from "next/image";
 import { useAudioPlayer, type Track } from "@/lib/audio-player-context";
 
 export function TrackCover({ track }: { track: Track }) {
-  const { currentTrackId, isPlaying, toggleTrack } = useAudioPlayer();
-  const active = currentTrackId === track.id && isPlaying;
+  const { currentTrack, isPlaying, toggleTrack } = useAudioPlayer();
+  const active = currentTrack?.id === track.id && isPlaying;
 
   return (
     <button

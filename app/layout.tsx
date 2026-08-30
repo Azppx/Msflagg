@@ -8,6 +8,7 @@ import { LocaleProvider } from "@/lib/i18n/locale-context";
 import { AudioPlayerProvider } from "@/lib/audio-player-context";
 import { OrderTrackerWidget } from "@/components/OrderTrackerWidget";
 import { TopBar } from "@/components/TopBar";
+import { MusicIsland } from "@/components/MusicIsland";
 import { LoadingSplash } from "@/components/LoadingSplash";
 import { PageTransition } from "@/components/PageTransition";
 
@@ -70,6 +71,7 @@ export default function RootLayout({
                 <AudioPlayerProvider>
                   <LoadingSplash />
                   <TopBar />
+                  <MusicIsland />
                   <PageTransition>{children}</PageTransition>
                   <OrderTrackerWidget />
                 </AudioPlayerProvider>

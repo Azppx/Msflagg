@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart, CartItem } from "@/lib/cart-context";
 import { trackOrder } from "@/lib/order-tracking";
-import { CatalogIcon, catalogToneRgb } from "@/components/catalog-icons";
+import { catalogToneRgb } from "@/components/catalog-icons";
+import { ProductLogo } from "@/components/ProductLogo";
 import { getProductBySlug } from "@/lib/catalog";
 import { GlowCard } from "@/components/GlowCard";
 import { useTranslation } from "@/lib/i18n/locale-context";
@@ -123,7 +124,7 @@ export function GlowPaymentPanel({
           </h2>
           {catalogItem && (
             <div className="glow-icon-pulse flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5">
-              <CatalogIcon name={catalogItem.icon} />
+              <ProductLogo logo={catalogItem.logo} icon={catalogItem.icon} size={44} />
             </div>
           )}
         </div>

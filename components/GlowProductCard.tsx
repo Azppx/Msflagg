@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useTilt } from "@/lib/useTilt";
-import { CatalogIcon, catalogToneClasses, catalogToneRgb } from "@/components/catalog-icons";
+import { catalogToneClasses, catalogToneRgb } from "@/components/catalog-icons";
+import { ProductLogo } from "@/components/ProductLogo";
 import type { CatalogProduct } from "@/lib/catalog";
 
 export function GlowProductCard({ item, delay }: { item: CatalogProduct; delay?: number }) {
@@ -27,7 +28,7 @@ export function GlowProductCard({ item, delay }: { item: CatalogProduct; delay?:
     >
       <div className="flex items-start justify-between gap-3">
         <div className={`pulse-logo flex h-[64px] w-[64px] items-center justify-center ${t.iconBox}`}>
-          <CatalogIcon name={item.icon} />
+          <ProductLogo logo={item.logo} icon={item.icon} size={40} />
         </div>
         <span className="pulse-badge">
           <span className="dot" />

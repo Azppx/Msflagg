@@ -98,6 +98,12 @@ export const dictionaries: Record<Locale, Record<string, string>> = {
     "music.eyebrow": "AMBIANCE",
     "music.title": "MUSIQUE",
     "music.subtitle": "Clique sur une pochette pour lancer ou couper le son.",
+    "music.play": "Lecture",
+    "music.pause": "Pause",
+    "music.next": "Piste suivante",
+    "music.previous": "Piste précédente",
+    "music.volume": "Volume",
+    "music.close_player": "Fermer le lecteur",
 
     // ---------- Checkout: paiement ----------
     "checkout.pay.step": "ÉTAPE 3 / 4",
@@ -307,6 +313,12 @@ export const dictionaries: Record<Locale, Record<string, string>> = {
     "music.eyebrow": "AMBIANCE",
     "music.title": "MUSIC",
     "music.subtitle": "Tap a cover to play or stop the track.",
+    "music.play": "Play",
+    "music.pause": "Pause",
+    "music.next": "Next track",
+    "music.previous": "Previous track",
+    "music.volume": "Volume",
+    "music.close_player": "Close player",
 
     // ---------- Checkout: paiement ----------
     "checkout.pay.step": "STEP 3 / 4",

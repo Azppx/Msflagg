@@ -3,7 +3,8 @@
 import { ButtonLink } from "@/components/Button";
 import { AddToCartPanel } from "@/components/AddToCartPanel";
 import { GlowCard } from "@/components/GlowCard";
-import { CatalogIcon, catalogToneRgb } from "@/components/catalog-icons";
+import { catalogToneRgb } from "@/components/catalog-icons";
+import { ProductLogo } from "@/components/ProductLogo";
 import { useTranslation } from "@/lib/i18n/locale-context";
 import type { CatalogProduct } from "@/lib/catalog";
 
@@ -28,7 +29,7 @@ export function ProductView({ item }: { item: CatalogProduct }) {
           className="glow-icon-pulse flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5"
           style={{ "--tone-rgb": toneRgb } as React.CSSProperties}
         >
-          <CatalogIcon name={item.icon} />
+          <ProductLogo logo={item.logo} icon={item.icon} size={44} />
         </div>
       </div>
 
