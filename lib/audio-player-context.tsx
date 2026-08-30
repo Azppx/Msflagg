@@ -480,6 +480,39 @@ const AudioPlayerContext = createContext<AudioPlayerContextValue>({
   closePlayer: () => {},
 });
 
+/**
+ * Met à jour les métadonnées affichées par le système (écran verrouillé,
+ * Control Center iOS, notification Android) via la Media Session API.
+ * Sans ça, iOS/Android n'affichent aucune info "en cours de lecture".
+ */
+function updateMediaSessionMetadata(track: Track | null) {
+  if (typeof navigator === "undefined" || !("mediaSession" in navigator)) return;
+
+  if (!track) {
+    navigator.mediaSession.metadata = null;
+    return;
+  }
+
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: track.title,
+    artist: track.artist,
+    album: "KYZEN",
+    artwork: [
+      { src: track.cover, sizes: "96x96", type: "image/jpeg" },
+      { src: track.cover, sizes: "128x128", type: "image/jpeg" },
+      { src: track.cover, sizes: "192x192", type: "image/jpeg" },
+      { src: track.cover, sizes: "256x256", type: "image/jpeg" },
+      { src: track.cover, sizes: "384x384", type: "image/jpeg" },
+      { src: track.cover, sizes: "512x512", type: "image/jpeg" },
+    ],
+  });
+}
+
+function updateMediaSessionPlaybackState(isPlaying: boolean) {
+  if (typeof navigator === "undefined" || !("mediaSession" in navigator)) return;
+  navigator.mediaSession.playbackState = isPlaying ? "playing" : "paused";
+}
+
 export function AudioPlayerProvider({ children }: { children: React.ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null);
@@ -503,19 +536,69 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
         audio.currentTime = 0;
         audio.play().catch(() => {});
         setIsPlaying(true);
+        updateMediaSessionMetadata(nextTrack);
+        updateMediaSessionPlaybackState(true);
         return nextTrack;
       });
     };
     const onTimeUpdate = () => {
       if (audio.duration) setProgress(audio.currentTime / audio.duration);
     };
+    const onPlay = () => updateMediaSessionPlaybackState(true);
+    const onPause = () => updateMediaSessionPlaybackState(false);
 
     audio.addEventListener("ended", onEnded);
     audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("play", onPlay);
+    audio.addEventListener("pause", onPause);
+
+    // Branche les contrôles système (écran verrouillé, Control Center,
+    // écouteurs Bluetooth) sur nos propres actions.
+    if (typeof navigator !== "undefined" && "mediaSession" in navigator) {
+      navigator.mediaSession.setActionHandler("play", () => {
+        audio.play().catch(() => {});
+        setIsPlaying(true);
+      });
+      navigator.mediaSession.setActionHandler("pause", () => {
+        audio.pause();
+        setIsPlaying(false);
+      });
+      navigator.mediaSession.setActionHandler("previoustrack", () => {
+        setCurrentTrack((prevTrack) => {
+          const idx = prevTrack ? TRACKS.findIndex((tr) => tr.id === prevTrack.id) : 0;
+          const prevIdx = (idx - 1 + TRACKS.length) % TRACKS.length;
+          const prevTrackObj = TRACKS[prevIdx];
+          audio.pause();
+          audio.src = prevTrackObj.src;
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+          setIsPlaying(true);
+          updateMediaSessionMetadata(prevTrackObj);
+          updateMediaSessionPlaybackState(true);
+          return prevTrackObj;
+        });
+      });
+      navigator.mediaSession.setActionHandler("nexttrack", () => {
+        setCurrentTrack((prevTrack) => {
+          const idx = prevTrack ? TRACKS.findIndex((tr) => tr.id === prevTrack.id) : -1;
+          const nextTrack = TRACKS[(idx + 1) % TRACKS.length];
+          audio.pause();
+          audio.src = nextTrack.src;
+          audio.currentTime = 0;
+          audio.play().catch(() => {});
+          setIsPlaying(true);
+          updateMediaSessionMetadata(nextTrack);
+          updateMediaSessionPlaybackState(true);
+          return nextTrack;
+        });
+      });
+    }
 
     return () => {
       audio.removeEventListener("ended", onEnded);
       audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("play", onPlay);
+      audio.removeEventListener("pause", onPause);
       audio.pause();
     };
   }, []);
@@ -530,6 +613,8 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
     setCurrentTrack(track);
     setIsPlaying(true);
     setProgress(0);
+    updateMediaSessionMetadata(track);
+    updateMediaSessionPlaybackState(true);
   }, []);
 
   const toggleTrack = useCallback(
@@ -542,9 +627,11 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
         if (isPlaying) {
           audio.pause();
           setIsPlaying(false);
+          updateMediaSessionPlaybackState(false);
         } else {
           audio.play().catch(() => {});
           setIsPlaying(true);
+          updateMediaSessionPlaybackState(true);
         }
         return;
       }
@@ -557,11 +644,13 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
   const play = useCallback(() => {
     audioRef.current?.play().catch(() => {});
     setIsPlaying(true);
+    updateMediaSessionPlaybackState(true);
   }, []);
 
   const pause = useCallback(() => {
     audioRef.current?.pause();
     setIsPlaying(false);
+    updateMediaSessionPlaybackState(false);
   }, []);
 
   const next = useCallback(() => {
@@ -594,6 +683,8 @@ export function AudioPlayerProvider({ children }: { children: React.ReactNode })
     setIsPlaying(false);
     setCurrentTrack(null);
     setProgress(0);
+    updateMediaSessionMetadata(null);
+    updateMediaSessionPlaybackState(false);
   }, []);
 
   return (
