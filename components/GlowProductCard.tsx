@@ -1,52 +1,61 @@
 "use client";
 
 import Link from "next/link";
-import { useTilt } from "@/lib/useTilt";
-import { catalogToneClasses, catalogToneRgb } from "@/components/catalog-icons";
+import { catalogToneRgb } from "@/components/catalog-icons";
 import { ProductLogo } from "@/components/ProductLogo";
 import type { CatalogProduct } from "@/lib/catalog";
 
-export function GlowProductCard({ item, delay }: { item: CatalogProduct; delay?: number }) {
-  const t = catalogToneClasses[item.tone];
-  const { ref, onPointerEnter, onPointerMove, onPointerLeave } = useTilt<HTMLAnchorElement>();
+export function GlowProductCard({
+  item,
+  index,
+}: {
+  item: CatalogProduct;
+  /** Numéro affiché en eyebrow ("01 / CATÉGORIE"). */
+  index?: number;
+}) {
+  const toneRgb = catalogToneRgb[item.tone];
+  const num = typeof index === "number" ? String(index + 1).padStart(2, "0") : null;
 
   return (
     <Link
-      ref={ref}
       href={`/produit/${item.slug}`}
-      onPointerEnter={onPointerEnter}
-      onPointerMove={onPointerMove}
-      onPointerLeave={onPointerLeave}
-      className="pulse-card group block border border-panelBorder"
-      style={
-        {
-          "--tone-rgb": catalogToneRgb[item.tone],
-          "--tone-hover-border": `rgba(${catalogToneRgb[item.tone]},0.4)`,
-          animationDelay: delay ? `${delay}s` : undefined,
-        } as React.CSSProperties
-      }
+      className="kyzen-service-card group block"
+      style={{ "--tone-rgb": toneRgb } as React.CSSProperties}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className={`pulse-logo flex h-[64px] w-[64px] items-center justify-center ${t.iconBox}`}>
-          <ProductLogo logo={item.logo} icon={item.icon} size={40} />
-        </div>
-        <span className="pulse-badge">
-          <span className="dot" />
-          {item.priceTotal} €
+      <div className="relative flex items-start justify-between">
+        {num && (
+          <span className="kyzen-service-num">
+            {num} / {item.category.toUpperCase()}
+          </span>
+        )}
+        <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-bold text-white/80">
+          {item.priceTotal}€
         </span>
       </div>
 
-      <p className={`mt-6 text-xs font-bold uppercase tracking-widest ${t.category}`}>
-        {item.category}
-      </p>
-      <h2 className="font-heading mt-1.5 text-[1.7rem] leading-tight tracking-tight">
+      <div className="kyzen-service-icon">
+        <ProductLogo logo={item.logo} icon={item.icon} size={26} />
+      </div>
+
+      <h2 className="relative mt-[18px] text-[22px] font-bold leading-tight tracking-tight text-white">
         {item.name}
       </h2>
-      <p className="mt-2.5 text-sm leading-relaxed text-white/55">{item.description}</p>
+      <p className="relative mt-[7px] max-w-[420px] text-[13px] leading-relaxed text-white/55">
+        {item.description}
+      </p>
 
-      <span className="pulse-explore mt-5 inline-flex items-center text-[0.95rem] font-bold text-white/80 group-hover:text-white">
-        Explorer
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <span className="kyzen-service-more">
+        Découvrir
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M7 17L17 7M17 7H8M17 7v9" />
         </svg>
       </span>
