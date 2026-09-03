@@ -124,7 +124,10 @@ body {
   transform-style: preserve-3d;
   will-change: transform;
   transition: transform 0.12s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
-  box-shadow: 0 10px 30px -18px rgba(var(--tone-rgb, 139, 53, 255), 0.5);
+  box-shadow:
+    0 10px 30px -18px rgba(var(--tone-rgb, 139, 53, 255), 0.5),
+    0 30px 70px -35px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   animation: cardFloat 6s ease-in-out infinite;
 }
 
@@ -138,30 +141,36 @@ body {
   pointer-events: none;
 }
 
-/* halo qui suit le curseur */
+/* halo qui suit le curseur (souris) ou le point de contact (tactile, via
+   la classe .is-active posée par le composant au pointerdown) */
 .pulse-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.1), transparent 60%);
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.12), transparent 60%);
   opacity: 0;
   transition: opacity 0.25s ease;
   pointer-events: none;
   z-index: 1;
 }
 
-.pulse-card:hover::before {
+.pulse-card:hover::before,
+.pulse-card.is-active::before {
   opacity: 1;
+}
+
+.pulse-card:hover,
+.pulse-card.is-active {
+  border-color: var(--tone-hover-border, rgba(139, 53, 255, 0.4));
+  box-shadow:
+    0 22px 46px -18px rgba(var(--tone-rgb, 139, 53, 255), 0.6),
+    0 40px 90px -40px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .pulse-card > * {
   position: relative;
   z-index: 2;
-}
-
-.pulse-card:hover {
-  border-color: var(--tone-hover-border, rgba(139, 53, 255, 0.4));
-  box-shadow: 0 22px 46px -18px rgba(var(--tone-rgb, 139, 53, 255), 0.55);
 }
 
 .pulse-card:active {
@@ -178,6 +187,68 @@ body {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(var(--tone-rgb, 139, 53, 255), 0.25);
   box-shadow: 0 0 24px -6px rgba(var(--tone-rgb, 139, 53, 255), 0.55);
+}
+
+/* ---------- Cadre logo produit : badge carré à coins arrondis avec vraie
+   profondeur (dégradé teinté + ombre interne + glow externe), remplace
+   l'ancien disque blanc plat. ---------- */
+.kyzen-logo-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  padding: 2px;
+  background: linear-gradient(
+    155deg,
+    rgba(var(--tone-rgb, 139, 53, 255), 0.55),
+    rgba(var(--tone-rgb, 139, 53, 255), 0.08) 55%,
+    rgba(255, 255, 255, 0.03)
+  );
+  box-shadow:
+    0 12px 28px -10px rgba(var(--tone-rgb, 139, 53, 255), 0.65),
+    0 0 40px -14px rgba(var(--tone-rgb, 139, 53, 255), 0.55);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.pulse-card:hover .kyzen-logo-frame,
+.pulse-card.is-active .kyzen-logo-frame {
+  transform: translateY(-1px) scale(1.03);
+  box-shadow:
+    0 16px 34px -8px rgba(var(--tone-rgb, 139, 53, 255), 0.8),
+    0 0 54px -10px rgba(var(--tone-rgb, 139, 53, 255), 0.7);
+}
+
+.kyzen-logo-frame-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  background: radial-gradient(120% 130% at 30% 15%, rgba(255, 255, 255, 0.07), transparent 60%), #0c0a14;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.08),
+    inset 0 -6px 14px rgba(0, 0, 0, 0.5);
+}
+
+.kyzen-logo-frame--lg {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+}
+
+.kyzen-logo-frame--lg .kyzen-logo-frame-inner {
+  border-radius: 16px;
+}
+
+/* Petit fond clair seulement pour les logos à zones transparentes/blanches
+   (ex: Discord, marques avec texte sombre sur fond transparent), pour
+   garder une bonne lisibilité sur l'arrière-plan sombre du site. */
+.kyzen-logo-chip {
+  background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.96), rgba(235, 233, 240, 0.9));
 }
 
 /* Variante centrée du pulse-card, identique au .svc-card de la maquette
@@ -1012,184 +1083,4 @@ body.kyzen-splash-active .kyzen-island {
     animation: none !important;
     transform: scaleX(1);
   }
-}
-
-/* ================================================================
-   THÈME "kyzen_services.html" / "kyzen_page_produit.html" — cartes
-   numérotées minimalistes, halo de coin discret, levée douce au survol
-   (pas d'animation continue : sobre, comme demandé).
-   ================================================================ */
-
-.kyzen-service-card {
-  position: relative;
-  overflow: hidden;
-  padding: 27px;
-  border-radius: 22px;
-  border: 1px solid #292033;
-  background: linear-gradient(145deg, #130c1d, #0b080f);
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-}
-
-.kyzen-service-card::before {
-  content: "";
-  position: absolute;
-  width: 170px;
-  height: 170px;
-  right: -80px;
-  top: -80px;
-  border-radius: 50%;
-  background: rgba(var(--tone-rgb, 145, 69, 255), 0.1);
-  filter: blur(20px);
-  pointer-events: none;
-}
-
-.kyzen-service-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(var(--tone-rgb, 164, 82, 255), 0.35);
-  box-shadow: 0 20px 55px -12px rgba(var(--tone-rgb, 116, 43, 255), 0.25);
-}
-
-.kyzen-service-num {
-  position: relative;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: #756b7d;
-}
-
-.kyzen-service-icon {
-  position: relative;
-  margin-top: 20px;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  background: rgba(var(--tone-rgb, 145, 69, 255), 0.1);
-  border: 1px solid rgba(var(--tone-rgb, 164, 82, 255), 0.22);
-  color: rgb(var(--tone-rgb, 200, 137, 255));
-}
-
-.kyzen-service-more {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 19px;
-  color: rgb(var(--tone-rgb, 197, 138, 255));
-  font-size: 12px;
-  font-weight: 800;
-  transition: gap 0.2s ease;
-}
-
-.kyzen-service-card:hover .kyzen-service-more {
-  gap: 8px;
-}
-
-/* Titre avec le second mot en contour (comme les h1 des deux maquettes) */
-.kyzen-stroke-text {
-  color: transparent;
-  -webkit-text-stroke: 1px #d8baff;
-}
-
-/* Visuel héro incliné (le "box" de la page produit) */
-.kyzen-tilt-box {
-  position: relative;
-  width: 220px;
-  height: 275px;
-  padding: 22px;
-  border-radius: 22px;
-  background: linear-gradient(145deg, #20142d, #09070d);
-  border: 1px solid rgba(193, 122, 255, 0.24);
-  box-shadow: -20px 24px 60px rgba(0, 0, 0, 0.5), 0 0 45px rgba(139, 61, 255, 0.1);
-  transform: rotate(-6deg);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.kyzen-tilt-box:hover {
-  transform: rotate(-2deg) translateY(-4px);
-}
-
-.kyzen-tilt-box .badge {
-  position: absolute;
-  right: 16px;
-  top: 16px;
-  border: 1px solid rgba(194, 124, 255, 0.35);
-  border-radius: 99px;
-  padding: 6px 9px;
-  color: #d5b4ff;
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-}
-
-.kyzen-tilt-box .big {
-  font-size: 90px;
-  font-weight: 900;
-  font-style: italic;
-  background: linear-gradient(135deg, #fff, #9744ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  line-height: 1;
-}
-
-/* Bandeau "offre" (titre + description + prix + CTA) */
-.kyzen-offer-row {
-  position: relative;
-  overflow: hidden;
-  padding: 26px;
-  border-radius: 22px;
-  border: 1px solid rgba(164, 82, 255, 0.27);
-  background: linear-gradient(105deg, #1b1027, #0b080f);
-}
-
-/* Petite carte "détail" (checklist) */
-.kyzen-detail-card {
-  padding: 20px;
-  border: 1px solid #292033;
-  border-radius: 16px;
-  background: #0d0913;
-}
-
-/* FAQ en accordéon natif, sobre */
-.kyzen-faq {
-  border-top: 1px solid #292033;
-}
-
-.kyzen-faq details {
-  border-bottom: 1px solid #292033;
-  padding: 16px 2px;
-}
-
-.kyzen-faq summary {
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 700;
-  list-style: none;
-}
-
-.kyzen-faq summary::-webkit-details-marker {
-  display: none;
-}
-
-.kyzen-faq summary::after {
-  content: "+";
-  float: right;
-  color: #8f8598;
-  transition: transform 0.2s ease;
-}
-
-.kyzen-faq details[open] summary::after {
-  transform: rotate(45deg);
-}
-
-.kyzen-faq details p {
-  margin: 10px 0 0;
-  color: #8e8496;
-  font-size: 12px;
-  line-height: 1.7;
 }

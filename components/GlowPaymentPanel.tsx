@@ -123,8 +123,10 @@ export function GlowPaymentPanel({
             {displayTitle}
           </h2>
           {catalogItem && (
-            <div className="glow-icon-pulse flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5">
-              <ProductLogo logo={catalogItem.logo} icon={catalogItem.icon} size={44} />
+            <div className="kyzen-logo-frame kyzen-logo-frame--lg" style={{ "--tone-rgb": toneRgb } as React.CSSProperties}>
+              <span className="kyzen-logo-frame-inner">
+                <ProductLogo logo={catalogItem.logo} icon={catalogItem.icon} size={40} />
+              </span>
             </div>
           )}
         </div>
