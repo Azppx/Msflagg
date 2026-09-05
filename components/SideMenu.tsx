@@ -13,12 +13,16 @@ export function SideMenu({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="flex h-full w-[85%] max-w-sm flex-col overflow-y-auto border-l border-panelBorder bg-midnight/98 p-6"
+        className="flex h-full w-[85%] max-w-sm flex-col overflow-y-auto bg-midnight p-6 shadow-[-10px_0_30px_rgba(163,155,194,0.35)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
           <KyzenLogo />
-          <button onClick={onClose} aria-label={t("nav.close")} className="text-white/50 hover:text-white">
+          <button
+            onClick={onClose}
+            aria-label={t("nav.close")}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-midnight text-ink-soft shadow-[3px_3px_8px_rgba(163,155,194,0.5),-3px_-3px_8px_rgba(255,255,255,0.85)] hover:text-ink"
+          >
             ✕
           </button>
         </div>
@@ -67,7 +71,7 @@ export function SideMenu({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="mt-6">
-          <InstallAppButton className="flex w-full items-center gap-3 rounded-2xl border border-panelBorder bg-white/5 p-4 text-left transition-colors hover:bg-white/10" />
+          <InstallAppButton className="flex w-full items-center gap-3 rounded-2xl bg-midnight p-4 text-left shadow-[5px_5px_12px_rgba(163,155,194,0.5),-5px_-5px_12px_rgba(255,255,255,0.85)] transition-shadow hover:shadow-[6px_6px_14px_rgba(163,155,194,0.55),-6px_-6px_14px_rgba(255,255,255,0.9)]" />
         </div>
 
         {account && (
@@ -103,9 +107,9 @@ function MenuItem({
     <Link
       href={href}
       onClick={onClick}
-      className="flex items-center gap-3 rounded-2xl border border-panelBorder bg-white/5 p-4 transition-colors hover:bg-white/10"
+      className="flex items-center gap-3 rounded-2xl bg-midnight p-4 shadow-[5px_5px_12px_rgba(163,155,194,0.5),-5px_-5px_12px_rgba(255,255,255,0.85)] transition-shadow hover:shadow-[6px_6px_14px_rgba(163,155,194,0.55),-6px_-6px_14px_rgba(255,255,255,0.9)] active:shadow-[inset_4px_4px_10px_rgba(163,155,194,0.5),inset_-4px_-4px_10px_rgba(255,255,255,0.85)]"
     >
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/5 text-lg">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-midnight text-lg shadow-[inset_3px_3px_7px_rgba(163,155,194,0.5),inset_-3px_-3px_7px_rgba(255,255,255,0.85)]">
         {icon}
       </span>
       <div className="flex-1">

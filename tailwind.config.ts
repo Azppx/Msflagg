@@ -8,37 +8,50 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        midnight: "#050507",
-        panel: "#0d0a13",
-        panelBorder: "rgba(255,255,255,0.09)",
+        // ---------- Palette neumorphism ----------
+        // "midnight"/"panel" gardent leur nom (utilisés dans tout le code)
+        // mais pointent maintenant vers la matière claire du thème neumorphism
+        // plutôt que le fond sombre d'origine.
+        midnight: "#e9e6f2", // fond de base, toute la matière du site
+        panel: "#e9e6f2", // panneaux/cards : même matière que le fond (neumorphism)
+        panelBorder: "rgba(43,39,64,0.08)",
+        ink: {
+          DEFAULT: "#2b2740",
+          soft: "rgba(43,39,64,0.6)",
+          faint: "rgba(43,39,64,0.4)",
+        },
+        neuShadow: {
+          dark: "rgba(163,155,194,0.55)",
+          light: "rgba(255,255,255,0.9)",
+        },
         electric: {
           DEFAULT: "#8B35FF",
-          soft: "#B85CFF",
+          soft: "#6D28D9",
         },
         accent: {
           DEFAULT: "#A64CFF",
-          soft: "#C88CFF",
+          soft: "#7C3AED",
         },
-        danger: "#FF3B3B",
+        danger: "#E11D48",
         violet: {
           DEFAULT: "#8B5CF6",
-          soft: "#B79CFF",
+          soft: "#6D28D9",
         },
         gold: {
           DEFAULT: "#9C45FF",
-          soft: "#D5B1FF",
+          soft: "#7C3AED",
         },
         teal: {
           DEFAULT: "#7C3AED",
-          soft: "#C4A6FF",
+          soft: "#5B21B6",
         },
         indigo: {
           DEFAULT: "#6D28D9",
-          soft: "#A78BFA",
+          soft: "#4C1D95",
         },
         green: {
           DEFAULT: "#8B35FF",
-          soft: "#B85CFF",
+          soft: "#6D28D9",
         },
       },
       borderRadius: {

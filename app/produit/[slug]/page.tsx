@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CartHeaderLink } from "@/components/CartHeaderLink";
+import { PageHeader } from "@/components/PageHeader";
 import { ProductView } from "@/components/ProductView";
 import { catalogProducts, getProductBySlug } from "@/lib/catalog";
 
@@ -13,17 +12,8 @@ export default function CatalogProductPage({ params }: { params: { slug: string 
   if (!item) notFound();
 
   return (
-    <main className="mx-auto min-h-screen max-w-md overflow-x-hidden pb-16 pt-8">
-      <div className="flex items-center justify-between px-5">
-        <Link
-          href="/premium"
-          aria-label="Retour"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-panelBorder bg-panel/60 text-white/70"
-        >
-          ←
-        </Link>
-        <CartHeaderLink />
-      </div>
+    <main className="mx-auto min-h-screen max-w-md pb-16">
+      <PageHeader eyebrow={item.category} title={item.name.toUpperCase()} backHref="/premium" showCart />
 
       <div className="px-5">
         <ProductView item={item} />

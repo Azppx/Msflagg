@@ -50,7 +50,15 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-3.5">
+        <h1 className="kyzen-wordmark mt-8 text-white">
+          ky<span className="accent">zen</span>
+        </h1>
+
+        <p className="relative mx-auto mt-5 max-w-[32ch] text-[14px] leading-[1.7] text-white/50">
+          {t("home.tagline")}
+        </p>
+
+        <div className="mt-8 grid grid-cols-1 gap-3.5">
           <Link href="/premium" className="kyzen-mini-card">
             <div className="kyzen-mini-icon">
               <Image src="/icons/logo-k.png" alt="KYZEN" width={26} height={26} priority />

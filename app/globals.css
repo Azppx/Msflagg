@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html,
@@ -16,6 +16,41 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
   font-family: var(--font-inter), system-ui, sans-serif;
 }
+
+/* ==========================================================================
+   THÈME NEUMORPHISM — overrides globaux
+   ==========================================================================
+   Le reste du code utilise encore des classes Tailwind "text-white/NN",
+   "bg-white/NN" et "border-white/NN" héritées du thème sombre d'origine.
+   Plutôt que de réécrire des centaines d'usages dispersés dans ~45 fichiers
+   (risque élevé d'oubli / incohérence), on re-route ici fidèlement chaque
+   nuance utilisée vers l'équivalent en encre foncée du thème clair, en
+   conservant les mêmes niveaux d'opacité relative. Toute nouvelle classe
+   "text-white/NN" ajoutée plus tard devra être ajoutée ici aussi.
+   ========================================================================== */
+
+.text-white { color: #2b2740 !important; }
+.text-white\/90 { color: rgba(43,39,64,0.9) !important; }
+.text-white\/80 { color: rgba(43,39,64,0.8) !important; }
+.text-white\/70 { color: rgba(43,39,64,0.7) !important; }
+.text-white\/60 { color: rgba(43,39,64,0.6) !important; }
+.text-white\/55 { color: rgba(43,39,64,0.55) !important; }
+.text-white\/50 { color: rgba(43,39,64,0.5) !important; }
+.text-white\/45 { color: rgba(43,39,64,0.45) !important; }
+.text-white\/40 { color: rgba(43,39,64,0.4) !important; }
+.text-white\/35 { color: rgba(43,39,64,0.35) !important; }
+.text-white\/30 { color: rgba(43,39,64,0.3) !important; }
+.text-white\/25 { color: rgba(43,39,64,0.25) !important; }
+.text-white\/20 { color: rgba(43,39,64,0.2) !important; }
+.text-white\/15 { color: rgba(43,39,64,0.15) !important; }
+
+.bg-white\/90 { background-color: rgba(43,39,64,0.06) !important; }
+.bg-white\/15 { background-color: rgba(43,39,64,0.06) !important; }
+.bg-white\/10 { background-color: rgba(43,39,64,0.045) !important; }
+.bg-white\/5 { background-color: rgba(43,39,64,0.03) !important; }
+
+.border-white\/20 { border-color: rgba(43,39,64,0.14) !important; }
+.border-white\/10 { border-color: rgba(43,39,64,0.09) !important; }
 
 .bg-glow-radial {
   background: radial-gradient(ellipse 140% 55% at 50% -15%, rgba(139, 53, 255, 0.18), transparent 65%);
@@ -108,50 +143,53 @@ body {
   );
 }
 
-/* --- Glow 3D card recipe (identique aux maquettes HTML) --- */
+/* --- Neumorphism card recipe : moulée dans la matière du fond, le relief
+   vient uniquement de deux ombres opposées (claire + sombre) --- */
 
 .pulse-card {
   position: relative;
-  border-radius: 1.6rem;
+  border-radius: 1.8rem;
   padding: 26px;
   overflow: hidden;
   cursor: pointer;
   text-decoration: none;
   color: inherit;
-  background:
-    radial-gradient(120% 90% at 22% 0%, rgba(var(--tone-rgb, 139, 53, 255), 0.3), transparent 60%),
-    rgba(255, 255, 255, 0.035);
-  transform-style: preserve-3d;
-  will-change: transform;
-  transition: transform 0.12s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
-  box-shadow: 0 10px 30px -18px rgba(var(--tone-rgb, 139, 53, 255), 0.5);
-  animation: cardFloat 6s ease-in-out infinite;
+  background: #e9e6f2;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  box-shadow:
+    10px 10px 24px rgba(163, 155, 194, 0.55),
+    -10px -10px 24px rgba(255, 255, 255, 0.9);
 }
 
-/* estompe le glow vers le bas/les bords, comme dans la référence */
+/* pas d'estompage de bord requis en neumorphism : la card est déjà de la
+   même matière que le fond, il n'y a pas de "glow" à contenir */
 .pulse-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(80% 60% at 20% 0%, transparent 0%, #05070f 115%);
-  opacity: 0.55;
-  pointer-events: none;
+  content: none;
 }
 
-/* halo qui suit le curseur */
+/* halo très doux qui suit le curseur/le doigt, garde un soupçon de la
+   couleur du produit sans casser l'unité de matière */
 .pulse-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.1), transparent 60%);
+  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%), rgba(var(--tone-rgb, 139, 53, 255), 0.08), transparent 60%);
   opacity: 0;
   transition: opacity 0.25s ease;
   pointer-events: none;
   z-index: 1;
 }
 
-.pulse-card:hover::before {
+.pulse-card:hover::before,
+.pulse-card.is-active::before {
   opacity: 1;
+}
+
+.pulse-card:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    14px 14px 30px rgba(163, 155, 194, 0.55),
+    -14px -14px 30px rgba(255, 255, 255, 0.9);
 }
 
 .pulse-card > * {
@@ -159,25 +197,78 @@ body {
   z-index: 2;
 }
 
-.pulse-card:hover {
-  border-color: var(--tone-hover-border, rgba(139, 53, 255, 0.4));
-  box-shadow: 0 22px 46px -18px rgba(var(--tone-rgb, 139, 53, 255), 0.55);
-}
-
-.pulse-card:active {
-  transition-duration: 0.1s;
+/* la card "s'enfonce" dans la matière au clic/tap : ombre qui bascule
+   à l'intérieur, plutôt qu'un simple raccourci de transition */
+.pulse-card:active,
+.pulse-card.is-active {
+  transform: translateY(0);
+  box-shadow:
+    inset 7px 7px 16px rgba(163, 155, 194, 0.55),
+    inset -7px -7px 16px rgba(255, 255, 255, 0.9);
 }
 
 @keyframes cardFloat {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-7px); }
+  50% { transform: translateY(-4px); }
 }
 
 .pulse-logo {
+  border-radius: 18px;
+  background: #e9e6f2;
+  box-shadow:
+    inset 6px 6px 12px rgba(163, 155, 194, 0.55),
+    inset -6px -6px 12px rgba(255, 255, 255, 0.9);
+}
+
+/* ---------- Cadre logo produit : creusé dans la matière (ombre intérieure),
+   le logo semble posé au fond d'une cavité douce. ---------- */
+.kyzen-logo-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: #e9e6f2;
+  box-shadow:
+    inset 6px 6px 12px rgba(163, 155, 194, 0.55),
+    inset -6px -6px 12px rgba(255, 255, 255, 0.9);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.pulse-card:hover .kyzen-logo-frame,
+.pulse-card.is-active .kyzen-logo-frame {
+  box-shadow:
+    inset 7px 7px 14px rgba(163, 155, 194, 0.6),
+    inset -7px -7px 14px rgba(255, 255, 255, 0.95);
+}
+
+.kyzen-logo-frame-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+}
+
+.kyzen-logo-frame--lg {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+}
+
+.kyzen-logo-frame--lg .kyzen-logo-frame-inner {
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(var(--tone-rgb, 139, 53, 255), 0.25);
-  box-shadow: 0 0 24px -6px rgba(var(--tone-rgb, 139, 53, 255), 0.55);
+}
+
+/* Petit fond clair derrière les logos à zones transparentes (ex: Discord),
+   pour garder une bonne lisibilité même sur le fond clair du thème
+   neumorphism : beaucoup de logos officiels ont un fond blanc/transparent
+   qui se fondrait sinon dans la matière du cadre. */
+.kyzen-logo-chip {
+  background: rgba(255, 255, 255, 0.9);
 }
 
 /* Variante centrée du pulse-card, identique au .svc-card de la maquette
@@ -252,23 +343,22 @@ body {
 /* Frosted-glass card background: lets the colored glow bleed through,
    like the reference Pulse screenshots. Pair with your own border color. */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.045);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  background: #e9e6f2;
+  box-shadow:
+    8px 8px 18px rgba(163, 155, 194, 0.5),
+    -8px -8px 18px rgba(255, 255, 255, 0.85);
 }
 
 .card-glow {
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.06),
-    0 0 40px -10px rgba(139, 53, 255, 0.35),
-    0 25px 80px -18px rgba(139, 53, 255, 0.45);
+    8px 8px 18px rgba(163, 155, 194, 0.5),
+    -8px -8px 18px rgba(255, 255, 255, 0.85);
 }
 
 .card-glow-accent {
   box-shadow:
-    0 0 0 1px rgba(166, 76, 255, 0.5),
-    0 0 50px -8px rgba(166, 76, 255, 0.5),
-    0 30px 90px -16px rgba(166, 76, 255, 0.55);
+    inset 5px 5px 12px rgba(163, 155, 194, 0.5),
+    inset -5px -5px 12px rgba(255, 255, 255, 0.85);
 }
 
 /* Soft pulsing halo, e.g. behind icons/logos on selection cards */
@@ -477,27 +567,33 @@ button {
 .btn-glow-purple {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #a64cff, #6d1dff);
-  color: #fff;
-  box-shadow: 0 14px 45px -8px rgba(139, 53, 255, 0.45);
+  background: #e9e6f2;
+  color: #2b2740;
+  box-shadow:
+    7px 7px 16px rgba(163, 155, 194, 0.55),
+    -7px -7px 16px rgba(255, 255, 255, 0.9);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .btn-glow-blue:hover,
 .btn-glow-purple:hover {
-  background: linear-gradient(135deg, #b263ff, #7a2eff);
   transform: translateY(-2px);
+  box-shadow:
+    9px 9px 20px rgba(163, 155, 194, 0.55),
+    -9px -9px 20px rgba(255, 255, 255, 0.9);
+}
+
+.btn-glow-blue:active,
+.btn-glow-purple:active {
+  transform: translateY(0);
+  box-shadow:
+    inset 5px 5px 12px rgba(163, 155, 194, 0.55),
+    inset -5px -5px 12px rgba(255, 255, 255, 0.9);
 }
 
 .btn-glow-blue::after,
 .btn-glow-purple::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-  animation: ctaShine 3s ease-in-out infinite;
+  content: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1003,8 +1099,6 @@ body.kyzen-splash-active .btn-glow-purple,
 body.kyzen-splash-active .sweep-banner,
 body.kyzen-splash-active .kyzen-mini-card,
 body.kyzen-splash-active .kyzen-eq-bar,
-body.kyzen-splash-active .kyzen-service-icon,
-body.kyzen-splash-active .kyzen-tilt-box,
 body.kyzen-splash-active .kyzen-island {
   animation-play-state: paused !important;
 }
@@ -1014,205 +1108,4 @@ body.kyzen-splash-active .kyzen-island {
     animation: none !important;
     transform: scaleX(1);
   }
-}
-
-/* ================================================================
-   THÈME "kyzen_services.html" / "kyzen_page_produit.html" — cartes
-   numérotées minimalistes, halo de coin discret, levée douce au survol
-   (pas d'animation continue : sobre, comme demandé).
-   ================================================================ */
-
-.kyzen-service-card {
-  position: relative;
-  overflow: hidden;
-  padding: 27px;
-  border-radius: 22px;
-  border: 1px solid #292033;
-  background: linear-gradient(145deg, #130c1d, #0b080f);
-  transform: perspective(800px) rotateX(0deg) translateY(0) scale(1);
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease,
-    box-shadow 0.35s ease;
-}
-
-.kyzen-service-card::before {
-  content: "";
-  position: absolute;
-  width: 170px;
-  height: 170px;
-  right: -80px;
-  top: -80px;
-  border-radius: 50%;
-  background: rgba(var(--tone-rgb, 145, 69, 255), 0.1);
-  filter: blur(20px);
-  pointer-events: none;
-  transition: transform 0.4s ease, background 0.4s ease;
-}
-
-.kyzen-service-card:hover {
-  transform: perspective(800px) rotateX(4deg) translateY(-7px) scale(1.012);
-  border-color: rgba(var(--tone-rgb, 164, 82, 255), 0.5);
-  box-shadow: 0 26px 60px -16px rgba(var(--tone-rgb, 116, 43, 255), 0.4),
-    0 0 40px -10px rgba(var(--tone-rgb, 164, 82, 255), 0.35);
-}
-
-.kyzen-service-card:hover::before {
-  transform: scale(1.35);
-  background: rgba(var(--tone-rgb, 145, 69, 255), 0.22);
-}
-
-.kyzen-service-num {
-  position: relative;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: #756b7d;
-}
-
-.kyzen-service-icon {
-  position: relative;
-  margin-top: 20px;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  background: rgba(var(--tone-rgb, 145, 69, 255), 0.1);
-  border: 1px solid rgba(var(--tone-rgb, 164, 82, 255), 0.22);
-  color: rgb(var(--tone-rgb, 200, 137, 255));
-  animation: iconPulseGlow 3.4s ease-in-out infinite;
-}
-
-.kyzen-service-more {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 19px;
-  color: rgb(var(--tone-rgb, 197, 138, 255));
-  font-size: 12px;
-  font-weight: 800;
-  transition: gap 0.2s ease;
-}
-
-.kyzen-service-card:hover .kyzen-service-more {
-  gap: 8px;
-}
-
-/* Titre avec le second mot en contour (comme les h1 des deux maquettes) */
-.kyzen-stroke-text {
-  color: transparent;
-  -webkit-text-stroke: 1px #d8baff;
-}
-
-/* Visuel héro incliné (le "box" de la page produit) */
-.kyzen-tilt-box {
-  position: relative;
-  width: 220px;
-  height: 275px;
-  padding: 22px;
-  border-radius: 22px;
-  background: linear-gradient(145deg, #20142d, #09070d);
-  border: 1px solid rgba(193, 122, 255, 0.24);
-  transform: rotate(-6deg);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
-  animation: kyzenTiltGlow 4s ease-in-out infinite;
-}
-
-@keyframes kyzenTiltGlow {
-  0%, 100% {
-    box-shadow: -20px 24px 60px rgba(0, 0, 0, 0.5),
-      0 0 45px rgba(var(--tone-rgb, 139, 61, 255), 0.12);
-  }
-  50% {
-    box-shadow: -20px 24px 60px rgba(0, 0, 0, 0.5),
-      0 0 65px rgba(var(--tone-rgb, 139, 61, 255), 0.32);
-  }
-}
-
-.kyzen-tilt-box:hover {
-  transform: rotate(-2deg) translateY(-6px) scale(1.02);
-}
-
-.kyzen-tilt-box .badge {
-  position: absolute;
-  right: 16px;
-  top: 16px;
-  border: 1px solid rgba(194, 124, 255, 0.35);
-  border-radius: 99px;
-  padding: 6px 9px;
-  color: #d5b4ff;
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-}
-
-.kyzen-tilt-box .big {
-  font-size: 90px;
-  font-weight: 900;
-  font-style: italic;
-  background: linear-gradient(135deg, #fff, #9744ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  line-height: 1;
-}
-
-/* Bandeau "offre" (titre + description + prix + CTA) */
-.kyzen-offer-row {
-  position: relative;
-  overflow: hidden;
-  padding: 26px;
-  border-radius: 22px;
-  border: 1px solid rgba(164, 82, 255, 0.27);
-  background: linear-gradient(105deg, #1b1027, #0b080f);
-}
-
-/* Petite carte "détail" (checklist) */
-.kyzen-detail-card {
-  padding: 20px;
-  border: 1px solid #292033;
-  border-radius: 16px;
-  background: #0d0913;
-}
-
-/* FAQ en accordéon natif, sobre */
-.kyzen-faq {
-  border-top: 1px solid #292033;
-}
-
-.kyzen-faq details {
-  border-bottom: 1px solid #292033;
-  padding: 16px 2px;
-}
-
-.kyzen-faq summary {
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 700;
-  list-style: none;
-}
-
-.kyzen-faq summary::-webkit-details-marker {
-  display: none;
-}
-
-.kyzen-faq summary::after {
-  content: "+";
-  float: right;
-  color: #8f8598;
-  transition: transform 0.2s ease;
-}
-
-.kyzen-faq details[open] summary::after {
-  transform: rotate(45deg);
-}
-
-.kyzen-faq details p {
-  margin: 10px 0 0;
-  color: #8e8496;
-  font-size: 12px;
-  line-height: 1.7;
 }
