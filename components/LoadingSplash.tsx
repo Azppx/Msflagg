@@ -23,9 +23,7 @@ export function LoadingSplash() {
   }, []);
 
   function handleTransitionEnd(e: React.TransitionEvent) {
-    // opacity est la seule propriété animée désormais (voir style plus bas) :
-    // plus besoin de filtrer sur clip-path.
-    if (e.propertyName === "opacity" && wiping) {
+    if (e.propertyName === "clip-path" && wiping) {
       setVisible(false);
       document.body.classList.remove("kyzen-splash-active");
     }
@@ -38,17 +36,8 @@ export function LoadingSplash() {
       onTransitionEnd={handleTransitionEnd}
       className="kyzen-splash-root fixed inset-0 z-[100] flex flex-col items-center justify-center bg-midnight"
       style={{
-        // On évite volontairement clip-path/backdrop-filter ici : combinées à
-        // celles déjà présentes dans la TopBar en dessous, elles forcent le
-        // navigateur à recomposer un masque à chaque frame, ce qui sature le
-        // thread de rendu sur les téléphones moins puissants (effet de
-        // freeze/saccade signalé). Une simple transition opacity + scale sur
-        // les propriétés "transform"/"opacity" reste, elle, accélérée par le
-        // GPU de façon fiable sur tous les mobiles.
-        opacity: wiping ? 0 : 1,
-        transform: wiping ? "scale(1.04)" : "scale(1)",
-        pointerEvents: wiping ? "none" : "auto",
-        transition: "opacity 0.45s ease, transform 0.45s ease",
+        clipPath: wiping ? "circle(0% at 50% 50%)" : "circle(150% at 50% 50%)",
+        transition: "clip-path 0.6s cubic-bezier(0.65,0,0.35,1)",
       }}
     >
       <span className="kyzen-k-outline" style={{ fontSize: "56px", animation: "none" }}>
