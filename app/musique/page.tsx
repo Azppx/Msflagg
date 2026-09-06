@@ -15,11 +15,17 @@ export default function MusiquePage() {
       <div className="px-5">
         <p className="text-sm text-white/50">{t("music.subtitle")}</p>
 
-        <div className="mt-6 grid grid-cols-2 gap-4">
-          {TRACKS.map((track) => (
-            <TrackCover key={track.id} track={track} />
-          ))}
-        </div>
+        {TRACKS.length === 0 ? (
+          <p className="mt-8 text-sm text-white/30">
+            Aucune piste disponible pour le moment.
+          </p>
+        ) : (
+          <div className="mt-6 grid grid-cols-2 gap-4">
+            {TRACKS.map((track) => (
+              <TrackCover key={track.id} track={track} />
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );
