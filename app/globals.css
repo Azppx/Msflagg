@@ -1,1111 +1,318 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+* {
+  box-sizing: border-box;
+}
 
 :root {
-  color-scheme: light;
+  --void: #0a0710;
+  --void-raised: #120c1e;
+  --void-deep: #06040a;
+  --signal: #9d5cff;
+  --signal-dim: rgba(157, 92, 255, 0.5);
+  --ember: #ff6b4a;
+  --mint: #5dffb0;
+  --gold: #ffd65a;
+  --fog: #b8aed6;
+  --paper: #f5f1ff;
+  --line: rgba(157, 92, 255, 0.14);
+
+  /* ---------- Liquid glass tokens ---------- */
+  --glass-tint: rgba(255, 255, 255, 0.06);
+  --glass-tint-strong: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-blur: 22px;
+  --glass-sat: 180%;
 }
 
-html,
-body {
-  overscroll-behavior-y: none;
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  margin: 0;
+  background: var(--void);
+  color: var(--paper);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.font-display {
+  font-family: var(--font-display), sans-serif;
 }
 
 /* ==========================================================================
-   THÈME NEUMORPHISM — overrides globaux
+   LIQUID GLASS — recette de base appliquée à toute surface "vitrée" du site
    ==========================================================================
-   Le reste du code utilise encore des classes Tailwind "text-white/NN",
-   "bg-white/NN" et "border-white/NN" héritées du thème sombre d'origine.
-   Plutôt que de réécrire des centaines d'usages dispersés dans ~45 fichiers
-   (risque élevé d'oubli / incohérence), on re-route ici fidèlement chaque
-   nuance utilisée vers l'équivalent en encre foncée du thème clair, en
-   conservant les mêmes niveaux d'opacité relative. Toute nouvelle classe
-   "text-white/NN" ajoutée plus tard devra être ajoutée ici aussi.
+   Contrairement à un glassmorphism plat (fond translucide + blur uniforme),
+   le liquid glass superpose :
+   1. Un flou + saturation fort (le verre déforme la lumière derrière lui)
+   2. Un dégradé de teinte interne asymétrique (le verre n'est jamais éclairé
+      uniformément — plus clair en haut, plus sombre en bas, comme s'il
+      captait une source de lumière au-dessus)
+   3. Un reflet spéculaire fin qui longe le bord supérieur (surface qui
+      accroche la lumière, pas juste un fond flouté)
+   4. Une bordure à deux tons (clair en haut, sombre en bas) qui simule
+      l'épaisseur réelle du verre plutôt qu'un simple trait uniforme
    ========================================================================== */
-
-.text-white { color: #2b2740 !important; }
-.text-white\/90 { color: rgba(43,39,64,0.9) !important; }
-.text-white\/80 { color: rgba(43,39,64,0.8) !important; }
-.text-white\/70 { color: rgba(43,39,64,0.7) !important; }
-.text-white\/60 { color: rgba(43,39,64,0.6) !important; }
-.text-white\/55 { color: rgba(43,39,64,0.55) !important; }
-.text-white\/50 { color: rgba(43,39,64,0.5) !important; }
-.text-white\/45 { color: rgba(43,39,64,0.45) !important; }
-.text-white\/40 { color: rgba(43,39,64,0.4) !important; }
-.text-white\/35 { color: rgba(43,39,64,0.35) !important; }
-.text-white\/30 { color: rgba(43,39,64,0.3) !important; }
-.text-white\/25 { color: rgba(43,39,64,0.25) !important; }
-.text-white\/20 { color: rgba(43,39,64,0.2) !important; }
-.text-white\/15 { color: rgba(43,39,64,0.15) !important; }
-
-.bg-white\/90 { background-color: rgba(43,39,64,0.06) !important; }
-.bg-white\/15 { background-color: rgba(43,39,64,0.06) !important; }
-.bg-white\/10 { background-color: rgba(43,39,64,0.045) !important; }
-.bg-white\/5 { background-color: rgba(43,39,64,0.03) !important; }
-
-.border-white\/20 { border-color: rgba(43,39,64,0.14) !important; }
-.border-white\/10 { border-color: rgba(43,39,64,0.09) !important; }
-
-.bg-glow-radial {
-  background: radial-gradient(ellipse 140% 55% at 50% -15%, rgba(139, 53, 255, 0.18), transparent 65%);
-}
-
-/* Subtle dot-grid texture, like the reference screenshots */
-.bg-dot-grid {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 20px 20px;
-  background-position: -9px -9px;
-}
-
-/* Traits fins qui convergent en haut de l'écran, identique à la maquette HTML */
-.frame-line {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 220px;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.35;
-}
-
-.frame-line::before {
-  content: "";
-  position: absolute;
-  top: 60px;
-  left: 0;
-  width: 46%;
-  height: 1px;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.18), transparent);
-}
-
-.frame-line::after {
-  content: "";
-  position: absolute;
-  top: 60px;
-  right: 0;
-  width: 46%;
-  height: 1px;
-  background: linear-gradient(to left, rgba(255, 255, 255, 0.18), transparent);
-}
-
-/* Slow-drifting ambient glow blobs behind the whole app */
-.bg-ambient-blob {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  will-change: transform, opacity;
-}
-
-.bg-ambient-blob--accent {
-  background: radial-gradient(circle, rgba(166, 76, 255, 0.42), transparent 70%);
-  animation: driftAccent 16s ease-in-out infinite alternate;
-}
-
-.bg-ambient-blob--electric {
-  background: radial-gradient(circle, rgba(139, 53, 255, 0.3), transparent 70%);
-  animation: driftElectric 20s ease-in-out infinite alternate;
-}
-
-@keyframes driftAccent {
-  0% { transform: translate(-4%, -6%) scale(1); opacity: 0.7; }
-  50% { transform: translate(3%, 2%) scale(1.12); opacity: 1; }
-  100% { transform: translate(-2%, 5%) scale(0.95); opacity: 0.75; }
-}
-
-@keyframes driftElectric {
-  0% { transform: translate(3%, 4%) scale(1); opacity: 0.6; }
-  50% { transform: translate(-3%, -2%) scale(1.08); opacity: 0.9; }
-  100% { transform: translate(2%, -5%) scale(0.96); opacity: 0.6; }
-}
-
-/* Fades the left/right edges of a horizontally scrollable row instead of hard-clipping content */
-.edge-fade-x {
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    black 20px,
-    black calc(100% - 20px),
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    black 20px,
-    black calc(100% - 20px),
-    transparent 100%
-  );
-}
-
-/* --- Neumorphism card recipe : moulée dans la matière du fond, le relief
-   vient uniquement de deux ombres opposées (claire + sombre) --- */
-
-.pulse-card {
+.liquid-glass {
   position: relative;
-  border-radius: 1.8rem;
-  padding: 26px;
+  background:
+    linear-gradient(165deg, var(--glass-tint-strong), var(--glass-tint) 55%, rgba(255, 255, 255, 0.02));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  border: 1px solid transparent;
+  border-top-color: var(--glass-border);
+  border-left-color: rgba(255, 255, 255, 0.08);
+  border-right-color: rgba(0, 0, 0, 0.1);
+  border-bottom-color: rgba(0, 0, 0, 0.25);
+}
+
+/* Reflet spéculaire : liseré lumineux fin qui longe le haut du bord interne,
+   comme la lumière qui accroche l'arête supérieure d'une vitre. */
+.liquid-glass::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  pointer-events: none;
+}
+
+/* Variante teintée par la couleur de marque, pour les surfaces qui doivent
+   aussi porter un peu de --signal (nav, boutons, badges actifs). */
+.liquid-glass--signal {
+  background:
+    linear-gradient(165deg, rgba(157, 92, 255, 0.22), rgba(157, 92, 255, 0.08) 55%, rgba(255, 255, 255, 0.02));
+  border-top-color: rgba(210, 180, 255, 0.4);
+}
+
+/* Petit shimmer horizontal qui traverse une fois au montage, pour évoquer
+   la surface liquide qui "s'installe" — un seul déclenchement, jamais en
+   boucle, pour respecter la contrainte "un seul moment orchestré". */
+@keyframes glass-settle {
+  from { background-position: -150% 0; }
+  to { background-position: 250% 0; }
+}
+.liquid-glass--settle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, 0.12) 50%, transparent 60%);
+  background-size: 250% 100%;
+  animation: glass-settle 1.1s ease-out 1;
+  pointer-events: none;
+}
+
+svg {
+  display: block;
+}
+
+::selection {
+  background: rgba(157, 92, 255, 0.35);
+}
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   HERO STAGE — orbe 3D avec anneaux orbitaux
+   ========================================================================== */
+.hero-stage {
+  position: relative;
+  height: 280px;
+  margin: 8px -20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 900px;
+}
+
+.orb {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, 0.9), rgba(210, 180, 255, 0.4) 22%, rgba(157, 92, 255, 0.55) 45%, rgba(80, 30, 160, 0.85) 72%, #1a0f2e 100%);
+  box-shadow:
+    0 0 60px 10px rgba(157, 92, 255, 0.55),
+    0 0 140px 40px rgba(157, 92, 255, 0.35),
+    inset -14px -14px 40px rgba(0, 0, 0, 0.55),
+    inset 10px 10px 30px rgba(255, 255, 255, 0.25);
+  animation: orb-float 7s ease-in-out infinite;
+}
+
+@keyframes orb-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+.ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba(157, 92, 255, 0.4);
+  transform: translate(-50%, -50%) rotateX(72deg);
+  pointer-events: none;
+}
+.ring--1 { width: 320px; height: 320px; animation: ring-spin 14s linear infinite; }
+.ring--2 { width: 380px; height: 380px; border-color: rgba(190, 130, 255, 0.22); animation: ring-spin 20s linear infinite reverse; }
+
+@keyframes ring-spin {
+  from { transform: translate(-50%, -50%) rotateX(72deg) rotateZ(0deg); }
+  to { transform: translate(-50%, -50%) rotateX(72deg) rotateZ(360deg); }
+}
+
+.ring-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 0 12px 3px rgba(157, 92, 255, 0.9);
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.hero-floating-badge {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 13px;
+  border-radius: 12px;
+  font-size: 11px;
+  color: var(--fog);
+  animation: badge-drift 5s ease-in-out infinite;
+}
+.hero-floating-badge b { color: var(--paper); font-weight: 600; }
+.hero-floating-badge--1 { top: 6%; right: 4%; animation-delay: 0s; }
+.hero-floating-badge--2 { bottom: 10%; left: 0%; animation-delay: 1.6s; }
+
+@keyframes badge-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* ==========================================================================
+   PRODUCT BADGE 3D — logo qui lévite légèrement (page produit)
+   ========================================================================== */
+.product-badge-3d {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  border-radius: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 34px;
+  animation: badge-3d-spin 8s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+@keyframes badge-3d-spin {
+  0%, 100% { transform: rotateY(-8deg) rotateX(4deg) translateY(0); }
+  50% { transform: rotateY(8deg) rotateX(-2deg) translateY(-8px); }
+}
+
+/* ==========================================================================
+   THEME RAIL — vitrine horizontale scrollable par catégorie
+   ========================================================================== */
+.theme-rail {
+  display: flex;
+  gap: 13px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.theme-rail::-webkit-scrollbar { display: none; }
+
+.theme-card {
+  scroll-snap-align: start;
+  flex: 0 0 160px;
+  border-radius: 22px;
+  padding: 18px 16px;
+  position: relative;
   overflow: hidden;
   cursor: pointer;
   text-decoration: none;
   color: inherit;
-  background: #e9e6f2;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-  box-shadow:
-    10px 10px 24px rgba(163, 155, 194, 0.55),
-    -10px -10px 24px rgba(255, 255, 255, 0.9);
+  display: block;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
-/* pas d'estompage de bord requis en neumorphism : la card est déjà de la
-   même matière que le fond, il n'y a pas de "glow" à contenir */
-.pulse-card::after {
-  content: none;
+.theme-card:hover {
+  transform: translateY(-5px);
 }
+.theme-card-logo {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px;
+}
+.theme-card-logo svg { color: #221a33; }
+.theme-card-name { position: relative; margin-top: 14px; font-weight: 600; font-size: 13.5px; }
+.theme-card-price { position: relative; margin-top: 3px; font-size: 11.5px; color: var(--fog); }
 
-/* halo très doux qui suit le curseur/le doigt, garde un soupçon de la
-   couleur du produit sans casser l'unité de matière */
-.pulse-card::before {
+/* ==========================================================================
+   PROD GRID — grille catalogue avec halo qui suit le curseur
+   ========================================================================== */
+.prod-card {
+  position: relative;
+  border-radius: 22px;
+  padding: 20px 18px;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.prod-card::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%), rgba(var(--tone-rgb, 139, 53, 255), 0.08), transparent 60%);
+  background: radial-gradient(160px circle at var(--mx, 30%) var(--my, 0%), rgba(157, 92, 255, 0.16), transparent 65%);
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.3s ease;
   pointer-events: none;
-  z-index: 1;
 }
+.prod-card:hover { transform: translateY(-4px); }
+.prod-card:hover::after { opacity: 1; }
 
-.pulse-card:hover::before,
-.pulse-card.is-active::before {
-  opacity: 1;
-}
-
-.pulse-card:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    14px 14px 30px rgba(163, 155, 194, 0.55),
-    -14px -14px 30px rgba(255, 255, 255, 0.9);
-}
-
-.pulse-card > * {
+.prod-logo-frame {
   position: relative;
-  z-index: 2;
-}
-
-/* la card "s'enfonce" dans la matière au clic/tap : ombre qui bascule
-   à l'intérieur, plutôt qu'un simple raccourci de transition */
-.pulse-card:active,
-.pulse-card.is-active {
-  transform: translateY(0);
-  box-shadow:
-    inset 7px 7px 16px rgba(163, 155, 194, 0.55),
-    inset -7px -7px 16px rgba(255, 255, 255, 0.9);
-}
-
-@keyframes cardFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-
-.pulse-logo {
-  border-radius: 18px;
-  background: #e9e6f2;
-  box-shadow:
-    inset 6px 6px 12px rgba(163, 155, 194, 0.55),
-    inset -6px -6px 12px rgba(255, 255, 255, 0.9);
-}
-
-/* ---------- Cadre logo produit : creusé dans la matière (ombre intérieure),
-   le logo semble posé au fond d'une cavité douce. ---------- */
-.kyzen-logo-frame {
-  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 20px;
-  background: #e9e6f2;
-  box-shadow:
-    inset 6px 6px 12px rgba(163, 155, 194, 0.55),
-    inset -6px -6px 12px rgba(255, 255, 255, 0.9);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  padding: 11px;
+  box-shadow: 0 8px 20px -8px rgba(157, 92, 255, 0.5);
 }
-
-.pulse-card:hover .kyzen-logo-frame,
-.pulse-card.is-active .kyzen-logo-frame {
-  box-shadow:
-    inset 7px 7px 14px rgba(163, 155, 194, 0.6),
-    inset -7px -7px 14px rgba(255, 255, 255, 0.95);
-}
-
-.kyzen-logo-frame-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  border-radius: 18px;
-}
-
-.kyzen-logo-frame--lg {
-  width: 56px;
-  height: 56px;
-  border-radius: 18px;
-}
-
-.kyzen-logo-frame--lg .kyzen-logo-frame-inner {
-  border-radius: 16px;
-}
-
-/* Petit fond clair derrière les logos à zones transparentes (ex: Discord),
-   pour garder une bonne lisibilité même sur le fond clair du thème
-   neumorphism : beaucoup de logos officiels ont un fond blanc/transparent
-   qui se fondrait sinon dans la matière du cadre. */
-.kyzen-logo-chip {
-  background: rgba(255, 255, 255, 0.9);
-}
-
-/* Variante centrée du pulse-card, identique au .svc-card de la maquette
-   "Nos services" (icône ronde 84px, tout centré, pas de badge). */
-.pulse-card.svc-card-style {
-  padding: 40px 22px 30px;
-  text-align: center;
-}
-
-.icon-ring-84 {
-  width: 84px;
-  height: 84px;
-  border-radius: 1.4rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(var(--tone-rgb, 139, 53, 255), 0.4);
-  box-shadow: 0 0 34px -6px rgba(var(--tone-rgb, 139, 53, 255), 0.65);
-}
-
-.pulse-card.svc-card-style:hover .pulse-explore {
-  color: rgb(var(--tone-rgb, 139, 53, 255));
-}
-
-.pulse-badge {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 999px;
-  padding: 8px 14px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.85);
-  white-space: nowrap;
-}
-
-.pulse-badge .dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgb(var(--tone-rgb, 139, 53, 255));
-  box-shadow: 0 0 8px 1px rgb(var(--tone-rgb, 139, 53, 255));
-}
-
-.pulse-explore {
-  position: relative;
-  gap: 5px;
-  transition: gap 0.2s ease;
-}
-
-.pulse-card:hover .pulse-explore {
-  gap: 9px;
-}
-
-.pulse-explore svg {
-  transition: transform 0.2s ease;
-}
-
-.pulse-card:hover .pulse-explore svg {
-  transform: translate(3px, -3px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pulse-card {
-    animation: none;
-    transition: none;
-  }
-}
-
-/* Frosted-glass card background: lets the colored glow bleed through,
-   like the reference Pulse screenshots. Pair with your own border color. */
-.glass-panel {
-  background: #e9e6f2;
-  box-shadow:
-    8px 8px 18px rgba(163, 155, 194, 0.5),
-    -8px -8px 18px rgba(255, 255, 255, 0.85);
-}
-
-.card-glow {
-  box-shadow:
-    8px 8px 18px rgba(163, 155, 194, 0.5),
-    -8px -8px 18px rgba(255, 255, 255, 0.85);
-}
-
-.card-glow-accent {
-  box-shadow:
-    inset 5px 5px 12px rgba(163, 155, 194, 0.5),
-    inset -5px -5px 12px rgba(255, 255, 255, 0.85);
-}
-
-/* Soft pulsing halo, e.g. behind icons/logos on selection cards */
-.icon-halo {
-  position: relative;
-}
-
-.icon-halo::after {
-  content: "";
-  position: absolute;
-  inset: -16px;
-  z-index: -1;
-  border-radius: inherit;
-  background: radial-gradient(circle, rgba(166, 76, 255, 0.6), transparent 72%);
-  filter: blur(14px);
-  animation: haloPulse 2.6s ease-in-out infinite;
-}
-
-@keyframes haloPulse {
-  0%,
-  100% {
-    opacity: 0.55;
-    transform: scale(0.92);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.18);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Fluid page transition: every route's <main> fades and slides in on mount. */
-main {
-  animation: pageIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes pageIn {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Smoother, more premium tap feedback everywhere */
-a,
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* --- Icônes nav (Discord / Support) : halo qui respire + reflet au survol --- */
-.icon-glow-btn {
-  position: relative;
-  overflow: hidden;
-  animation: iconBreathe 3.2s ease-in-out infinite;
-}
-
-.icon-glow-btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.25) 48%, transparent 66%);
-  background-size: 250% 250%;
-  animation: iconSheen 4.5s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes iconBreathe {
-  0%, 100% { box-shadow: 0 0 0 rgba(var(--icon-glow-rgb, 139, 53, 255), 0); }
-  50% { box-shadow: 0 0 16px 1px rgba(var(--icon-glow-rgb, 139, 53, 255), 0.55); }
-}
-
-@keyframes iconSheen {
-  0% { background-position: 140% 50%; }
-  50% { background-position: -40% 50%; }
-  100% { background-position: 140% 50%; }
-}
-
-/* --- Rebond à l'ouverture d'une catégorie / carte --- */
-.bounce-in {
-  animation: bounceIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-@keyframes bounceIn {
-  0% { opacity: 0; transform: scale(0.82) translateY(14px); }
-  60% { opacity: 1; transform: scale(1.03) translateY(-2px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.pulse-card:active,
-.tap-bounce:active {
-  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-  transform: scale(0.95);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .icon-glow-btn,
-  .bounce-in {
-    animation: none !important;
-  }
-}
-
-/* ================================================================
-   GLOW POSTER — style "carte lumineuse" identique à la maquette de
-   paiement (sheen animé, particules flottantes, icône qui pulse,
-   bouton CTA avec reflet qui balaie).
-   ================================================================ */
-
-.glow-poster {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 20px 60px -30px rgba(var(--tone-rgb, 139, 53, 255), 0.5);
-}
-
-.glow-poster::before {
-  content: "";
-  position: absolute;
-  top: -40%;
-  left: -20%;
-  width: 70%;
-  height: 70%;
-  background: radial-gradient(circle, rgba(var(--tone-rgb, 139, 53, 255), 0.28), transparent 70%);
-  filter: blur(20px);
-  pointer-events: none;
-  animation: glowPulse 5s ease-in-out infinite;
-}
-
-@keyframes glowPulse {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.15); }
-}
-
-.glow-poster-sheen {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(90deg, transparent 35%, rgba(255, 255, 255, 0.09) 48%, rgba(255, 255, 255, 0.02) 55%, transparent 65%);
-  background-size: 250% 100%;
-  animation: sheenMove 6s ease-in-out infinite;
-  pointer-events: none;
-  mix-blend-mode: screen;
-}
-
-@keyframes sheenMove {
-  0% { background-position: 130% 50%; }
-  50% { background-position: -30% 50%; }
-  100% { background-position: 130% 50%; }
-}
-
-.glow-particle {
-  position: absolute;
-  z-index: 2;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--tone-rgb, 139, 53, 255), 1), rgba(var(--tone-rgb, 139, 53, 255), 0));
-  box-shadow: 0 0 8px 1px rgba(var(--tone-rgb, 139, 53, 255), 0.7);
-  filter: blur(0.5px);
-  pointer-events: none;
-  animation: particleDrift 6s ease-in-out infinite;
-}
-
-@keyframes particleDrift {
-  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.5; }
-  50% { transform: translateY(-16px) translateX(7px); opacity: 1; }
-}
-
-.glow-icon-pulse {
-  animation: iconPulseGlow 3.2s ease-in-out infinite;
-}
-
-@keyframes iconPulseGlow {
-  0%, 100% { box-shadow: 0 0 14px rgba(var(--tone-rgb, 139, 53, 255), 0.25); }
-  50% { box-shadow: 0 0 28px rgba(var(--tone-rgb, 139, 53, 255), 0.55); }
-}
-
-.glow-cta::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.55), transparent);
-  animation: ctaShine 3s ease-in-out infinite;
-}
-
-@keyframes ctaShine {
-  0% { left: -60%; }
-  50% { left: 120%; }
-  100% { left: 120%; }
-}
-
-/* Bouton bleu "brillant" — Continuer / Passer commande, identique au CTA de la maquette */
-.btn-glow-blue,
-.btn-glow-purple {
-  position: relative;
-  overflow: hidden;
-  background: #e9e6f2;
-  color: #2b2740;
-  box-shadow:
-    7px 7px 16px rgba(163, 155, 194, 0.55),
-    -7px -7px 16px rgba(255, 255, 255, 0.9);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
-}
-
-.btn-glow-blue:hover,
-.btn-glow-purple:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    9px 9px 20px rgba(163, 155, 194, 0.55),
-    -9px -9px 20px rgba(255, 255, 255, 0.9);
-}
-
-.btn-glow-blue:active,
-.btn-glow-purple:active {
-  transform: translateY(0);
-  box-shadow:
-    inset 5px 5px 12px rgba(163, 155, 194, 0.55),
-    inset -5px -5px 12px rgba(255, 255, 255, 0.9);
-}
-
-.btn-glow-blue::after,
-.btn-glow-purple::after {
-  content: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .glow-poster::before,
-  .glow-poster-sheen,
-  .glow-particle,
-  .glow-icon-pulse,
-  .glow-cta::after {
-    animation: none !important;
-  }
-}
-
-/* Bannière promo : léger balayage lumineux périodique */
-.sweep-banner::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.14) 48%, transparent 66%);
-  background-size: 220% 100%;
-  animation: sheenMove 4.5s ease-in-out infinite;
-  pointer-events: none;
-}
-
-/* --- Écran de chargement au lancement du site --- */
-.splash-dashes {
-  display: flex;
-  gap: 6px;
-}
-
-.splash-dashes span {
-  width: 18px;
-  height: 3px;
-  border-radius: 999px;
-  background: rgb(139, 53, 255);
-  box-shadow: 0 0 10px 1px rgba(139, 53, 255, 0.7);
-  animation: splashDash 1.1s ease-in-out infinite;
-}
-
-.splash-dashes span:nth-child(2) { animation-delay: 0.12s; }
-.splash-dashes span:nth-child(3) { animation-delay: 0.24s; }
-.splash-dashes span:nth-child(4) { animation-delay: 0.36s; }
-.splash-dashes span:nth-child(5) { animation-delay: 0.48s; }
-
-@keyframes splashDash {
-  0%, 100% { opacity: 0.25; transform: scaleX(0.7); }
-  50% { opacity: 1; transform: scaleX(1); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sweep-banner::after,
-  .splash-dashes span {
-    animation: none !important;
-  }
-}
-
-/* Dégradé de texte du hero — identique au .gradient de la maquette KYZEN */
-.text-kyzen-gradient {
-  background: linear-gradient(110deg, #fff 20%, #d5b1ff 48%, #8e35ff 80%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 30px rgba(139, 53, 255, 0.2));
-}
-
-.kyzen-badge-live {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #b85cff;
-  box-shadow: 0 0 14px #a43cff;
-}
-
-/* ============================================================
-   HERO 3D — orbites + K en contour + badges flottants + wordmark
-   ============================================================ */
-
-.kyzen-orbit-stage {
-  position: relative;
-  height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform-style: preserve-3d;
-  perspective: 900px;
-}
-
-.kyzen-orbit-ring {
-  position: absolute;
-  border: 1px solid rgba(167, 139, 250, 0.22);
-  border-radius: 50%;
-  pointer-events: none;
-}
-
-.kyzen-orbit-ring--1 {
-  width: 260px;
-  height: 150px;
-  transform: rotateX(65deg) rotateZ(18deg);
-  animation: orbitSpin1 22s linear infinite;
-}
-
-.kyzen-orbit-ring--2 {
-  width: 260px;
-  height: 150px;
-  transform: rotateX(65deg) rotateZ(-38deg);
-  animation: orbitSpin2 28s linear infinite;
-}
-
-@keyframes orbitSpin1 {
-  from { transform: rotateX(65deg) rotateZ(18deg); }
-  to { transform: rotateX(65deg) rotateZ(378deg); }
-}
-
-@keyframes orbitSpin2 {
-  from { transform: rotateX(65deg) rotateZ(-38deg); }
-  to { transform: rotateX(65deg) rotateZ(322deg); }
-}
-
-.kyzen-k-outline {
-  font-size: 128px;
-  font-weight: 900;
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 2px rgba(196, 181, 253, 0.85);
-  text-stroke: 2px rgba(196, 181, 253, 0.85);
-  filter: drop-shadow(0 0 25px rgba(139, 92, 246, 0.45));
-  animation: kFloat 5s ease-in-out infinite;
-  transform-style: preserve-3d;
-}
-
-@keyframes kFloat {
-  0%, 100% { transform: translateY(0) rotateY(0deg); }
-  50% { transform: translateY(-8px) rotateY(6deg); }
-}
-
-.kyzen-float-badge {
-  position: absolute;
-  padding: 10px 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(167, 139, 250, 0.25);
-  background: rgba(16, 10, 24, 0.85);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-  animation: cardFloat 6s ease-in-out infinite;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-  white-space: nowrap;
-}
-
-.kyzen-float-badge:hover {
-  border-color: rgba(167, 139, 250, 0.6);
-  box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
-  transform: translateY(-4px) scale(1.03);
-}
-
-.kyzen-float-badge .label {
-  display: block;
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: #8a8092;
-  text-transform: uppercase;
-}
-
-.kyzen-float-badge .value {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 3px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #f5f3ff;
-}
-
-/* Wordmark "kyzen" — dégradé de profondeur 3D identique à la maquette */
-.kyzen-wordmark {
-  font-size: clamp(48px, 13vw, 86px);
-  line-height: 0.95;
-  letter-spacing: -0.045em;
-  font-weight: 850;
-  text-shadow: 0 1px 0 #d8ccff, 0 4px 0 #4c1d95, 0 9px 18px rgba(0, 0, 0, 0.55),
-    0 0 35px rgba(139, 92, 246, 0.42);
-  transform: perspective(700px) rotateX(2deg);
-}
-
-.kyzen-wordmark .accent {
-  color: #a78bfa;
-  text-shadow: 0 0 12px rgba(167, 139, 250, 0.85), 0 0 35px rgba(139, 92, 246, 0.65);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .kyzen-orbit-ring--1,
-  .kyzen-orbit-ring--2,
-  .kyzen-k-outline,
-  .kyzen-float-badge {
-    animation: none !important;
-  }
-}
-
-/* Mini-cartes "Kyzen services / Discord" — glow animé + tilt 3D + icônes flottantes */
-.kyzen-mini-card {
-  --mini-accent: 139, 92, 246; /* violet KYZEN par défaut */
-  position: relative;
-  overflow: hidden;
-  padding: 22px;
-  border-radius: 20px;
-  border: 1px solid rgba(var(--mini-accent), 0.16);
-  background: linear-gradient(145deg, rgba(35, 20, 52, 0.85), rgba(10, 6, 16, 0.92));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 14px 35px rgba(0, 0, 0, 0.3);
-  transform-style: preserve-3d;
-  transform: perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1);
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease,
-    box-shadow 0.4s ease;
-}
-
-/* Variante Discord : accent blurple officiel Discord */
-.kyzen-mini-card--discord {
-  --mini-accent: 88, 101, 242;
-}
-
-.kyzen-mini-card::before {
-  content: "";
-  position: absolute;
-  width: 170px;
-  height: 170px;
-  top: -90px;
-  right: -60px;
-  border-radius: 50%;
-  background: rgba(var(--mini-accent), 0.2);
-  filter: blur(30px);
-  animation: miniGlowPulse 4s ease-in-out infinite;
-  transition: background 0.4s ease, transform 0.4s ease;
-  pointer-events: none;
-}
-
-.kyzen-mini-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.09) 50%, transparent 65%);
-  background-size: 220% 100%;
-  background-position: -140% 0;
-  pointer-events: none;
-}
-
-.kyzen-mini-card:hover {
-  transform: perspective(800px) rotateX(6deg) rotateY(-3deg) translateY(-8px) scale(1.015);
-  border-color: rgba(var(--mini-accent), 0.55);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 26px 60px rgba(0, 0, 0, 0.4),
-    0 0 45px rgba(var(--mini-accent), 0.35);
-}
-
-.kyzen-mini-card:hover::before {
-  transform: scale(1.35);
-  background: rgba(var(--mini-accent), 0.32);
-}
-
-.kyzen-mini-card:hover::after {
-  animation: miniCardSheen 1.1s ease forwards;
-}
-
-@keyframes miniCardSheen {
-  from { background-position: -140% 0; }
-  to { background-position: 140% 0; }
-}
-
-@keyframes miniGlowPulse {
-  0%, 100% { opacity: 0.65; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.15); }
-}
-
-.kyzen-mini-icon {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 13px;
-  background: linear-gradient(145deg, rgba(var(--mini-accent), 0.32), rgba(var(--mini-accent), 0.06));
-  border: 1px solid rgba(var(--mini-accent), 0.38);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 0 22px rgba(var(--mini-accent), 0.35);
-  transform-style: preserve-3d;
-  animation: miniIconFloat 3.6s ease-in-out infinite;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.kyzen-mini-icon img {
-  object-fit: contain;
-  filter: drop-shadow(0 0 6px rgba(var(--mini-accent), 0.85));
-}
-
-@keyframes miniIconFloat {
-  0%, 100% { transform: translateY(0) rotateZ(0deg); }
-  50% { transform: translateY(-4px) rotateZ(-4deg); }
-}
-
-.kyzen-mini-card:hover .kyzen-mini-icon {
-  animation-play-state: paused;
-  transform: translateY(-2px) scale(1.1) rotateZ(0deg);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 32px rgba(var(--mini-accent), 0.65);
-}
-
-.kyzen-mini-arrow {
-  position: absolute;
-  right: 18px;
-  bottom: 17px;
-  color: #73687e;
-  transition: 0.25s ease;
-}
-
-.kyzen-mini-card:hover .kyzen-mini-arrow {
-  color: rgb(var(--mini-accent));
-  transform: translateX(4px);
-  text-shadow: 0 0 12px rgba(var(--mini-accent), 0.8);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .kyzen-mini-card::before,
-  .kyzen-mini-card::after,
-  .kyzen-mini-icon {
-    animation: none !important;
-  }
-}
-
-/* ---------- Lecteur audio : petit égaliseur animé sur la cover active ---------- */
-.kyzen-eq-bar {
-  display: block;
-  width: 3px;
-  height: 10px;
-  border-radius: 2px;
-  background: rgb(139, 53, 255);
-  box-shadow: 0 0 6px rgba(139, 53, 255, 0.8);
-  animation: kyzen-eq-bounce 0.9s ease-in-out infinite;
-}
-
-@keyframes kyzen-eq-bounce {
-  0%, 100% { height: 5px; }
-  50% { height: 16px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .kyzen-eq-bar {
-    animation: none !important;
-  }
-}
-
-/* ---------- Lecteur audio : bulle flottante style "Dynamic Island" ---------- */
-.kyzen-island {
-  cursor: pointer;
-  border-radius: 999px;
-  background: rgba(12, 8, 20, 0.88);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgba(166, 76, 255, 0.25);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.04),
-    0 12px 40px -10px rgba(0, 0, 0, 0.6),
-    0 0 30px -8px rgba(139, 53, 255, 0.45);
-  transition: border-radius 0.35s cubic-bezier(0.34, 1.2, 0.4, 1), transform 0.2s ease;
-  animation: kyzen-island-in 0.35s cubic-bezier(0.34, 1.2, 0.4, 1);
-}
-
-.kyzen-island:active {
-  transform: scale(0.98);
-}
-
-.kyzen-island--expanded {
-  border-radius: 28px;
-  cursor: default;
-  border-color: rgba(166, 76, 255, 0.4);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    0 20px 60px -12px rgba(0, 0, 0, 0.7),
-    0 0 50px -6px rgba(139, 53, 255, 0.55);
-}
-
-@keyframes kyzen-island-in {
-  from { opacity: 0; transform: translateY(-14px) scale(0.9); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.kyzen-island-progress {
-  position: relative;
-  width: 34px;
-  height: 3px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.12);
-  overflow: hidden;
-}
-
-.kyzen-island-progress--wide {
-  width: 100%;
-  height: 4px;
-}
-
-.kyzen-island-progress-fill {
-  height: 100%;
-  border-radius: 2px;
-  background: linear-gradient(90deg, #a64cff, #6d1dff);
-  box-shadow: 0 0 8px rgba(166, 76, 255, 0.7);
-  transition: width 0.2s linear;
-}
-
-.kyzen-island-play {
-  background: linear-gradient(135deg, #a64cff, #6d1dff);
-  box-shadow: 0 8px 24px -6px rgba(139, 53, 255, 0.6);
-  transition: box-shadow 0.25s ease, transform 0.2s ease;
-}
-
-.kyzen-island-play:hover {
-  box-shadow: 0 10px 32px -6px rgba(139, 53, 255, 0.85), 0 0 20px -2px rgba(166, 76, 255, 0.6);
-  transform: scale(1.04);
-}
-
-.kyzen-island-mini-btn {
-  transition: color 0.2s ease, transform 0.2s ease;
-}
-
-.kyzen-island-mini-btn:active {
-  transform: scale(0.85);
-}
-
-.kyzen-island-icon-btn {
-  border-radius: 999px;
-  transition: color 0.2s ease, background 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease;
-}
-
-.kyzen-island-icon-btn:hover {
-  color: #fff;
-  background: rgba(166, 76, 255, 0.12);
-  box-shadow: 0 0 16px -2px rgba(139, 53, 255, 0.5);
-}
-
-.kyzen-island-icon-btn:active {
-  transform: scale(0.88);
-}
-
-.kyzen-island-volume {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 4px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.12);
-  outline: none;
-}
-
-.kyzen-island-volume::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 0 8px rgba(166, 76, 255, 0.9);
-  cursor: pointer;
-}
-
-.kyzen-island-volume::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
-  border: none;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 0 8px rgba(166, 76, 255, 0.9);
-  cursor: pointer;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .kyzen-island {
-    animation: none !important;
-  }
-}
-
-/* ---------- Écran de chargement : barre 100% CSS (pas de JS par frame) ---------- */
-.kyzen-splash-bar {
-  transform: scaleX(0);
-  background: linear-gradient(90deg, #8b35ff, #b85cff);
-  box-shadow: 0 0 12px 1px rgba(139, 53, 255, 0.7);
-  animation: kyzenSplashProgress 900ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  will-change: transform;
-}
-
-@keyframes kyzenSplashProgress {
-  0% { transform: scaleX(0); }
-  65% { transform: scaleX(0.8); }
-  100% { transform: scaleX(0.97); }
-}
-
-/* Pendant l'écran de chargement, on gèle toutes les animations continues du
-   reste du site : elles reprendront pile là où elles en étaient une fois le
-   splash disparu, mais ne consomment plus de temps machine pendant que la
-   barre de progression tourne. C'est ce qui évite l'effet de freeze sur les
-   téléphones moins puissants (ou simplement sous charge au démarrage). */
-body.kyzen-splash-active .pulse-card,
-body.kyzen-splash-active .bg-ambient-blob,
-body.kyzen-splash-active .kyzen-orbit-ring,
-body.kyzen-splash-active .kyzen-k-outline,
-body.kyzen-splash-active .kyzen-float-badge,
-body.kyzen-splash-active .glow-icon-pulse,
-body.kyzen-splash-active .icon-glow-btn,
-body.kyzen-splash-active .glow-cta,
-body.kyzen-splash-active .btn-glow-blue,
-body.kyzen-splash-active .btn-glow-purple,
-body.kyzen-splash-active .sweep-banner,
-body.kyzen-splash-active .kyzen-mini-card,
-body.kyzen-splash-active .kyzen-eq-bar,
-body.kyzen-splash-active .kyzen-island {
-  animation-play-state: paused !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .kyzen-splash-bar {
-    animation: none !important;
-    transform: scaleX(1);
-  }
-}
+.prod-logo-frame svg { color: #221a33; }

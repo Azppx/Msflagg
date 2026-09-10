@@ -1,150 +1,192 @@
-"use client";
-
 import Link from "next/link";
-import Image from "next/image";
-import { GlowCard } from "@/components/GlowCard";
-import { siteConfig } from "@/lib/config";
-import { catalogToneRgb } from "@/components/catalog-icons";
-import { useTranslation } from "@/lib/i18n/locale-context";
+import { ThemeSection } from "@/components/ThemeSection";
+import { ArrowRightIcon, BoltIcon, DiscordIcon, HeadsetIcon, PackageIcon, StarIcon } from "@/components/icons";
+import { getProductsByCategory } from "@/lib/catalog";
 
 export default function HomePage() {
-  const t = useTranslation();
-
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col px-5 pb-16 pt-10">
-      {/* ---------- HERO 3D ---------- */}
-      <section className="relative text-center">
-        <div className="flex flex-wrap justify-center gap-3">
-          <Link
-            href="/produit/pack-basicfit-netflix"
-            className="btn-glow-purple rounded-xl px-5 py-3.5 text-[13px] font-bold transition-transform"
-          >
-            {t("home.cta_discover")}
-          </Link>
-          <Link
-            href="/premium"
-            className="rounded-xl border border-panelBorder bg-white/[0.035] px-5 py-3.5 text-[13px] font-bold text-white transition-transform hover:-translate-y-0.5"
-          >
-            {t("home.cta_explore")}
-          </Link>
-        </div>
-
-        <div className="kyzen-orbit-stage mt-6">
-          <div className="kyzen-orbit-ring kyzen-orbit-ring--1" />
-          <div className="kyzen-orbit-ring kyzen-orbit-ring--2" />
-          <span className="kyzen-k-outline">K</span>
-
-          <div className="kyzen-float-badge" style={{ top: "6%", right: "0%" }}>
-            <span className="label">{t("home.status_label")}</span>
-            <span className="value">
-              <span className="kyzen-badge-live" /> {t("home.status_value")}
-            </span>
+    <main style={{ position: "relative", zIndex: 1, maxWidth: 460, margin: "0 auto", padding: "20px 20px 100px" }}>
+      {/* ---------- Hero ---------- */}
+      <section style={{ marginTop: 8 }}>
+        <div className="hero-stage">
+          <div className="ring ring--2" />
+          <div className="ring ring--1">
+            <span className="ring-dot" />
           </div>
-          <div className="kyzen-float-badge" style={{ bottom: "8%", left: "-2%", animationDelay: "1.5s" }}>
-            <span className="label">{t("home.collection_label")}</span>
-            <span className="value">{t("home.collection_value")}</span>
+          <div className="orb" />
+          <div className="hero-floating-badge hero-floating-badge--1 liquid-glass" style={{ borderRadius: 12 }}>
+            <BoltIcon width={13} height={13} style={{ color: "var(--signal)" }} /> <b>En ligne</b>
           </div>
-          <div className="kyzen-float-badge" style={{ bottom: "0%", right: "2%", animationDelay: "3s" }}>
-            <span className="label">{t("home.community_label")}</span>
-            <span className="value">{t("home.community_value")}</span>
+          <div className="hero-floating-badge hero-floating-badge--2 liquid-glass" style={{ borderRadius: 12 }}>
+            <PackageIcon width={13} height={13} style={{ color: "var(--signal)" }} /> Livraison &lt;10min
           </div>
         </div>
 
-        <h1 className="kyzen-wordmark mt-8 text-white">
-          ky<span className="accent">zen</span>
+        <p style={{ marginTop: 8, fontSize: 13, color: "var(--fog)", fontWeight: 500 }}>
+          Accès instantané · <b style={{ color: "var(--signal)", fontWeight: 600 }}>200+ membres actifs</b>
+        </p>
+        <h1 className="font-display" style={{ fontWeight: 700, fontSize: 50, lineHeight: 0.96, letterSpacing: "-0.03em", marginTop: 14 }}>
+          Un accès.
+          <br />
+          Tous{" "}
+          <span style={{ WebkitTextStroke: "1.5px rgba(157, 92, 255, 0.5)", color: "transparent" }}>tes comptes</span>.
         </h1>
-
-        <p className="relative mx-auto mt-5 max-w-[32ch] text-[14px] leading-[1.7] text-white/50">
-          {t("home.tagline")}
+        <p style={{ marginTop: 20, maxWidth: "34ch", fontSize: 15, lineHeight: 1.65, color: "var(--fog)" }}>
+          Spotify, Netflix, ChatGPT, Discord Nitro et bien plus — livrés en quelques minutes après paiement, sans engagement.
         </p>
 
-        <div className="mt-8 grid grid-cols-1 gap-3.5">
-          <Link href="/premium" className="kyzen-mini-card">
-            <div className="kyzen-mini-icon">
-              <Image src="/icons/logo-k.png" alt="KYZEN" width={26} height={26} priority />
-            </div>
-            <h2 className="mt-[18px] text-[17px] font-semibold">{t("home.card_services")}</h2>
-            <span className="kyzen-mini-arrow">→</span>
+        <div style={{ marginTop: 30, display: "flex", gap: 12 }}>
+          <Link
+            href="/premium"
+            className="liquid-glass liquid-glass--signal"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              color: "var(--paper)",
+              fontWeight: 600,
+              fontSize: 14.5,
+              padding: "14px 22px",
+              borderRadius: 14,
+              textDecoration: "none",
+            }}
+          >
+            Voir le catalogue <ArrowRightIcon width={15} height={15} />
           </Link>
           <a
             href="https://discord.gg/"
             target="_blank"
             rel="noreferrer"
-            className="kyzen-mini-card kyzen-mini-card--discord"
+            className="liquid-glass"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              color: "var(--paper)",
+              fontWeight: 600,
+              fontSize: 14.5,
+              padding: "14px 20px",
+              borderRadius: 14,
+              textDecoration: "none",
+            }}
           >
-            <div className="kyzen-mini-icon">
-              <Image src="/icons/discord-mark.png" alt="Discord" width={22} height={22} />
-            </div>
-            <h2 className="mt-[18px] text-[17px] font-semibold">{t("home.card_discord")}</h2>
-            <span className="kyzen-mini-arrow">→</span>
+            <DiscordIcon width={15} height={15} style={{ color: "var(--signal)" }} /> Discord
           </a>
         </div>
       </section>
 
-      {/* ---------- OFFRE EN VEDETTE ---------- */}
-      <section className="mt-14">
-        <p className="text-[22px] font-bold tracking-tight">{t("home.featured_title")}</p>
-        <p className="mt-1 text-xs text-white/40">{t("home.featured_subtitle")}</p>
-
-        <Link href="/produit/pack-basicfit-netflix" className="mt-5 block">
-          <GlowCard toneRgb={catalogToneRgb.electric} className="text-left">
-            <span className="inline-block rounded-full border border-electric/30 bg-electric/10 px-2.5 py-1 text-[10px] font-extrabold tracking-wide text-violet-soft">
-              {t("home.best_seller")}
-            </span>
-            <h3 className="mt-4 text-[28px] font-extrabold leading-[1.05] tracking-tight text-white">
-              <span className="text-violet-soft">{t("home.pack1_title_line1")}</span>
-              <br />
-              {t("home.pack1_title_line2")}
-            </h3>
-            <p className="mt-3 text-[13px] leading-relaxed text-white/50">{t("home.pack1_desc")}</p>
-            <div className="mt-5 flex items-center justify-between gap-3">
-              <p>
-                <span className="text-3xl font-extrabold tracking-tight">25€</span>
-                <span className="ml-1 text-[11px] text-white/40">{t("home.per_bundle")}</span>
-              </p>
-              <span className="btn-glow-purple rounded-xl px-4 py-3 text-[12px] font-bold">
-                {t("home.order_cta")}
-              </span>
-            </div>
-          </GlowCard>
-        </Link>
-      </section>
-
-      {/* ---------- 2E PACK ---------- */}
-      <section className="mt-8">
-        <Link href="/produit/pack-spotify-basicfit-netflix-youtube" className="block">
-          <GlowCard toneRgb={catalogToneRgb.violet} className="text-left">
-            <span className="inline-block rounded-full border border-violet/30 bg-violet/10 px-2.5 py-1 text-[10px] font-extrabold tracking-wide text-violet-soft">
-              {t("home.pack_complete")}
-            </span>
-            <h3 className="mt-4 text-[28px] font-extrabold leading-[1.05] tracking-tight text-white">
-              <span className="text-violet-soft">{t("home.pack2_title_line1")}</span>
-              <br />
-              {t("home.pack2_title_line2")}
-            </h3>
-            <p className="mt-3 text-[13px] leading-relaxed text-white/50">{t("home.pack2_desc")}</p>
-            <div className="mt-5 flex items-center justify-between gap-3">
-              <p>
-                <span className="text-3xl font-extrabold tracking-tight">35€</span>
-                <span className="ml-1 text-[11px] text-white/40">{t("home.per_bundle")}</span>
-              </p>
-              <span className="btn-glow-purple rounded-xl px-4 py-3 text-[12px] font-bold">
-                {t("home.order_cta")}
-              </span>
-            </div>
-          </GlowCard>
-        </Link>
-      </section>
-
-      <p className="mt-14 text-center text-[11px] tracking-widest text-white/25">
-        © 2026 {siteConfig.brandName} — {t("home.rights")}
-      </p>
-      <Link
-        href="/admin/login"
-        className="mt-2 block text-center text-[11px] tracking-widest text-white/15 transition-colors hover:text-white/40"
+      {/* ---------- Stat strip ---------- */}
+      <section
+        className="liquid-glass"
+        style={{
+          marginTop: 44,
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          borderRadius: 20,
+          padding: "18px 0",
+        }}
       >
-        {t("home.admin_link")}
-      </Link>
+        <Stat icon={<PackageIcon width={18} height={18} />} value="25+" label="Services" />
+        <Stat icon={<BoltIcon width={18} height={18} />} value="<10min" label="Livraison" divider />
+        <Stat icon={<HeadsetIcon width={18} height={18} />} value="24/7" label="Support" />
+      </section>
+
+      {/* ---------- Offre en vedette ---------- */}
+      <section style={{ marginTop: 56 }}>
+        <p className="font-display" style={{ fontWeight: 700, fontSize: 23, letterSpacing: "-0.01em" }}>En vedette</p>
+        <Link
+          href="/produit/basic-fit"
+          className="liquid-glass liquid-glass--signal"
+          style={{
+            marginTop: 20,
+            position: "relative",
+            display: "block",
+            borderRadius: 26,
+            padding: 28,
+            textDecoration: "none",
+            color: "inherit",
+            boxShadow: "0 25px 60px -25px rgba(157, 92, 255, 0.55)",
+            overflow: "hidden",
+          }}
+        >
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              fontSize: 11.5,
+              fontWeight: 600,
+              color: "var(--ember)",
+              background: "rgba(255, 107, 74, 0.12)",
+              border: "1px solid rgba(255, 107, 74, 0.3)",
+              padding: "5px 12px",
+              borderRadius: 999,
+            }}
+          >
+            <StarIcon width={12} height={12} /> Le plus demandé
+          </span>
+          <p className="font-display" style={{ fontWeight: 700, fontSize: 29, lineHeight: 1.05, marginTop: 16, letterSpacing: "-0.02em" }}>
+            Pack Basic-Fit
+            <br />+ 2 Netflix
+          </p>
+          <p style={{ marginTop: 10, fontSize: 14, color: "var(--fog)", maxWidth: "32ch", lineHeight: 1.6 }}>
+            1 compte Basic-Fit Ultimate + 2 comptes Netflix Premium 4K, livrés ensemble.
+          </p>
+          <div style={{ marginTop: 22, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <p className="font-display" style={{ fontWeight: 700, fontSize: 29 }}>
+              25<sup style={{ fontSize: 13, color: "var(--fog)", fontWeight: 500 }}>€ / bundle</sup>
+            </p>
+            <span
+              className="liquid-glass"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontWeight: 600,
+                fontSize: 13,
+                padding: "11px 18px",
+                borderRadius: 12,
+              }}
+            >
+              Commander <ArrowRightIcon width={13} height={13} />
+            </span>
+          </div>
+        </Link>
+      </section>
+
+      {/* ---------- Sections thématiques ---------- */}
+      <div style={{ marginTop: 4 }}>
+        <ThemeSection category="streaming" products={getProductsByCategory("streaming")} />
+        <ThemeSection category="musique" products={getProductsByCategory("musique")} />
+        <ThemeSection category="gaming" products={getProductsByCategory("gaming")} />
+        <ThemeSection category="ia" products={getProductsByCategory("ia")} />
+      </div>
+
+      <footer style={{ marginTop: 64, textAlign: "center" }}>
+        <p style={{ fontSize: 10.5, letterSpacing: "0.08em", color: "rgba(184,174,214,0.35)" }}>
+          © 2026 KYZEN — TOUS DROITS RÉSERVÉS
+        </p>
+      </footer>
     </main>
+  );
+}
+
+function Stat({ icon, value, label, divider }: { icon: React.ReactNode; value: string; label: string; divider?: boolean }) {
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 6,
+        borderLeft: divider ? "1px solid var(--line)" : "none",
+        borderRight: divider ? "1px solid var(--line)" : "none",
+      }}
+    >
+      <span style={{ color: "var(--signal)" }}>{icon}</span>
+      <p className="font-display" style={{ fontWeight: 700, fontSize: 20 }}>{value}</p>
+      <p style={{ fontSize: 11, color: "var(--fog)" }}>{label}</p>
+    </div>
   );
 }

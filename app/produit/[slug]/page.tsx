@@ -1,23 +1,18 @@
 import { notFound } from "next/navigation";
-import { PageHeader } from "@/components/PageHeader";
+import { getProductBySlug, PRODUCTS } from "@/lib/catalog";
 import { ProductView } from "@/components/ProductView";
-import { catalogProducts, getProductBySlug } from "@/lib/catalog";
 
 export function generateStaticParams() {
-  return catalogProducts.map((p) => ({ slug: p.slug }));
+  return PRODUCTS.map((p) => ({ slug: p.slug }));
 }
 
-export default function CatalogProductPage({ params }: { params: { slug: string } }) {
-  const item = getProductBySlug(params.slug);
-  if (!item) notFound();
+export default function ProductPage({ params }: { params: { slug: string } }) {
+  const product = getProductBySlug(params.slug);
+  if (!product) notFound();
 
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow={item.category} title={item.name.toUpperCase()} backHref="/premium" showCart />
-
-      <div className="px-5">
-        <ProductView item={item} />
-      </div>
+    <main style={{ position: "relative", zIndex: 1, maxWidth: 460, margin: "0 auto", padding: "20px 20px 100px" }}>
+      <ProductView product={product} />
     </main>
   );
 }
