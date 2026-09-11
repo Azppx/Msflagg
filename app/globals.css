@@ -316,3 +316,27 @@ svg {
   box-shadow: 0 8px 20px -8px rgba(157, 92, 255, 0.5);
 }
 .prod-logo-frame svg { color: #221a33; }
+
+/* ==========================================================================
+   FORM FIELDS — champs de formulaire en liquid glass
+   ========================================================================== */
+.glass-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 14.5px;
+  font-family: inherit;
+  color: var(--paper);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.glass-input::placeholder {
+  color: rgba(184, 174, 214, 0.4);
+}
+.glass-input:focus {
+  border-top-color: var(--signal) !important;
+  box-shadow: 0 0 0 3px rgba(157, 92, 255, 0.15);
+}
+.glass-input[type="date"] {
+  color-scheme: dark;
+}

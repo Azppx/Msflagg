@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ProductIcon } from "@/components/ProductIcon";
-import { ArrowLeftIcon, BoltIcon, CartIcon, DiscordIcon, HeadsetIcon, MinusIcon, PlusIcon, ShieldIcon } from "@/components/icons";
+import { PageNav } from "@/components/PageNav";
+import { BoltIcon, CartIcon, DiscordIcon, HeadsetIcon, MinusIcon, PlusIcon, ShieldIcon } from "@/components/icons";
 import { useCart } from "@/lib/cart-context";
 import type { Product } from "@/lib/catalog";
 
@@ -21,31 +22,7 @@ export function ProductView({ product }: { product: Product }) {
 
   return (
     <>
-      <nav
-        className="liquid-glass liquid-glass--signal"
-        style={{
-          position: "sticky",
-          top: 12,
-          zIndex: 40,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "10px 14px",
-          borderRadius: 20,
-          marginBottom: 12,
-        }}
-      >
-        <button
-          onClick={() => router.back()}
-          aria-label="Retour"
-          className="liquid-glass"
-          style={{ width: 38, height: 38, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--fog)", cursor: "pointer" }}
-        >
-          <ArrowLeftIcon width={16} height={16} />
-        </button>
-        <p className="font-display" style={{ fontWeight: 700, fontSize: 16 }}>{product.name}</p>
-        <div style={{ width: 38 }} />
-      </nav>
+      <PageNav title={product.name} />
 
       <div style={{ position: "relative", height: 240, margin: "12px 0 0", display: "flex", alignItems: "center", justifyContent: "center", perspective: 1000 }}>
         <div

@@ -3,14 +3,13 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { PageHeader } from "@/components/PageHeader";
+import { PageNav } from "@/components/PageNav";
+import { CartIcon, ChevronDiagIcon, HeadsetIcon, UserIcon } from "@/components/icons";
 import { useAuth } from "@/lib/auth-context";
-import { useTranslation } from "@/lib/i18n/locale-context";
 
-export default function ComptePage() {
+export default function AccountPage() {
   const router = useRouter();
   const { account, loading, logout } = useAuth();
-  const t = useTranslation();
 
   useEffect(() => {
     if (!loading && !account) router.push("/compte/connexion");
@@ -18,51 +17,60 @@ export default function ComptePage() {
 
   if (loading || !account) {
     return (
-      <main className="mx-auto min-h-screen max-w-md px-5 pb-16 pt-12">
-        <p className="text-sm text-white/40">{t("account.loading")}</p>
+      <main style={{ position: "relative", zIndex: 1, maxWidth: 460, margin: "0 auto", padding: "20px 20px 100px" }}>
+        <p style={{ fontSize: 14, color: "var(--fog)" }}>Chargement…</p>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow={t("account.eyebrow")} title={t("account.title")} backHref="/" />
-      <div className="px-5">
-        <div className="glass-panel rounded-xl2 border border-panelBorder p-5">
-          <p className="font-display text-xl">{account.name}</p>
-          <p className="mt-1 text-sm text-white/50">{account.email}</p>
-        </div>
+    <main style={{ position: "relative", zIndex: 1, maxWidth: 460, margin: "0 auto", padding: "20px 20px 100px" }}>
+      <PageNav title="Mon compte" />
 
-        <div className="mt-4 flex flex-col gap-3">
-          <MenuLink href="/compte/commandes" title={t("account.my_orders")} subtitle={t("account.my_orders_subtitle")} />
-          <MenuLink href="/support" title={t("account.help")} subtitle={t("account.help_subtitle")} />
-        </div>
-
-        <button
-          onClick={async () => {
-            await logout();
-            router.push("/");
-          }}
-          className="mt-8 w-full rounded-2xl border border-panelBorder bg-white/5 px-6 py-3.5 text-sm font-semibold tracking-wide text-white/70 transition-colors hover:bg-white/10"
+      <div className="liquid-glass liquid-glass--signal" style={{ marginTop: 20, padding: 24, borderRadius: 24, display: "flex", alignItems: "center", gap: 16 }}>
+        <div
+          className="liquid-glass"
+          style={{ width: 52, height: 52, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--signal)", flexShrink: 0 }}
         >
-          {t("account.logout")}
-        </button>
+          <UserIcon width={24} height={24} />
+        </div>
+        <div style={{ minWidth: 0 }}>
+          <p className="font-display" style={{ fontWeight: 700, fontSize: 19 }}>{account.name}</p>
+          <p style={{ fontSize: 13, color: "var(--fog)", marginTop: 2 }}>{account.email}</p>
+        </div>
       </div>
+
+      <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 10 }}>
+        <MenuLink href="/compte/commandes" icon={<CartIcon width={17} height={17} />} title="Mes commandes" subtitle="Historique et suivi" />
+        <MenuLink href="/support" icon={<HeadsetIcon width={17} height={17} />} title="Aide" subtitle="Support & SAV" />
+      </div>
+
+      <button
+        onClick={() => {
+          logout();
+          router.push("/");
+        }}
+        style={{ marginTop: 28, width: "100%", background: "none", border: "none", color: "rgba(184,174,214,0.5)", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}
+      >
+        Se déconnecter
+      </button>
     </main>
   );
 }
 
-function MenuLink({ href, title, subtitle }: { href: string; title: string; subtitle: string }) {
+function MenuLink({ href, icon, title, subtitle }: { href: string; icon: React.ReactNode; title: string; subtitle: string }) {
   return (
     <Link
       href={href}
-      className="glass-panel flex items-center justify-between rounded-xl2 border border-panelBorder p-4 transition-colors hover:bg-white/5"
+      className="liquid-glass"
+      style={{ display: "flex", alignItems: "center", gap: 14, padding: 18, borderRadius: 18, textDecoration: "none", color: "inherit" }}
     >
-      <div>
-        <p className="font-semibold">{title}</p>
-        <p className="text-sm text-white/40">{subtitle}</p>
+      <span style={{ color: "var(--signal)" }}>{icon}</span>
+      <div style={{ flex: 1 }}>
+        <p style={{ fontWeight: 600, fontSize: 14.5 }}>{title}</p>
+        <p style={{ fontSize: 12, color: "var(--fog)" }}>{subtitle}</p>
       </div>
-      <span className="text-white/30">→</span>
+      <ChevronDiagIcon width={13} height={13} style={{ color: "rgba(184,174,214,0.4)" }} />
     </Link>
   );
 }

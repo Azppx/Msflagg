@@ -1,133 +1,80 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { PauseIcon, PlayIcon, SkipNextIcon, SkipPrevIcon } from "@/components/icons";
 import { useAudioPlayer } from "@/lib/audio-player-context";
-import { useTranslation } from "@/lib/i18n/locale-context";
-import {
-  PlayIcon,
-  PauseIcon,
-  PreviousIcon,
-  NextIcon,
-  VolumeLowIcon,
-  VolumeHighIcon,
-  CloseIcon,
-} from "@/components/MusicPlayerIcons";
 
-/**
- * Bulle flottante façon "Dynamic Island" : compacte par défaut (pochette +
- * mini barre de progression), s'étend au tap pour révéler les contrôles
- * complets (précédent / lecture-pause / suivant + volume). Ne s'affiche que
- * si une piste a été lancée quelque part sur le site.
- */
 export function MusicIsland() {
-  const { currentTrack, isPlaying, volume, progress, play, pause, next, previous, setVolume, closePlayer } =
-    useAudioPlayer();
+  const { currentTrack, isPlaying, progress, play, pause, next, previous } = useAudioPlayer();
   const [expanded, setExpanded] = useState(false);
-  const t = useTranslation();
 
   if (!currentTrack) return null;
 
   return (
-    <div className="fixed inset-x-0 top-[104px] z-20 flex justify-center px-3">
+    <div style={{ position: "fixed", insetInline: 0, top: 70, zIndex: 45, display: "flex", justifyContent: "center", padding: "0 12px" }}>
       <div
-        className={`kyzen-island ${expanded ? "kyzen-island--expanded" : ""}`}
+        className="liquid-glass liquid-glass--signal"
         onClick={() => !expanded && setExpanded(true)}
+        style={{
+          borderRadius: expanded ? 28 : 999,
+          cursor: expanded ? "default" : "pointer",
+          transition: "border-radius 0.35s cubic-bezier(0.34,1.2,0.4,1)",
+          boxShadow: "0 20px 50px -20px rgba(157,92,255,0.55)",
+        }}
       >
         {!expanded && (
-          <div className="flex items-center gap-2.5 px-3 py-2">
-            <div className="relative h-7 w-7 shrink-0 overflow-hidden rounded-full">
-              <Image src={currentTrack.cover} alt="" fill className="object-cover" sizes="28px" />
-            </div>
-            <div className="min-w-0">
-              <p className="truncate text-[12px] font-semibold leading-tight text-white">
-                {currentTrack.title}
-              </p>
-            </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 14px" }}>
+            <p style={{ fontSize: 12.5, fontWeight: 600, maxWidth: 140, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {currentTrack.title}
+            </p>
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 isPlaying ? pause() : play();
               }}
-              aria-label={isPlaying ? t("music.pause") : t("music.play")}
-              className="kyzen-island-mini-btn ml-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-white/90"
+              aria-label={isPlaying ? "Pause" : "Lecture"}
+              style={{ background: "none", border: "none", color: "var(--paper)", cursor: "pointer", display: "flex" }}
             >
-              {isPlaying ? <PauseIcon className="h-3 w-3" /> : <PlayIcon className="h-3 w-3" />}
+              {isPlaying ? <PauseIcon width={14} height={14} /> : <PlayIcon width={14} height={14} />}
             </button>
-            <div className="kyzen-island-progress">
-              <div className="kyzen-island-progress-fill" style={{ width: `${progress * 100}%` }} />
+            <div style={{ width: 34, height: 3, borderRadius: 2, background: "rgba(255,255,255,0.15)", overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${progress * 100}%`, background: "var(--signal)" }} />
             </div>
           </div>
         )}
 
         {expanded && (
-          <div className="w-[300px] p-4" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center gap-3">
-              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl">
-                <Image src={currentTrack.cover} alt="" fill className="object-cover" sizes="56px" />
+          <div style={{ width: 280, padding: 18 }} onClick={(e) => e.stopPropagation()}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ minWidth: 0 }}>
+                <p style={{ fontSize: 14, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{currentTrack.title}</p>
+                <p style={{ fontSize: 12, color: "var(--fog)", marginTop: 2 }}>{currentTrack.artist}</p>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-white">{currentTrack.title}</p>
-                <p className="truncate text-xs text-white/50">{currentTrack.artist}</p>
-              </div>
-              <button
-                onClick={() => setExpanded(false)}
-                aria-label={t("nav.close")}
-                className="kyzen-island-icon-btn shrink-0 text-white/40"
-              >
-                <CloseIcon className="h-4 w-4" />
+              <button onClick={() => setExpanded(false)} aria-label="Fermer" style={{ background: "none", border: "none", color: "var(--fog)", cursor: "pointer", fontSize: 16 }}>
+                ✕
               </button>
             </div>
 
-            <div className="kyzen-island-progress kyzen-island-progress--wide mt-3">
-              <div className="kyzen-island-progress-fill" style={{ width: `${progress * 100}%` }} />
+            <div style={{ marginTop: 14, height: 4, borderRadius: 2, background: "rgba(255,255,255,0.12)", overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${progress * 100}%`, background: "var(--signal)" }} />
             </div>
 
-            <div className="mt-4 flex items-center justify-center gap-6">
-              <button
-                onClick={previous}
-                aria-label={t("music.previous")}
-                className="kyzen-island-icon-btn flex h-9 w-9 items-center justify-center text-white/80"
-              >
-                <PreviousIcon className="h-4 w-4" />
+            <div style={{ marginTop: 18, display: "flex", alignItems: "center", justifyContent: "center", gap: 24 }}>
+              <button onClick={previous} aria-label="Précédent" style={{ background: "none", border: "none", color: "var(--paper)", cursor: "pointer" }}>
+                <SkipPrevIcon width={18} height={18} />
               </button>
               <button
                 onClick={() => (isPlaying ? pause() : play())}
-                aria-label={isPlaying ? t("music.pause") : t("music.play")}
-                className="kyzen-island-play flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform active:scale-90"
+                aria-label={isPlaying ? "Pause" : "Lecture"}
+                className="liquid-glass liquid-glass--signal"
+                style={{ width: 44, height: 44, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--paper)", cursor: "pointer" }}
               >
-                {isPlaying ? <PauseIcon className="h-5 w-5" /> : <PlayIcon className="h-5 w-5" />}
+                {isPlaying ? <PauseIcon width={18} height={18} /> : <PlayIcon width={18} height={18} />}
               </button>
-              <button
-                onClick={next}
-                aria-label={t("music.next")}
-                className="kyzen-island-icon-btn flex h-9 w-9 items-center justify-center text-white/80"
-              >
-                <NextIcon className="h-4 w-4" />
+              <button onClick={next} aria-label="Suivant" style={{ background: "none", border: "none", color: "var(--paper)", cursor: "pointer" }}>
+                <SkipNextIcon width={18} height={18} />
               </button>
             </div>
-
-            <div className="mt-4 flex items-center gap-2.5">
-              <VolumeLowIcon className="h-4 w-4 shrink-0 text-white/40" />
-              <input
-                type="range"
-                min={0}
-                max={1}
-                step={0.01}
-                value={volume}
-                onChange={(e) => setVolume(parseFloat(e.target.value))}
-                aria-label={t("music.volume")}
-                className="kyzen-island-volume flex-1"
-              />
-              <VolumeHighIcon className="h-4 w-4 shrink-0 text-white/40" />
-            </div>
-
-            <button
-              onClick={closePlayer}
-              className="mt-4 w-full text-center text-[11px] font-semibold tracking-wide text-white/30 hover:text-white/60"
-            >
-              {t("music.close_player")}
-            </button>
           </div>
         )}
       </div>

@@ -1,43 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ProductIcon } from "@/components/ProductIcon";
-import { ArrowLeftIcon, ArrowRightIcon, CartIcon, CloseIcon, MinusIcon, PlusIcon } from "@/components/icons";
+import { PageNav } from "@/components/PageNav";
+import { ArrowRightIcon, CartIcon, CloseIcon, MinusIcon, PlusIcon } from "@/components/icons";
 import { useCart } from "@/lib/cart-context";
 import { getProductBySlug } from "@/lib/catalog";
 
 export default function CartPage() {
-  const router = useRouter();
   const { items, hydrated, updateQuantity, removeItem, totalPrice } = useCart();
 
   return (
     <main style={{ position: "relative", zIndex: 1, maxWidth: 460, margin: "0 auto", padding: "20px 20px 100px" }}>
-      <nav
-        className="liquid-glass liquid-glass--signal"
-        style={{
-          position: "sticky",
-          top: 12,
-          zIndex: 40,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "10px 14px",
-          borderRadius: 20,
-          marginBottom: 12,
-        }}
-      >
-        <button
-          onClick={() => router.back()}
-          aria-label="Retour"
-          className="liquid-glass"
-          style={{ width: 38, height: 38, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--fog)", cursor: "pointer" }}
-        >
-          <ArrowLeftIcon width={16} height={16} />
-        </button>
-        <p className="font-display" style={{ fontWeight: 700, fontSize: 16 }}>Panier</p>
-        <div style={{ width: 38 }} />
-      </nav>
+      <PageNav title="Panier" />
 
       <h1 className="font-display" style={{ fontWeight: 700, fontSize: 30, letterSpacing: "-0.02em", marginTop: 20 }}>Ton panier</h1>
       <p style={{ marginTop: 6, fontSize: 13.5, color: "var(--fog)" }}>

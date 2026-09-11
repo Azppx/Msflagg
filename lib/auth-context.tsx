@@ -1,56 +1,65 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
-export type PublicAccount = {
-  id: string;
-  email: string;
-  name: string;
-  createdAt: string;
-};
+export type Account = { name: string; email: string };
 
 type AuthContextValue = {
-  account: PublicAccount | null;
+  account: Account | null;
   loading: boolean;
-  refresh: () => Promise<void>;
-  logout: () => Promise<void>;
+  login: (email: string) => void;
+  register: (name: string, email: string) => void;
+  logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextValue>({
   account: null,
   loading: true,
-  refresh: async () => {},
-  logout: async () => {},
+  login: () => {},
+  register: () => {},
+  logout: () => {},
 });
 
+const STORAGE_KEY = "kyzen-account";
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [account, setAccount] = useState<PublicAccount | null>(null);
+  const [account, setAccount] = useState<Account | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const refresh = useCallback(async () => {
-    try {
-      const res = await fetch("/api/auth/me", { cache: "no-store" });
-      const data = await res.json();
-      setAccount(data.account);
-    } catch {
-      setAccount(null);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
-    refresh();
-  }, [refresh]);
-
-  const logout = useCallback(async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    setAccount(null);
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) setAccount(JSON.parse(raw));
+    } catch {
+      // ignore
+    }
+    setLoading(false);
   }, []);
 
-  const value = useMemo(() => ({ account, loading, refresh, logout }), [account, loading, refresh, logout]);
+  const persist = useCallback((acc: Account | null) => {
+    setAccount(acc);
+    if (acc) localStorage.setItem(STORAGE_KEY, JSON.stringify(acc));
+    else localStorage.removeItem(STORAGE_KEY);
+  }, []);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const login = useCallback(
+    (email: string) => {
+      const name = email.split("@")[0];
+      persist({ name, email });
+    },
+    [persist]
+  );
+
+  const register = useCallback(
+    (name: string, email: string) => {
+      persist({ name, email });
+    },
+    [persist]
+  );
+
+  const logout = useCallback(() => persist(null), [persist]);
+
+  return <AuthContext.Provider value={{ account, loading, login, register, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

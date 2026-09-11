@@ -3,16 +3,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { PageHeader } from "@/components/PageHeader";
+import { PageNav } from "@/components/PageNav";
 import { useAuth } from "@/lib/auth-context";
-import type { Order } from "@/lib/orders";
-import { useTranslation } from "@/lib/i18n/locale-context";
 
-export default function CommandesPage() {
+type StoredOrder = { id: string; productName: string; amount: string; currency: string; date: string };
+
+export default function OrdersPage() {
   const router = useRouter();
   const { account, loading } = useAuth();
-  const [orders, setOrders] = useState<Order[] | null>(null);
-  const t = useTranslation();
+  const [orders, setOrders] = useState<StoredOrder[] | null>(null);
 
   useEffect(() => {
     if (!loading && !account) router.push("/compte/connexion");
@@ -20,51 +19,45 @@ export default function CommandesPage() {
 
   useEffect(() => {
     if (!account) return;
-    fetch("/api/account/orders")
-      .then((r) => r.json())
-      .then((d) => setOrders(d.orders || []));
+    try {
+      const raw = localStorage.getItem("kyzen-orders");
+      setOrders(raw ? JSON.parse(raw) : []);
+    } catch {
+      setOrders([]);
+    }
   }, [account]);
 
   if (loading || !account) {
     return (
-      <main className="mx-auto min-h-screen max-w-md px-5 pb-16 pt-12">
-        <p className="text-sm text-white/40">{t("account.loading")}</p>
+      <main style={{ position: "relative", zIndex: 1, maxWidth: 460, margin: "0 auto", padding: "20px 20px 100px" }}>
+        <p style={{ fontSize: 14, color: "var(--fog)" }}>Chargement…</p>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow={t("account.eyebrow")} title={t("orders.title")} backHref="/compte" />
-      <div className="px-5">
-        {orders === null && <p className="text-sm text-white/40">{t("account.loading")}</p>}
+    <main style={{ position: "relative", zIndex: 1, maxWidth: 460, margin: "0 auto", padding: "20px 20px 100px" }}>
+      <PageNav title="Mes commandes" />
 
-        {orders !== null && orders.length === 0 && (
-          <p className="text-sm text-white/40">{t("orders.empty")}</p>
-        )}
+      {orders === null && <p style={{ marginTop: 24, fontSize: 14, color: "var(--fog)" }}>Chargement…</p>}
 
-        <div className="space-y-3">
-          {orders?.map((o) => (
-            <Link
-              key={o.id}
-              href={`/checkout/confirmation?orderId=${o.id}`}
-              className="glass-panel block rounded-xl2 border border-panelBorder p-4 transition-colors hover:bg-white/5"
-            >
-              <p className="font-mono text-xs text-white/40">{o.id}</p>
-              <p className="mt-1 font-semibold">{o.productName}</p>
-              <div className="mt-2 flex items-center justify-between text-sm">
-                <span className="text-white/50">{o.amount} {o.currency}</span>
-                <span className="text-white/40">
-                  {o.status === "PAID" && o.fulfillment === "DELIVERED"
-                    ? t("orders.status_delivered")
-                    : o.status === "PAID"
-                    ? t("orders.status_processing")
-                    : t("orders.status_pending")}
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
+      {orders !== null && orders.length === 0 && (
+        <p style={{ marginTop: 24, fontSize: 14, color: "var(--fog)" }}>Aucune commande pour l&apos;instant.</p>
+      )}
+
+      <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+        {orders?.map((o) => (
+          <Link
+            key={o.id}
+            href={`/checkout/confirmation?orderId=${o.id}`}
+            className="liquid-glass"
+            style={{ display: "block", padding: 18, borderRadius: 18, textDecoration: "none", color: "inherit" }}
+          >
+            <p style={{ fontFamily: "monospace", fontSize: 12, color: "var(--fog)" }}>{o.id}</p>
+            <p style={{ fontWeight: 600, fontSize: 14.5, marginTop: 4 }}>{o.productName}</p>
+            <p style={{ fontSize: 13, color: "var(--signal)", marginTop: 4 }}>{o.amount} {o.currency}</p>
+          </Link>
+        ))}
       </div>
     </main>
   );

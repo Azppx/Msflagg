@@ -1,36 +1,35 @@
-"use client";
+import { PageNav } from "@/components/PageNav";
+import { StarIcon } from "@/components/icons";
 
-import { PageHeader } from "@/components/PageHeader";
-import { reviews } from "@/lib/config";
-import { useTranslation } from "@/lib/i18n/locale-context";
+const REVIEWS = [
+  { rating: 5, text: "Livraison en 3 minutes, compte Spotify nickel. Je recommande.", author: "T. — client vérifié" },
+  { rating: 5, text: "Super service, support Discord hyper réactif quand j'ai eu un souci.", author: "M. — client vérifié" },
+  { rating: 4, text: "Bon rapport qualité prix sur le pack Netflix, rien à redire.", author: "L. — client vérifié" },
+  { rating: 5, text: "Deuxième commande, toujours aussi rapide et fiable.", author: "K. — client vérifié" },
+];
 
-export default function AvisPage() {
-  const t = useTranslation();
-
+export default function ReviewsPage() {
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
-      <PageHeader eyebrow={t("reviews.eyebrow")} title={t("reviews.title")} backHref="/" />
+    <main style={{ position: "relative", zIndex: 1, maxWidth: 460, margin: "0 auto", padding: "20px 20px 100px" }}>
+      <PageNav title="Avis clients" />
 
-      <div className="flex flex-col gap-4 px-5">
-        {reviews.map((r, i) => (
-          <div
-            key={i}
-            className="card-glow glass-panel rounded-xl2 border border-panelBorder p-5"
-          >
-            <div className="text-accent" aria-label={`${r.rating} ${t("reviews.stars_label")}`}>
-              {"★".repeat(r.rating)}
-              <span className="text-white/15">{"★".repeat(5 - r.rating)}</span>
+      <h1 className="font-display" style={{ fontWeight: 700, fontSize: 28, letterSpacing: "-0.02em", marginTop: 24 }}>
+        Ce qu&apos;ils en pensent
+      </h1>
+
+      <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 14 }}>
+        {REVIEWS.map((r, i) => (
+          <div key={i} className="liquid-glass" style={{ padding: 20, borderRadius: 20 }}>
+            <div style={{ display: "flex", gap: 3, color: "var(--gold)" }}>
+              {Array.from({ length: 5 }).map((_, s) => (
+                <StarIcon key={s} width={14} height={14} style={{ opacity: s < r.rating ? 1 : 0.2 }} />
+              ))}
             </div>
-            <p className="mt-3 text-white/80">« {r.text} »</p>
-            <p className="mt-2 text-xs text-white/40">{r.author}</p>
+            <p style={{ marginTop: 12, fontSize: 14, lineHeight: 1.6, color: "var(--paper)" }}>« {r.text} »</p>
+            <p style={{ marginTop: 10, fontSize: 12, color: "var(--fog)" }}>{r.author}</p>
           </div>
         ))}
       </div>
-
-      <p className="mt-8 px-5 text-xs text-white/30">
-        {t("reviews.demo_note_1")} <code>reviews</code> {t("reviews.demo_note_2")}{" "}
-        <code>lib/config.ts</code> {t("reviews.demo_note_3")}
-      </p>
     </main>
   );
 }
