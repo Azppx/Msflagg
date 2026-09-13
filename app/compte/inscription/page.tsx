@@ -3,59 +3,97 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { PageNav } from "@/components/PageNav";
-import { GlassField } from "@/components/GlassField";
-import { ArrowRightIcon } from "@/components/icons";
+import { PageHeader } from "@/components/PageHeader";
+import { Button } from "@/components/Button";
 import { useAuth } from "@/lib/auth-context";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
-export default function RegisterPage() {
+export default function InscriptionPage() {
   const router = useRouter();
-  const { register } = useAuth();
+  const { refresh } = useAuth();
+  const t = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (name.trim().length < 2 || !email.includes("@") || password.length < 8) {
-      setError("Vérifie tes informations (mot de passe : 8 caractères minimum).");
+    setLoading(true);
+    setError("");
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+    const data = await res.json();
+    setLoading(false);
+    if (!res.ok) {
+      setError(data.error || t("auth.signup_error"));
       return;
     }
-    register(name.trim(), email);
+    await refresh();
     router.push("/compte");
   }
 
   return (
-    <main style={{ position: "relative", zIndex: 1, maxWidth: 460, margin: "0 auto", padding: "20px 20px 100px" }}>
-      <PageNav title="Inscription" />
+    <main className="mx-auto min-h-screen max-w-md pb-16">
+      <PageHeader eyebrow={t("account.eyebrow")} title={t("auth.signup_title")} backHref="/" />
+      <div className="px-5">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <label className="block">
+            <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
+              {t("auth.name")}
+            </span>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
+              autoComplete="name"
+            />
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
+              {t("auth.email")}
+            </span>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
+              autoComplete="email"
+            />
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
+              {t("auth.password")}
+            </span>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
+              autoComplete="new-password"
+            />
+            <span className="mt-1 block text-xs text-white/30">{t("auth.password_hint")}</span>
+          </label>
 
-      <h1 className="font-display" style={{ fontWeight: 700, fontSize: 28, letterSpacing: "-0.02em", marginTop: 24 }}>
-        Crée ton compte
-      </h1>
+          {error && <p className="text-sm text-danger">{error}</p>}
 
-      <form onSubmit={handleSubmit} style={{ marginTop: 24 }}>
-        <GlassField label="NOM" type="text" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
-        <GlassField label="EMAIL" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
-        <GlassField label="MOT DE PASSE" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="new-password" />
+          <Button type="submit" variant="primary" className="mt-2" disabled={loading}>
+            {loading ? "…" : t("auth.signup_cta")}
+          </Button>
+        </form>
 
-        {error && <p style={{ fontSize: 13, color: "var(--ember)", marginTop: -4, marginBottom: 12 }}>{error}</p>}
-
-        <button
-          type="submit"
-          className="liquid-glass liquid-glass--signal"
-          style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: 16, fontSize: 15, fontWeight: 600, color: "var(--paper)", borderRadius: 14, cursor: "pointer", marginTop: 8 }}
-        >
-          Créer mon compte <ArrowRightIcon width={15} height={15} />
-        </button>
-      </form>
-
-      <p style={{ marginTop: 24, textAlign: "center", fontSize: 13.5, color: "var(--fog)" }}>
-        Déjà un compte ?{" "}
-        <Link href="/compte/connexion" style={{ color: "var(--signal)", fontWeight: 600, textDecoration: "none" }}>
-          Connecte-toi
-        </Link>
-      </p>
+        <p className="mt-6 text-center text-sm text-white/50">
+          {t("auth.has_account")}{" "}
+          <Link href="/compte/connexion" className="font-semibold text-electric-soft">
+            {t("auth.login_link")}
+          </Link>
+        </p>
+      </div>
     </main>
   );
 }

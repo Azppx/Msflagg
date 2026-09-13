@@ -3,57 +3,83 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { PageNav } from "@/components/PageNav";
-import { GlassField } from "@/components/GlassField";
-import { ArrowRightIcon } from "@/components/icons";
+import { PageHeader } from "@/components/PageHeader";
+import { Button } from "@/components/Button";
 import { useAuth } from "@/lib/auth-context";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
-export default function LoginPage() {
+export default function ConnexionPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { refresh } = useAuth();
+  const t = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.includes("@") || password.length < 4) {
-      setError("Merci de renseigner un email et un mot de passe valides.");
+    setLoading(true);
+    setError("");
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    setLoading(false);
+    if (!res.ok) {
+      setError(data.error || t("auth.login_error"));
       return;
     }
-    login(email);
+    await refresh();
     router.push("/compte");
   }
 
   return (
-    <main style={{ position: "relative", zIndex: 1, maxWidth: 460, margin: "0 auto", padding: "20px 20px 100px" }}>
-      <PageNav title="Connexion" />
+    <main className="mx-auto min-h-screen max-w-md pb-16">
+      <PageHeader eyebrow={t("account.eyebrow")} title={t("auth.login_title")} backHref="/" />
+      <div className="px-5">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <label className="block">
+            <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
+              {t("auth.email")}
+            </span>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
+              autoComplete="email"
+            />
+          </label>
+          <label className="block">
+            <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
+              {t("auth.password")}
+            </span>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
+              autoComplete="current-password"
+            />
+          </label>
 
-      <h1 className="font-display" style={{ fontWeight: 700, fontSize: 28, letterSpacing: "-0.02em", marginTop: 24 }}>
-        Content de te revoir
-      </h1>
+          {error && <p className="text-sm text-danger">{error}</p>}
 
-      <form onSubmit={handleSubmit} style={{ marginTop: 24 }}>
-        <GlassField label="EMAIL" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
-        <GlassField label="MOT DE PASSE" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
+          <Button type="submit" variant="primary" className="mt-2" disabled={loading}>
+            {loading ? "…" : t("auth.login_cta")}
+          </Button>
+        </form>
 
-        {error && <p style={{ fontSize: 13, color: "var(--ember)", marginTop: -4, marginBottom: 12 }}>{error}</p>}
-
-        <button
-          type="submit"
-          className="liquid-glass liquid-glass--signal"
-          style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: 16, fontSize: 15, fontWeight: 600, color: "var(--paper)", borderRadius: 14, cursor: "pointer", marginTop: 8 }}
-        >
-          Se connecter <ArrowRightIcon width={15} height={15} />
-        </button>
-      </form>
-
-      <p style={{ marginTop: 24, textAlign: "center", fontSize: 13.5, color: "var(--fog)" }}>
-        Pas encore de compte ?{" "}
-        <Link href="/compte/inscription" style={{ color: "var(--signal)", fontWeight: 600, textDecoration: "none" }}>
-          Inscris-toi
-        </Link>
-      </p>
+        <p className="mt-6 text-center text-sm text-white/50">
+          {t("auth.no_account")}{" "}
+          <Link href="/compte/inscription" className="font-semibold text-electric-soft">
+            {t("auth.signup_link")}
+          </Link>
+        </p>
+      </div>
     </main>
   );
 }

@@ -2,26 +2,36 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { PageNav } from "@/components/PageNav";
-import { GlassField } from "@/components/GlassField";
-import { ArrowRightIcon } from "@/components/icons";
+import { PageHeader } from "@/components/PageHeader";
+import { Button, ButtonLink } from "@/components/Button";
+import { GlowCard } from "@/components/GlowCard";
 import { useCart } from "@/lib/cart-context";
+import { getProductBySlug } from "@/lib/catalog";
+import { catalogToneRgb } from "@/components/catalog-icons";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export default function InformationsPage() {
   const router = useRouter();
   const { items, totalPrice, hydrated } = useCart();
+  const t = useTranslation();
 
+  const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
   const [dob, setDob] = useState("");
   const [error, setError] = useState("");
+  const firstTone = items[0] ? getProductBySlug(items[0].slug)?.tone : undefined;
+  const toneRgb = firstTone ? catalogToneRgb[firstTone] : catalogToneRgb.electric;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.includes("@") || firstName.trim().length < 2 || lastName.trim().length < 2 || !dob) {
-      setError("Merci de renseigner tous les champs correctement.");
+    if (
+      !email.includes("@") ||
+      firstName.trim().length < 2 ||
+      lastName.trim().length < 2 ||
+      !dob
+    ) {
+      setError(t("checkout.info.error"));
       return;
     }
     const name = `${firstName.trim()} ${lastName.trim()}`;
@@ -30,81 +40,108 @@ export default function InformationsPage() {
   }
 
   return (
-    <main style={{ position: "relative", zIndex: 1, maxWidth: 460, margin: "0 auto", padding: "20px 20px 100px" }}>
-      <PageNav title="Tes informations" />
+    <main className="mx-auto min-h-screen max-w-md pb-16">
+      <PageHeader eyebrow={t("checkout.info.step")} title={t("checkout.info.title")} backHref="/panier" />
 
-      <p style={{ marginTop: 20, fontSize: 12.5, color: "var(--signal)", fontWeight: 600 }}>ÉTAPE 2 / 4</p>
-      <h1 className="font-display" style={{ fontWeight: 700, fontSize: 28, letterSpacing: "-0.02em", marginTop: 6 }}>
-        Tes informations
-      </h1>
+      <div className="px-5">
 
-      {hydrated && items.length === 0 && (
-        <div className="liquid-glass" style={{ marginTop: 24, textAlign: "center", padding: 28, borderRadius: 22 }}>
-          <p style={{ fontSize: 14, color: "var(--fog)" }}>Ton panier est vide.</p>
-          <Link
-            href="/premium"
-            className="liquid-glass liquid-glass--signal"
-            style={{ display: "inline-flex", marginTop: 16, padding: "12px 20px", borderRadius: 12, color: "var(--paper)", fontWeight: 600, fontSize: 13.5, textDecoration: "none" }}
-          >
-            Voir le catalogue
-          </Link>
-        </div>
-      )}
+        {hydrated && items.length === 0 && (
+          <GlowCard toneRgb={catalogToneRgb.electric} className="bounce-in mt-6 text-center">
+            <p className="text-sm text-white/60">{t("checkout.info.empty_cart")}</p>
+            <ButtonLink href="/premium" variant="custom" className="btn-glow-blue mt-4">
+              {t("cart.view_catalog")}
+            </ButtonLink>
+          </GlowCard>
+        )}
 
-      {items.length > 0 && (
-        <>
-          <div className="liquid-glass liquid-glass--signal" style={{ marginTop: 20, padding: 22, borderRadius: 22 }}>
-            <p style={{ fontSize: 13, color: "var(--fog)" }}>Produits sélectionnés</p>
-            <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6 }}>
-              {items.map((item) => (
-                <div key={item.slug} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 13.5 }}>
-                  <span style={{ fontWeight: 500 }}>
-                    {item.name} {item.quantity > 1 && `×${item.quantity}`}
+        {items.length > 0 && (
+          <div className="bounce-in">
+            <GlowCard toneRgb={toneRgb} particles className="mt-6">
+              <p className="text-sm text-white/50">{t("checkout.info.selected_products")}</p>
+              <div className="mt-2 space-y-1.5">
+                {items.map((item) => (
+                  <div key={item.slug} className="flex items-center justify-between text-sm">
+                    <span className="font-medium">
+                      {item.name} {item.quantity > 1 && `×${item.quantity}`}
+                    </span>
+                    <span className="text-white/60">
+                      {(item.unitPrice * item.quantity).toFixed(2)} €
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 h-px bg-panelBorder" />
+              <div className="mt-3 flex items-center justify-between font-semibold">
+                <span>{t("checkout.info.total")}</span>
+                <span style={{ color: `rgb(${toneRgb})` }}>{totalPrice.toFixed(2)} €</span>
+              </div>
+            </GlowCard>
+
+            <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
+              <div className="grid grid-cols-2 gap-3">
+                <label className="block">
+                  <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
+                    {t("checkout.info.first_name")}
                   </span>
-                  <span style={{ color: "var(--fog)" }}>{(item.unitPrice * item.quantity).toFixed(2)} €</span>
-                </div>
-              ))}
-            </div>
-            <div style={{ height: 1, background: "var(--line)", margin: "12px 0" }} />
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontWeight: 600 }}>
-              <span>Total</span>
-              <span style={{ color: "var(--signal)" }}>{totalPrice.toFixed(2)} €</span>
-            </div>
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
+                    placeholder={t("checkout.info.first_name_placeholder")}
+                    autoComplete="given-name"
+                  />
+                </label>
+                <label className="block">
+                  <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
+                    {t("checkout.info.last_name")}
+                  </span>
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
+                    placeholder={t("checkout.info.last_name_placeholder")}
+                    autoComplete="family-name"
+                  />
+                </label>
+              </div>
+              <label className="block">
+                <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
+                  {t("checkout.info.email")}
+                </span>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric"
+                  placeholder="ton@email.com"
+                  autoComplete="email"
+                  inputMode="email"
+                />
+              </label>
+              <label className="block">
+                <span className="mb-1.5 block text-xs font-semibold tracking-widest text-white/50">
+                  {t("checkout.info.dob")}
+                </span>
+                <input
+                  type="date"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                  className="w-full rounded-xl border border-panelBorder bg-white/5 px-4 py-3.5 text-base outline-none focus:border-electric [color-scheme:dark]"
+                  autoComplete="bday"
+                />
+              </label>
+
+              {error && <p className="text-sm text-danger">{error}</p>}
+
+              <Button type="submit" variant="custom" className="btn-glow-blue mt-2">
+                {t("checkout.info.continue")}
+              </Button>
+            </form>
           </div>
-
-          <form onSubmit={handleSubmit} style={{ marginTop: 24 }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-              <GlassField label="PRÉNOM" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Ton prénom" autoComplete="given-name" />
-              <GlassField label="NOM" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Ton nom" autoComplete="family-name" />
-            </div>
-            <GlassField label="EMAIL" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ton@email.com" autoComplete="email" inputMode="email" />
-            <GlassField label="DATE DE NAISSANCE" type="date" value={dob} onChange={(e) => setDob(e.target.value)} autoComplete="bday" />
-
-            {error && <p style={{ fontSize: 13, color: "var(--ember)", marginTop: -4, marginBottom: 12 }}>{error}</p>}
-
-            <button
-              type="submit"
-              className="liquid-glass liquid-glass--signal"
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                padding: 16,
-                fontSize: 15,
-                fontWeight: 600,
-                color: "var(--paper)",
-                borderRadius: 14,
-                cursor: "pointer",
-                marginTop: 8,
-              }}
-            >
-              Continuer <ArrowRightIcon width={15} height={15} />
-            </button>
-          </form>
-        </>
-      )}
+        )}
+      </div>
     </main>
   );
 }

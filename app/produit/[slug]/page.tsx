@@ -1,18 +1,33 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProductBySlug, PRODUCTS } from "@/lib/catalog";
+import { CartHeaderLink } from "@/components/CartHeaderLink";
 import { ProductView } from "@/components/ProductView";
+import { catalogProducts, getProductBySlug } from "@/lib/catalog";
 
 export function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ slug: p.slug }));
+  return catalogProducts.map((p) => ({ slug: p.slug }));
 }
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
-  const product = getProductBySlug(params.slug);
-  if (!product) notFound();
+export default function CatalogProductPage({ params }: { params: { slug: string } }) {
+  const item = getProductBySlug(params.slug);
+  if (!item) notFound();
 
   return (
-    <main style={{ position: "relative", zIndex: 1, maxWidth: 460, margin: "0 auto", padding: "20px 20px 100px" }}>
-      <ProductView product={product} />
+    <main className="mx-auto min-h-screen max-w-md overflow-x-hidden pb-16 pt-8">
+      <div className="flex items-center justify-between px-5">
+        <Link
+          href="/premium"
+          aria-label="Retour"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-panelBorder bg-panel/60 text-white/70"
+        >
+          ←
+        </Link>
+        <CartHeaderLink />
+      </div>
+
+      <div className="px-5">
+        <ProductView item={item} />
+      </div>
     </main>
   );
 }

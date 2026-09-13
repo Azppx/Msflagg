@@ -1,171 +1,162 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { ProductIcon } from "@/components/ProductIcon";
-import { PageNav } from "@/components/PageNav";
-import { BoltIcon, CartIcon, DiscordIcon, HeadsetIcon, MinusIcon, PlusIcon, ShieldIcon } from "@/components/icons";
-import { useCart } from "@/lib/cart-context";
-import type { Product } from "@/lib/catalog";
+import { ButtonLink } from "@/components/Button";
+import { AddToCartPanel } from "@/components/AddToCartPanel";
+import { catalogToneRgb } from "@/components/catalog-icons";
+import { ProductLogo } from "@/components/ProductLogo";
+import { useTranslation } from "@/lib/i18n/locale-context";
+import type { CatalogProduct } from "@/lib/catalog";
 
-const FEATURE_ICONS = [BoltIcon, HeadsetIcon, ShieldIcon];
-
-export function ProductView({ product }: { product: Product }) {
-  const router = useRouter();
-  const { addItem } = useCart();
-  const [quantity, setQuantity] = useState(1);
-
-  function handleAddToCart() {
-    addItem({ slug: product.slug, name: product.name, unitPrice: product.price, currency: "EUR" }, quantity);
-    router.push("/panier");
-  }
+export function ProductView({ item }: { item: CatalogProduct }) {
+  const t = useTranslation();
+  const toneRgb = catalogToneRgb[item.tone];
 
   return (
-    <>
-      <PageNav title={product.name} />
+    <div className="bounce-in">
+      {/* ---------- Héro ---------- */}
+      <section className="pt-2 text-center">
+        <p
+          className="text-[10px] font-extrabold uppercase tracking-[0.2em]"
+          style={{ color: `rgb(${toneRgb})` }}
+        >
+          KYZEN / {item.category.toUpperCase()}
+        </p>
+        <h1 className="mt-3 text-[38px] font-black leading-[0.9] tracking-tight text-white">
+          {item.name}.
+          <br />
+          <span className="kyzen-stroke-text">Notre identité.</span>
+        </h1>
+        <p className="mx-auto mt-4 max-w-[32ch] text-[13px] leading-[1.85] text-white/55">
+          {item.description}
+        </p>
 
-      <div style={{ position: "relative", height: 240, margin: "12px 0 0", display: "flex", alignItems: "center", justifyContent: "center", perspective: 1000 }}>
-        <div
-          style={{
-            position: "absolute",
-            width: 220,
-            height: 220,
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(157,92,255,0.4), transparent 70%)",
-            pointerEvents: "none",
-          }}
-        />
-        <div className="product-badge-3d liquid-glass" style={{ color: product.tone }}>
-          <ProductIcon name={product.icon} width={62} height={62} />
+        <div className="mt-6 flex justify-center">
+          <div className="kyzen-tilt-box" style={{ "--tone-rgb": toneRgb } as React.CSSProperties}>
+            <span className="badge">EXCLUSIF</span>
+            <p className="text-[8px] font-bold uppercase tracking-[0.18em] text-white/50">
+              KYZEN / {item.category.toUpperCase()}
+            </p>
+            <div className="flex flex-1 items-center justify-center">
+              <ProductLogo logo={item.logo} icon={item.icon} size={72} />
+            </div>
+            <p className="text-[8px] font-bold uppercase tracking-[0.18em] text-white/50">
+              ÉDITION 2026
+            </p>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div style={{ marginTop: 12, textAlign: "center" }}>
-        <p style={{ fontSize: 12.5, fontWeight: 600, color: "var(--signal)", letterSpacing: "0.04em" }}>{product.categoryLabel}</p>
-        <h1 className="font-display" style={{ fontWeight: 700, fontSize: 34, letterSpacing: "-0.02em", marginTop: 6 }}>{product.name}</h1>
-        <p style={{ marginTop: 12, fontSize: 14.5, color: "var(--fog)", lineHeight: 1.65, maxWidth: "36ch", marginLeft: "auto", marginRight: "auto" }}>
-          {product.description}
-        </p>
-      </div>
+      {/* ---------- 01 — Offre ---------- */}
+      <section className="mt-12">
+        <SectionHead index="01" title="Offre" tag="Disponible maintenant" />
 
-      <div style={{ marginTop: 28, textAlign: "center" }}>
-        <p className="font-display" style={{ fontWeight: 700, fontSize: 52, letterSpacing: "-0.02em" }}>
-          {product.price}€<sup style={{ fontSize: 16, color: "var(--fog)", fontWeight: 500 }}> au total</sup>
-        </p>
-      </div>
+        <div
+          className="kyzen-offer-row"
+          style={{ "--tone-rgb": toneRgb } as React.CSSProperties}
+        >
+          <p
+            className="text-[9px] font-extrabold uppercase tracking-[0.16em]"
+            style={{ color: `rgb(${toneRgb})` }}
+          >
+            KYZEN / MEILLEURE OFFRE
+          </p>
+          <h3 className="mt-2.5 text-[24px] font-extrabold leading-tight tracking-tight text-white">
+            {item.name}
+          </h3>
+          <p className="mt-2 text-[13px] leading-relaxed text-white/55">{item.description}</p>
 
-      <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 14 }}>
-        {product.features.map((feature, i) => {
-          const Icon = FEATURE_ICONS[i % FEATURE_ICONS.length];
-          return (
-            <div key={feature} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-              <span
-                className="liquid-glass"
+          <div className="mt-5 border-t border-white/10 pt-5">
+            <p
+              className="text-[40px] font-extrabold leading-none tracking-tight text-white"
+              style={{ textShadow: `0 0 30px rgba(${toneRgb},0.3)` }}
+            >
+              {item.priceTotal}€
+            </p>
+            <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-widest text-white/35">
+              {t("product.total_label")}
+            </p>
+
+            <div className="mt-5 flex flex-col gap-3">
+              <AddToCartPanel
+                slug={item.slug}
+                name={item.name}
+                unitPrice={item.priceTotal}
+                currency={item.currency}
+                ctaClass="text-white"
+                ctaStyle={{
+                  background: `linear-gradient(180deg, rgb(${toneRgb}), rgba(${toneRgb},0.75))`,
+                  boxShadow: `0 18px 40px -12px rgba(${toneRgb},0.55)`,
+                }}
+              />
+              <ButtonLink href="/discord" variant="ghost">
+                {t("product.join_discord")}
+              </ButtonLink>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- 02 — Détails ---------- */}
+      <section className="mt-12">
+        <SectionHead index="02" title="Détails" tag="Les avantages" />
+
+        <div className="flex flex-col gap-2.5">
+          {item.features.map((f) => (
+            <div key={f} className="kyzen-detail-card">
+              <div
+                className="mb-3 flex h-[37px] w-[37px] items-center justify-center rounded-[10px] border text-[15px]"
                 style={{
-                  flexShrink: 0,
-                  width: 26,
-                  height: 26,
-                  borderRadius: "50%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "var(--signal)",
+                  color: `rgb(${toneRgb})`,
+                  background: `rgba(${toneRgb},0.08)`,
+                  borderColor: `rgba(${toneRgb},0.2)`,
                 }}
               >
-                <Icon width={13} height={13} />
-              </span>
-              <span style={{ fontSize: 14, color: "var(--paper)", paddingTop: 2 }}>{feature}</span>
+                ✓
+              </div>
+              <p className="text-[13px] font-medium leading-snug text-white/75">{f}</p>
             </div>
-          );
-        })}
-      </div>
-
-      <div
-        className="liquid-glass"
-        style={{
-          marginTop: 32,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "16px 18px",
-          borderRadius: 18,
-        }}
-      >
-        <span style={{ fontSize: 13.5, fontWeight: 600, color: "var(--fog)" }}>Quantité</span>
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <QtyButton onClick={() => setQuantity((q) => Math.max(1, q - 1))} ariaLabel="Diminuer">
-            <MinusIcon width={13} height={13} />
-          </QtyButton>
-          <span className="font-display" style={{ fontWeight: 700, fontSize: 16, minWidth: 20, textAlign: "center" }}>{quantity}</span>
-          <QtyButton onClick={() => setQuantity((q) => q + 1)} ariaLabel="Augmenter">
-            <PlusIcon width={13} height={13} />
-          </QtyButton>
+          ))}
         </div>
-      </div>
+      </section>
 
-      <div style={{ position: "sticky", bottom: 16, marginTop: 28, display: "flex", flexDirection: "column", gap: 10 }}>
-        <button
-          onClick={handleAddToCart}
-          className="liquid-glass liquid-glass--signal"
-          style={{
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            padding: 16,
-            fontSize: 15,
-            fontWeight: 600,
-            color: "var(--paper)",
-            borderRadius: 14,
-            cursor: "pointer",
-          }}
-        >
-          Ajouter au panier <CartIcon width={16} height={16} />
-        </button>
-        <a
-          href="https://discord.gg/"
-          target="_blank"
-          rel="noreferrer"
-          className="liquid-glass"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-            padding: 14,
-            fontSize: 14.5,
-            fontWeight: 600,
-            color: "var(--paper)",
-            borderRadius: 14,
-            textDecoration: "none",
-          }}
-        >
-          <DiscordIcon width={15} height={15} style={{ color: "var(--signal)" }} /> Rejoindre le Discord
-        </a>
-      </div>
-    </>
+      {/* ---------- 03 — FAQ ---------- */}
+      <section className="mt-12 pb-4">
+        <SectionHead index="03" title="FAQ" tag="Questions fréquentes" />
+
+        <div className="kyzen-faq">
+          <details>
+            <summary>Comment je reçois mon produit ?</summary>
+            <p>
+              Une fois ton virement Wise confirmé, ta commande est vérifiée manuellement puis
+              livrée directement sur le site, sous 24h.
+            </p>
+          </details>
+          <details>
+            <summary>Comment contacter le support ?</summary>
+            <p>
+              Via le bouton "Ouvrir un ticket" sur la page Support, ou directement sur notre
+              serveur Discord.
+            </p>
+          </details>
+          <details>
+            <summary>Quels moyens de paiement sont acceptés ?</summary>
+            <p>Le virement bancaire via Wise, avec vérification manuelle avant livraison.</p>
+          </details>
+        </div>
+      </section>
+    </div>
   );
 }
 
-function QtyButton({ children, onClick, ariaLabel }: { children: React.ReactNode; onClick: () => void; ariaLabel: string }) {
+function SectionHead({ index, title, tag }: { index: string; title: string; tag: string }) {
   return (
-    <button
-      onClick={onClick}
-      aria-label={ariaLabel}
-      className="liquid-glass"
-      style={{
-        width: 30,
-        height: 30,
-        borderRadius: "50%",
-        color: "var(--paper)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        cursor: "pointer",
-      }}
-    >
-      {children}
-    </button>
+    <div className="mb-4 flex items-end justify-between border-b border-[#292033] pb-3">
+      <h2 className="text-[19px] font-bold tracking-tight text-white">
+        {index} — {title}
+      </h2>
+      <span className="text-[9px] font-semibold uppercase tracking-widest text-white/35">
+        {tag}
+      </span>
+    </div>
   );
 }

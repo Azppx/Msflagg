@@ -1,176 +1,67 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
-import { useCart } from "@/lib/cart-context";
-import { CartIcon, GlobeIcon, MenuIcon, CloseIcon } from "@/components/icons";
+import Image from "next/image";
+import { KyzenLogo } from "@/components/KyzenLogo";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { CartHeaderLink } from "@/components/CartHeaderLink";
+import { SideMenu } from "@/components/SideMenu";
+import { SupportChatModal } from "@/components/SupportChatModal";
+import { discordConfig } from "@/lib/config";
+import { useTranslation } from "@/lib/i18n/locale-context";
 
 export function TopBar() {
-  const { totalCount } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const t = useTranslation();
 
   return (
     <>
-      <nav
-        className="liquid-glass liquid-glass--signal"
-        style={{
-          position: "sticky",
-          top: 12,
-          zIndex: 40,
-          maxWidth: 460,
-          margin: "0 auto",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "10px 14px",
-          borderRadius: 20,
-        }}
-      >
-        <Link href="/" className="font-display" style={{ fontWeight: 700, fontSize: 21, letterSpacing: "-0.02em", color: "var(--paper)", textDecoration: "none" }}>
-          ky<span style={{ color: "var(--signal)" }}>zen</span>
-        </Link>
-        <div style={{ display: "flex", gap: 8 }}>
-          <IconButton ariaLabel="Langue">
-            <GlobeIcon width={16} height={16} />
-          </IconButton>
-          <Link href="/panier" style={{ textDecoration: "none" }}>
-            <IconButton ariaLabel="Panier" badge={totalCount > 0 ? totalCount : undefined}>
-              <CartIcon width={16} height={16} />
-            </IconButton>
-          </Link>
-          <IconButton ariaLabel="Menu" onClick={() => setMenuOpen(true)}>
-            <MenuIcon width={16} height={16} />
-          </IconButton>
-        </div>
-      </nav>
+      <div className="sticky top-3 z-30 mx-3 mt-3 flex items-center justify-between rounded-[16px] border border-electric/20 bg-panel/85 px-4 py-2.5 shadow-[0_18px_60px_rgba(0,0,0,0.4),0_0_50px_rgba(255,45,120,0.08)] backdrop-blur-xl">
+        <KyzenLogo />
+        <div className="flex items-center gap-2">
+          <LanguageSelector />
 
-      {menuOpen && <SideMenu onClose={() => setMenuOpen(false)} />}
-    </>
-  );
-}
-
-function IconButton({
-  children,
-  ariaLabel,
-  badge,
-  onClick,
-}: {
-  children: React.ReactNode;
-  ariaLabel: string;
-  badge?: number;
-  onClick?: () => void;
-}) {
-  return (
-    <button
-      aria-label={ariaLabel}
-      onClick={onClick}
-      className="liquid-glass"
-      style={{
-        position: "relative",
-        width: 38,
-        height: 38,
-        borderRadius: "50%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: "var(--fog)",
-        cursor: "pointer",
-      }}
-    >
-      {children}
-      {badge !== undefined && (
-        <span
-          style={{
-            position: "absolute",
-            top: -3,
-            right: -3,
-            width: 16,
-            height: 16,
-            borderRadius: "50%",
-            background: "var(--ember)",
-            color: "var(--void-deep)",
-            fontSize: 9.5,
-            fontWeight: 700,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 0 8px rgba(255,107,74,0.7)",
-          }}
-        >
-          {badge}
-        </span>
-      )}
-    </button>
-  );
-}
-
-function SideMenu({ onClose }: { onClose: () => void }) {
-  return (
-    <div
-      onClick={onClose}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 50,
-        display: "flex",
-        justifyContent: "flex-end",
-        background: "rgba(6,4,10,0.6)",
-      }}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="liquid-glass liquid-glass--settle"
-        style={{
-          width: "85%",
-          maxWidth: 340,
-          height: "100%",
-          padding: 24,
-          overflowY: "auto",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <p className="font-display" style={{ fontWeight: 700, fontSize: 20 }}>
-            ky<span style={{ color: "var(--signal)" }}>zen</span>
-          </p>
-          <button
-            onClick={onClose}
-            aria-label="Fermer"
-            style={{ background: "none", border: "none", color: "var(--fog)", cursor: "pointer", padding: 6 }}
+          <a
+            href={discordConfig.inviteUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={t("nav.join_discord")}
+            className="icon-glow-btn flex h-10 w-10 items-center justify-center rounded-full border border-electric/40 bg-electric/10 transition-transform hover:scale-105 active:scale-90"
+            style={{ "--icon-glow-rgb": "255,45,120" } as React.CSSProperties}
           >
-            <CloseIcon width={18} height={18} />
+            <Image src="/icons/discord-mark.png" alt="Discord" width={20} height={20} className="object-contain" />
+          </a>
+
+          <button
+            onClick={() => setChatOpen(true)}
+            aria-label={t("nav.support")}
+            className="icon-glow-btn flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-electric/40 bg-electric/10 transition-transform hover:scale-105 active:scale-90"
+            style={{ "--icon-glow-rgb": "255,45,120" } as React.CSSProperties}
+          >
+            <Image
+              src="/icons/support-chat.png"
+              alt="Support"
+              width={26}
+              height={26}
+              className="rounded-md object-contain"
+            />
+          </button>
+
+          <CartHeaderLink />
+
+          <button
+            onClick={() => setMenuOpen(true)}
+            aria-label={t("nav.menu")}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-panelBorder bg-white/5 text-lg transition-colors hover:bg-white/10 active:scale-90"
+          >
+            ☰
           </button>
         </div>
-
-        <nav style={{ marginTop: 28, display: "flex", flexDirection: "column", gap: 8 }}>
-          <MenuLink href="/premium" label="Catalogue" onClick={onClose} />
-          <MenuLink href="/compte" label="Mon compte" onClick={onClose} />
-          <MenuLink href="/compte/commandes" label="Mes commandes" onClick={onClose} />
-          <MenuLink href="/support" label="Support" onClick={onClose} />
-          <MenuLink href="/avis" label="Avis clients" onClick={onClose} />
-          <MenuLink href="/musique" label="Musique" onClick={onClose} />
-        </nav>
       </div>
-    </div>
-  );
-}
 
-function MenuLink({ href, label, onClick }: { href: string; label: string; onClick: () => void }) {
-  return (
-    <Link
-      href={href}
-      onClick={onClick}
-      className="liquid-glass"
-      style={{
-        display: "block",
-        padding: "14px 16px",
-        borderRadius: 14,
-        color: "var(--paper)",
-        textDecoration: "none",
-        fontWeight: 600,
-        fontSize: 14.5,
-      }}
-    >
-      {label}
-    </Link>
+      {menuOpen && <SideMenu onClose={() => setMenuOpen(false)} />}
+      {chatOpen && <SupportChatModal onClose={() => setChatOpen(false)} />}
+    </>
   );
 }

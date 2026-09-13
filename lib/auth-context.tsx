@@ -1,65 +1,56 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-export type Account = { name: string; email: string };
+export type PublicAccount = {
+  id: string;
+  email: string;
+  name: string;
+  createdAt: string;
+};
 
 type AuthContextValue = {
-  account: Account | null;
+  account: PublicAccount | null;
   loading: boolean;
-  login: (email: string) => void;
-  register: (name: string, email: string) => void;
-  logout: () => void;
+  refresh: () => Promise<void>;
+  logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue>({
   account: null,
   loading: true,
-  login: () => {},
-  register: () => {},
-  logout: () => {},
+  refresh: async () => {},
+  logout: async () => {},
 });
 
-const STORAGE_KEY = "kyzen-account";
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [account, setAccount] = useState<Account | null>(null);
+  const [account, setAccount] = useState<PublicAccount | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const refresh = useCallback(async () => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setAccount(JSON.parse(raw));
+      const res = await fetch("/api/auth/me", { cache: "no-store" });
+      const data = await res.json();
+      setAccount(data.account);
     } catch {
-      // ignore
+      setAccount(null);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
-  const persist = useCallback((acc: Account | null) => {
-    setAccount(acc);
-    if (acc) localStorage.setItem(STORAGE_KEY, JSON.stringify(acc));
-    else localStorage.removeItem(STORAGE_KEY);
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  const logout = useCallback(async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    setAccount(null);
   }, []);
 
-  const login = useCallback(
-    (email: string) => {
-      const name = email.split("@")[0];
-      persist({ name, email });
-    },
-    [persist]
-  );
+  const value = useMemo(() => ({ account, loading, refresh, logout }), [account, loading, refresh, logout]);
 
-  const register = useCallback(
-    (name: string, email: string) => {
-      persist({ name, email });
-    },
-    [persist]
-  );
-
-  const logout = useCallback(() => persist(null), [persist]);
-
-  return <AuthContext.Provider value={{ account, loading, login, register, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
