@@ -16,8 +16,8 @@ export type CatalogProduct = {
   description: string;
   features: string[];
   tone: CatalogTone;
-  icon: string; // clé vers l'icône SVG de secours, voir components/catalog-icons.tsx
-  logo?: string; // chemin vers le vrai logo officiel dans /public/logos, si disponible
+  icon: string;
+  logo?: string;
 };
 
 const genericFeatures = [
@@ -38,7 +38,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "gold",
     icon: "ghost",
-    logo: "/logos/snapchat.png",
+    logo: "/logos/snapchat.svg",
   },
   {
     slug: "deezer",
@@ -50,7 +50,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "heart",
-    logo: "/logos/deezer.png",
+    logo: "/logos/deezer.svg",
   },
   {
     slug: "spotify",
@@ -62,7 +62,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "green",
     icon: "spotify",
-    logo: "/logos/spotify.png",
+    logo: "/logos/spotify.svg",
   },
   {
     slug: "basic-fit",
@@ -74,6 +74,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "accent",
     icon: "dumbbell",
+    logo: "/logos/basicfit.svg",
   },
   {
     slug: "pack-basicfit-netflix",
@@ -91,6 +92,7 @@ export const catalogProducts: CatalogProduct[] = [
     ],
     tone: "gold",
     icon: "gift",
+    logo: "/logos/netflix.svg",
   },
   {
     slug: "pack-spotify-basicfit-netflix-youtube",
@@ -110,6 +112,7 @@ export const catalogProducts: CatalogProduct[] = [
     ],
     tone: "violet",
     icon: "gift",
+    logo: "/logos/youtube.svg",
   },
   {
     slug: "iptv",
@@ -132,6 +135,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "danger",
     icon: "netflix",
+    logo: "/logos/netflix.svg",
   },
   {
     slug: "crunchyroll",
@@ -143,7 +147,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "accent",
     icon: "moon",
-    logo: "/logos/crunchyroll.png",
+    logo: "/logos/crunchyroll.svg",
   },
   {
     slug: "canva",
@@ -155,7 +159,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "teal",
     icon: "canva",
-    logo: "/logos/canva.jpg",
+    logo: "/logos/canva.svg",
   },
   {
     slug: "adobe",
@@ -167,7 +171,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "danger",
     icon: "adobe",
-    logo: "/logos/adobe.png",
+    logo: "/logos/adobe.svg",
   },
   {
     slug: "capcut",
@@ -179,7 +183,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "electric",
     icon: "capcut",
-    logo: "/logos/capcut.png",
+    logo: "/logos/capcut.svg",
   },
   {
     slug: "office365",
@@ -191,7 +195,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "accent",
     icon: "office",
-    logo: "/logos/office365.jpg",
+    logo: "/logos/office365.svg",
   },
   {
     slug: "prime-video",
@@ -203,7 +207,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "electric",
     icon: "play",
-    logo: "/logos/primevideo.png",
+    logo: "/logos/amazon.svg",
   },
   {
     slug: "nordvpn",
@@ -215,7 +219,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "electric",
     icon: "shield",
-    logo: "/logos/nordvpn.png",
+    logo: "/logos/nordvpn.svg",
   },
   {
     slug: "chatgpt",
@@ -227,7 +231,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "green",
     icon: "spark",
-    logo: "/logos/chatgpt.png",
+    logo: "/logos/chatgpt.svg",
   },
   {
     slug: "paramount",
@@ -239,7 +243,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "electric",
     icon: "mountain",
-    logo: "/logos/paramount.png",
+    logo: "/logos/paramount.svg",
   },
   {
     slug: "disney",
@@ -251,7 +255,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "electric",
     icon: "star",
-    logo: "/logos/disney.png",
+    logo: "/logos/disney.svg",
   },
   {
     slug: "hbomax",
@@ -263,7 +267,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "clapper",
-    logo: "/logos/hbomax.png",
+    logo: "/logos/hbomax.svg",
   },
   {
     slug: "discord",
@@ -275,7 +279,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "discord",
-    logo: "/logos/discord.png",
+    logo: "/logos/discord.svg",
   },
   {
     slug: "youtube",
@@ -287,7 +291,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "youtube",
-    logo: "/logos/youtube.png",
+    logo: "/logos/youtube.svg",
   },
   {
     slug: "valorant",
@@ -299,7 +303,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "gamepad",
-    logo: "/logos/valorant.png",
+    logo: "/logos/valorant.svg",
   },
   {
     slug: "ccv",
@@ -311,6 +315,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "violet",
     icon: "card",
+    logo: "/logos/cartes-bancaires.svg",
   },
   {
     slug: "claude-unlimited-method",
@@ -329,7 +334,7 @@ export const catalogProducts: CatalogProduct[] = [
     ],
     tone: "violet",
     icon: "asterisk",
-    logo: "/logos/claude.png",
+    logo: "/logos/claude.svg",
   },
   {
     slug: "duolingo",
@@ -341,7 +346,7 @@ export const catalogProducts: CatalogProduct[] = [
     features: genericFeatures,
     tone: "green",
     icon: "owl",
-    logo: "/logos/duolingo.png",
+    logo: "/logos/duolingo.svg",
   },
 ];
 

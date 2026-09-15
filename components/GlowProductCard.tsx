@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
-import { BrandLogo } from "@/components/BrandLogos";
 import type { CatalogProduct } from "@/lib/catalog";
 
 const toneStyles: Record<string, { border: string; shadow: string; text: string }> = {
@@ -17,8 +17,11 @@ const toneStyles: Record<string, { border: string; shadow: string; text: string 
 
 export function GlowProductCard({ item, index }: { item: CatalogProduct; index?: number }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const tone = toneStyles[item.tone] || toneStyles.electric;
   const num = typeof index === "number" ? String(index + 1).padStart(2, "0") : null;
+
+  const showImage = !!item.logo && !imageError;
 
   return (
     <Link
@@ -39,9 +42,23 @@ export function GlowProductCard({ item, index }: { item: CatalogProduct; index?:
       </span>
 
       <div className="flex h-28 shrink-0 items-center justify-center border-b border-white/5 bg-white/[0.02] p-4 transition-colors duration-300 group-hover:bg-white/[0.04]">
-        <div className="transition-transform duration-500 group-hover:scale-110">
-          <BrandLogo slug={item.slug} size={56} />
-        </div>
+        {showImage ? (
+          <div className="relative h-16 w-full">
+            <Image
+              src={item.logo!}
+              alt={item.name}
+              fill
+              className="object-contain transition-transform duration-500 group-hover:scale-110"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              onError={() => setImageError(true)}
+              unoptimized
+            />
+          </div>
+        ) : (
+          <div className={`text-5xl font-black opacity-20 transition-transform duration-500 group-hover:scale-110 ${tone.text}`}>
+            {item.name.charAt(0)}
+          </div>
+        )}
       </div>
 
       <div className="flex grow flex-col p-5">
