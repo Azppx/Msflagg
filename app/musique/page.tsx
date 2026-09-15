@@ -9,13 +9,13 @@ export default function MusiquePage() {
   const t = useTranslation();
 
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
+    <main className="mx-auto min-h-screen max-w-md pb-16 sm:max-w-2xl lg:max-w-4xl">
       <PageHeader eyebrow={t("music.eyebrow")} title={t("music.title")} backHref="/" />
 
       <div className="px-5">
         <p className="text-sm text-white/50">{t("music.subtitle")}</p>
 
-        <div className="mt-6 grid grid-cols-2 gap-4">
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {TRACKS.map((track) => (
             <TrackCover key={track.id} track={track} />
           ))}

@@ -24,7 +24,7 @@ export function ConfirmationView({ order }: { order: OrderLike }) {
   const isFailed = order?.status === "FAILED";
 
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
+    <main className="mx-auto min-h-screen max-w-md pb-16 sm:max-w-xl">
       <PageHeader eyebrow={t("confirm.step")} title={t("confirm.title")} />
 
       <div className="px-5 pt-6 text-center bounce-in">

@@ -37,7 +37,7 @@ export default function ConnexionPage() {
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
+    <main className="mx-auto min-h-screen max-w-md pb-16 sm:max-w-xl">
       <PageHeader eyebrow={t("account.eyebrow")} title={t("auth.login_title")} backHref="/" />
       <div className="px-5">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

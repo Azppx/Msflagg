@@ -40,7 +40,7 @@ export default function InformationsPage() {
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
+    <main className="mx-auto min-h-screen max-w-md pb-16 sm:max-w-xl">
       <PageHeader eyebrow={t("checkout.info.step")} title={t("checkout.info.title")} backHref="/panier" />
 
       <div className="px-5">

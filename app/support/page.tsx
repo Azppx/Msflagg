@@ -12,7 +12,7 @@ export default function SupportPage() {
   const t = useTranslation();
 
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
+    <main className="mx-auto min-h-screen max-w-md pb-16 sm:max-w-xl">
       <PageHeader eyebrow={t("support.eyebrow")} title={t("support.title")} backHref="/" />
       <div className="px-5 text-center">
         <p className="text-white/60">{t("support.intro")}</p>

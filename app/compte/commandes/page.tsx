@@ -27,14 +27,14 @@ export default function CommandesPage() {
 
   if (loading || !account) {
     return (
-      <main className="mx-auto min-h-screen max-w-md px-5 pb-16 pt-12">
+      <main className="mx-auto min-h-screen max-w-md px-5 pb-16 pt-12 sm:max-w-xl">
         <p className="text-sm text-white/40">{t("account.loading")}</p>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
+    <main className="mx-auto min-h-screen max-w-md pb-16 sm:max-w-2xl">
       <PageHeader eyebrow={t("account.eyebrow")} title={t("orders.title")} backHref="/compte" />
       <div className="px-5">
         {orders === null && <p className="text-sm text-white/40">{t("account.loading")}</p>}
@@ -43,7 +43,7 @@ export default function CommandesPage() {
           <p className="text-sm text-white/40">{t("orders.empty")}</p>
         )}
 
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {orders?.map((o) => (
             <Link
               key={o.id}

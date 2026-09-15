@@ -10,7 +10,7 @@ export default function PremiumCatalogPage() {
   const t = useTranslation();
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col overflow-x-hidden px-5 pb-16 pt-8">
+    <main className="mx-auto flex min-h-screen max-w-md flex-col overflow-x-hidden px-5 pb-16 pt-8 sm:max-w-2xl lg:max-w-5xl lg:px-8">
       <div className="flex items-center justify-between">
         <Link
           href="/"
@@ -36,7 +36,7 @@ export default function PremiumCatalogPage() {
         </p>
       </div>
 
-      <div className="mt-8 flex flex-col gap-3.5">
+      <div className="mt-8 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
         {catalogProducts.map((item, i) => (
           <GlowProductCard key={item.slug} item={item} index={i} />
         ))}

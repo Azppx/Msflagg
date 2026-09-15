@@ -42,7 +42,7 @@ function PaiementContent() {
   const items = snapshot ?? [];
 
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
+    <main className="mx-auto min-h-screen max-w-md pb-16 sm:max-w-xl">
       <PageHeader eyebrow={t("checkout.pay.step")} title={t("checkout.pay.title")} backHref="/checkout/informations" />
 
       <div className="px-5">

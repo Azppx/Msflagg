@@ -8,10 +8,10 @@ export default function AvisPage() {
   const t = useTranslation();
 
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
+    <main className="mx-auto min-h-screen max-w-md pb-16 sm:max-w-2xl lg:max-w-4xl">
       <PageHeader eyebrow={t("reviews.eyebrow")} title={t("reviews.title")} backHref="/" />
 
-      <div className="flex flex-col gap-4 px-5">
+      <div className="grid grid-cols-1 gap-4 px-5 sm:grid-cols-2">
         {reviews.map((r, i) => (
           <div
             key={i}

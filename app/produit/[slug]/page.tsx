@@ -13,7 +13,7 @@ export default function CatalogProductPage({ params }: { params: { slug: string 
   if (!item) notFound();
 
   return (
-    <main className="mx-auto min-h-screen max-w-md overflow-x-hidden pb-16 pt-8">
+    <main className="mx-auto min-h-screen max-w-md overflow-x-hidden pb-16 pt-8 sm:max-w-2xl lg:max-w-5xl">
       <div className="flex items-center justify-between px-5">
         <Link
           href="/premium"

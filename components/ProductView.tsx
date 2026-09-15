@@ -12,9 +12,9 @@ export function ProductView({ item }: { item: CatalogProduct }) {
   const toneRgb = catalogToneRgb[item.tone];
 
   return (
-    <div className="bounce-in">
+    <div className="bounce-in lg:grid lg:grid-cols-[1fr_420px] lg:items-start lg:gap-10">
       {/* ---------- Héro ---------- */}
-      <section className="pt-2 text-center">
+      <section className="pt-2 text-center lg:sticky lg:top-6 lg:pt-0">
         <p
           className="text-[10px] font-extrabold uppercase tracking-[0.2em]"
           style={{ color: `rgb(${toneRgb})` }}
@@ -47,7 +47,7 @@ export function ProductView({ item }: { item: CatalogProduct }) {
       </section>
 
       {/* ---------- 01 — Offre ---------- */}
-      <section className="mt-12">
+      <section className="mt-12 lg:mt-0 lg:sticky lg:top-6">
         <SectionHead index="01" title="Offre" tag="Disponible maintenant" />
 
         <div
@@ -97,10 +97,10 @@ export function ProductView({ item }: { item: CatalogProduct }) {
       </section>
 
       {/* ---------- 02 — Détails ---------- */}
-      <section className="mt-12">
+      <section className="mt-12 lg:col-span-2">
         <SectionHead index="02" title="Détails" tag="Les avantages" />
 
-        <div className="flex flex-col gap-2.5">
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
           {item.features.map((f) => (
             <div key={f} className="kyzen-detail-card">
               <div
@@ -120,10 +120,10 @@ export function ProductView({ item }: { item: CatalogProduct }) {
       </section>
 
       {/* ---------- 03 — FAQ ---------- */}
-      <section className="mt-12 pb-4">
+      <section className="mt-12 pb-4 lg:col-span-2">
         <SectionHead index="03" title="FAQ" tag="Questions fréquentes" />
 
-        <div className="kyzen-faq">
+        <div className="kyzen-faq lg:columns-2 lg:gap-6">
           <details>
             <summary>Comment je reçois mon produit ?</summary>
             <p>

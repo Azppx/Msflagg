@@ -18,14 +18,14 @@ export default function ComptePage() {
 
   if (loading || !account) {
     return (
-      <main className="mx-auto min-h-screen max-w-md px-5 pb-16 pt-12">
+      <main className="mx-auto min-h-screen max-w-md px-5 pb-16 pt-12 sm:max-w-xl">
         <p className="text-sm text-white/40">{t("account.loading")}</p>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-md pb-16">
+    <main className="mx-auto min-h-screen max-w-md pb-16 sm:max-w-2xl">
       <PageHeader eyebrow={t("account.eyebrow")} title={t("account.title")} backHref="/" />
       <div className="px-5">
         <div className="glass-panel rounded-xl2 border border-panelBorder p-5">
