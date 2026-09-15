@@ -20,10 +20,6 @@ export type CatalogProduct = {
   logo?: string; // chemin vers le vrai logo officiel dans /public/logos, si disponible
 };
 
-// Alias conservé pour compatibilité avec les composants qui importent `Product`
-// (ex: components/ProductCard.tsx) au lieu de `CatalogProduct`.
-export type Product = CatalogProduct;
-
 const genericFeatures = [
   "Accès immédiat après paiement",
   "Support dédié via Discord",
