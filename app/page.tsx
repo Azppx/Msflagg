@@ -2,13 +2,26 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { GlowCard } from "@/components/GlowCard";
+import { GlowProductCard } from "@/components/GlowProductCard";
+import { catalogProducts } from "@/lib/catalog";
 import { siteConfig, discordConfig } from "@/lib/config";
-import { catalogToneRgb } from "@/components/catalog-icons";
 import { useTranslation } from "@/lib/i18n/locale-context";
 
 export default function HomePage() {
   const t = useTranslation();
+
+  // Les 6 produits en vedette (comme sur ta capture d'écran)
+  const featuredSlugs = [
+    "snapchat-3-mois",
+    "deezer",
+    "spotify",
+    "basic-fit",
+    "pack-basicfit-netflix",
+    "pack-spotify-basicfit-netflix-youtube",
+  ];
+  const featuredProducts = catalogProducts.filter((p) =>
+    featuredSlugs.includes(p.slug)
+  );
 
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col px-5 pb-16 pt-10 sm:max-w-2xl lg:max-w-5xl lg:px-8">
@@ -95,57 +108,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ---------- OFFRES EN VEDETTE ---------- */}
+      {/* ---------- OFFRES EN VEDETTE (avec GlowProductCard) ---------- */}
       <section className="mt-14">
-        <p className="text-[22px] font-bold tracking-tight">{t("home.featured_title")}</p>
-        <p className="mt-1 text-xs text-white/40">{t("home.featured_subtitle")}</p>
+        <div className="text-center">
+          <p className="text-[22px] font-bold tracking-tight">
+            {t("home.featured_title") || "Offre en vedette"}
+          </p>
+          <p className="mt-1 text-xs text-white/40">
+            {t("home.featured_subtitle") || "Le bundle KYZEN du moment"}
+          </p>
+        </div>
 
-        <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-2">
-          <Link href="/produit/pack-basicfit-netflix" className="block">
-            <GlowCard toneRgb={catalogToneRgb.electric} className="text-left">
-              <span className="inline-block rounded-full border border-electric/30 bg-electric/10 px-2.5 py-1 text-[10px] font-extrabold tracking-wide text-violet-soft">
-                {t("home.best_seller")}
-              </span>
-              <h3 className="mt-4 text-[28px] font-extrabold leading-[1.05] tracking-tight text-white">
-                <span className="text-violet-soft">{t("home.pack1_title_line1")}</span>
-                <br />
-                {t("home.pack1_title_line2")}
-              </h3>
-              <p className="mt-3 text-[13px] leading-relaxed text-white/50">{t("home.pack1_desc")}</p>
-              <div className="mt-5 flex items-center justify-between gap-3">
-                <p>
-                  <span className="text-3xl font-extrabold tracking-tight">25€</span>
-                  <span className="ml-1 text-[11px] text-white/40">{t("home.per_bundle")}</span>
-                </p>
-                <span className="btn-glow-purple rounded-xl px-4 py-3 text-[12px] font-bold">
-                  {t("home.order_cta")}
-                </span>
-              </div>
-            </GlowCard>
-          </Link>
-
-          <Link href="/produit/pack-spotify-basicfit-netflix-youtube" className="block">
-            <GlowCard toneRgb={catalogToneRgb.violet} className="text-left">
-              <span className="inline-block rounded-full border border-violet/30 bg-violet/10 px-2.5 py-1 text-[10px] font-extrabold tracking-wide text-violet-soft">
-                {t("home.pack_complete")}
-              </span>
-              <h3 className="mt-4 text-[28px] font-extrabold leading-[1.05] tracking-tight text-white">
-                <span className="text-violet-soft">{t("home.pack2_title_line1")}</span>
-                <br />
-                {t("home.pack2_title_line2")}
-              </h3>
-              <p className="mt-3 text-[13px] leading-relaxed text-white/50">{t("home.pack2_desc")}</p>
-              <div className="mt-5 flex items-center justify-between gap-3">
-                <p>
-                  <span className="text-3xl font-extrabold tracking-tight">35€</span>
-                  <span className="ml-1 text-[11px] text-white/40">{t("home.per_bundle")}</span>
-                </p>
-                <span className="btn-glow-purple rounded-xl px-4 py-3 text-[12px] font-bold">
-                  {t("home.order_cta")}
-                </span>
-              </div>
-            </GlowCard>
-          </Link>
+        <div className="mt-6 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+          {featuredProducts.map((product, i) => (
+            <GlowProductCard key={product.slug} item={product} index={i} />
+          ))}
         </div>
       </section>
 
